@@ -178,7 +178,7 @@ const Loginandsignup = () => {
           <img
             src={login}
             alt="Login Illustration"
-            className="w-[500px] h-full rounded-r-2xl object-cover"
+            className="w-[500px] rounded-r-2xl object-cover max-w-full h-auto  sharp"
           />
         </div>
       </div>
