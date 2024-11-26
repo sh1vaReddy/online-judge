@@ -5,6 +5,8 @@ dotenv.config();
 import { ConnectDB } from './config/db.js';
 import cookieParser from "cookie-parser";
 import UserRoute from './router/User_Router.js';
+import ProblemRoute from './router/Problem_Router.js';
+import TestcaseRouter from './router/Testcase_Router.js'
 
 
 import cors from 'cors';
@@ -20,7 +22,7 @@ server.use(express.json());
 server.use(cookieParser());
 
 
-server.use('/api/v1', UserRoute);
+server.use('/api/v1', UserRoute,ProblemRoute,TestcaseRouter);
 
 
 

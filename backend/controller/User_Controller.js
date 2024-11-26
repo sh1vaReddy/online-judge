@@ -8,13 +8,13 @@ export const Register = trycatchmethod(async (req, res, next) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
-        return res.status(400).json({ success: false, message: 'All fields are required' });
+        return next(new ErrorHandler('All fields are required',400));
     }
 
    
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
-        return res.status(409).json({ success: false, message: 'Email already registered' });
+        return next(new ErrorHandler('Email already registered',409))
     }
 
    
@@ -32,7 +32,7 @@ export const Login = trycatchmethod(async (req, res, next) => {
     const { usernameOrEmail, password } = req.body;
 
     if (!usernameOrEmail || !password) {
-        return res.status(400).json({ success: false, message: 'All fields are required' });
+        return next(new ErrorHandler('All fields are required',400))
     }
 
     let user;

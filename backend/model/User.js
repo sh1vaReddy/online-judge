@@ -7,7 +7,7 @@ import { hash } from 'bcrypt';
 
 const AutoIncrementFactory = AutoIncrement(mongoose);
 
-export const UserSchema = new Schema({
+ const UserSchema = new Schema({
     user_id: {
         type: Number,
         unique: true, 
