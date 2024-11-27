@@ -4,10 +4,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout.jsx";
 
 const Home = lazy(() => import("./components/Home/Home.jsx"));
-const Login = lazy(() =>
-  import("./components/Loginandsinup/Loginandsingup.jsx")
-);
+const Login = lazy(() => import("./components/Loginandsinup/Loginandsingup.jsx"));
 const Editor = lazy(() => import("./components/Problem/Editor.jsx"));
+const Compiler=lazy(()=>import('./components/Compiler/Compiler.jsx'));
 
 const App = () => {
   return (
@@ -19,6 +18,7 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/sing" element={<Login />} />
               <Route path="/problem" element={<Editor />} />
+              <Route path='/compiler'element={<Compiler/>}/>
             </Route>
           </Routes>
         </Suspense>
