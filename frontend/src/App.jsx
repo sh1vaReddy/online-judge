@@ -4,7 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
 const Home = lazy(() => import("./components/Home/Home.jsx"));
-const Login=lazy(()=>import("./components/Loginandsinup/Loginandsingup.jsx"))
+const Login=lazy(()=>import("./components/Loginandsinup/Loginandsingup.jsx"));
+const Editor=lazy(()=>import("./components/Problem/Editor.jsx"));
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path='/sing' element={<Login/>}/>
+            <Route path='/problem' element={<Editor/>}/>
           </Routes>
         </Suspense>
       </BrowserRouter>
