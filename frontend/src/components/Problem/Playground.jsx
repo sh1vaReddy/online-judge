@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaRedoAlt } from "react-icons/fa";
 import { MdFormatAlignLeft } from "react-icons/md";
 
-const Playground = () => {
+const Playground = ({ theme }) => {
   // Default boilerplate code for each language
   const defaultCode = {
     cpp: `
@@ -51,16 +51,42 @@ const Playground = () => {
     { label: "C++", value: "cpp" },
   ];
 
+  // Define themes
+  const themes = {
+    light: {
+      container: "bg-gray-100 text-black border-gray-300",
+      header: "bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200",
+      dropdown: "bg-white text-black border-gray-400",
+      buttonReset: "bg-blue-500 hover:bg-blue-600 text-white",
+      buttonFormat: "bg-green-500 hover:bg-green-600 text-white",
+      editor: "bg-white text-black border-gray-400",
+    },
+    dark: {
+      container: "bg-gray-900 text-white border-gray-700",
+      header: "bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800",
+      dropdown: "bg-gray-700 text-white border-gray-500",
+      buttonReset: "bg-blue-600 hover:bg-blue-700 text-white",
+      buttonFormat: "bg-green-600 hover:bg-green-700 text-white",
+      editor: "bg-gray-800 text-white border-gray-600",
+    },
+  };
+
+  const currentTheme = themes[theme] || themes.dark; // Default to dark theme
+
   return (
-    <div className="rounded-lg border border-gray-300 bg-gray-100 shadow-lg overflow-hidden h-full">
+    <div
+      className={`rounded-lg border shadow-lg overflow-hidden h-full ${currentTheme.container}`}
+    >
       {/* Header Section */}
-      <div className="h-16 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 w-full flex items-center px-4 rounded-t-md relative">
+      <div
+        className={`h-16 w-full flex items-center px-4 rounded-t-md relative ${currentTheme.header}`}
+      >
         {/* Language Selector */}
         <select
           id="language"
           value={selectedLanguage}
           onChange={handleLanguageChange}
-          className="bg-gray-700 text-white border-2 border-gray-500 rounded-md px-3 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-gray-400 transition-all"
+          className={`rounded-md px-3 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-gray-400 transition-all ${currentTheme.dropdown}`}
         >
           {languageOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -74,7 +100,7 @@ const Playground = () => {
           {/* Reset Button */}
           <button
             onClick={() => setCode(defaultCode[selectedLanguage])}
-            className="flex items-center justify-center gap-2 px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`flex items-center justify-center gap-2 px-5 py-3 font-semibold rounded-lg shadow-lg transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
           >
             <FaRedoAlt className="text-lg" />
             <span className="text-sm">Reset</span>
@@ -90,7 +116,7 @@ const Playground = () => {
                 alert("Formatting failed. Ensure code is valid.");
               }
             }}
-            className="flex items-center justify-center gap-2 px-5 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-lg hover:bg-green-700 transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className={`flex items-center justify-center gap-2 px-5 py-3 font-semibold rounded-lg shadow-lg transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 ${currentTheme.buttonFormat}`}
           >
             <MdFormatAlignLeft className="text-lg" />
             <span className="text-sm">Format</span>
@@ -99,11 +125,11 @@ const Playground = () => {
       </div>
 
       {/* Code Editor Section */}
-      <div className="bg-gray-900 h-screen rounded-b-md ">
+      <div className="rounded-b-md w-full h-full">
         <textarea
           value={code}
-          onChange={(e) => setCode(e.target.value)} // Allow editing in the text area
-          className="w-full h-full bg-gray-800 text-white border-2 border-gray-600 rounded-md p-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner"
+          onChange={(e) => setCode(e.target.value)} 
+          className={`w-full h-full rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner ${currentTheme.editor}`}
           placeholder="Write your code here..."
         />
       </div>

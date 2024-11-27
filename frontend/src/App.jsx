@@ -1,11 +1,13 @@
 import { lazy, Suspense } from "react";
 import { ThemeProvider } from "./ThemeContext.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Layout from "./Layout.jsx";
 
 const Home = lazy(() => import("./components/Home/Home.jsx"));
-const Login=lazy(()=>import("./components/Loginandsinup/Loginandsingup.jsx"));
-const Editor=lazy(()=>import("./components/Problem/Editor.jsx"));
+const Login = lazy(() =>
+  import("./components/Loginandsinup/Loginandsingup.jsx")
+);
+const Editor = lazy(() => import("./components/Problem/Editor.jsx"));
 
 const App = () => {
   return (
@@ -13,9 +15,11 @@ const App = () => {
       <BrowserRouter>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path='/sing' element={<Login/>}/>
-            <Route path='/problem' element={<Editor/>}/>
+            <Route path="/" element={<Layout/>}>
+              <Route path="/" element={<Home />} />
+              <Route path="/sing" element={<Login />} />
+              <Route path="/problem" element={<Editor />} />
+            </Route>
           </Routes>
         </Suspense>
       </BrowserRouter>
