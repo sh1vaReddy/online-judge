@@ -29,7 +29,7 @@ const ProblemList = () => {
               </td>
               <td className={`px-4 py-2 ${problem.status === 'Solved' ? 'text-green-500' : problem.status === 'Unsolved' ? 'text-red-500' : 'text-yellow-500'}`}>
                 {problem.status}
-              </td> {/* Display problem status */}
+              </td> 
             </tr>
           ))}
         </tbody>
