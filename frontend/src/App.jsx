@@ -19,6 +19,7 @@ const App = () => {
               <Route path="/sing" element={<Login />} />
               <Route path="/problem" element={<Editor />} />
               <Route path='/compiler'element={<Compiler/>}/>
+              
             </Route>
           </Routes>
         </Suspense>

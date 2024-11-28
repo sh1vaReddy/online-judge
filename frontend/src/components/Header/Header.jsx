@@ -11,7 +11,7 @@ const Header = () => {
 
   // Array of menu items
   const menuItems = [
-    { label: "Home", to: "/", current: true },
+    { label: "Home", to: "/"},
     { label: "Problems", to: "/problem" },
     { label: "Contest", to: "/contest" },
     { label: "Compiler", to: "/compiler" },
