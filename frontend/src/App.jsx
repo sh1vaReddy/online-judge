@@ -7,6 +7,7 @@ const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Login = lazy(() => import("./components/Loginandsinup/Loginandsingup.jsx"));
 const Editor = lazy(() => import("./components/Problem/Editor.jsx"));
 const Compiler=lazy(()=>import('./components/Compiler/Compiler.jsx'));
+const Problem=lazy(()=>import('./components/Admin/ProblemCreation.jsx'));
 
 const App = () => {
   return (
@@ -17,7 +18,7 @@ const App = () => {
             <Route path="/" element={<Layout/>}>
               <Route path="/" element={<Home />} />
               <Route path="/sing" element={<Login />} />
-              <Route path="/problem" element={<Editor />} />
+              <Route path="/problem" element={<Problem/>} />
               <Route path='/compiler'element={<Compiler/>}/>
               
             </Route>
