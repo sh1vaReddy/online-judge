@@ -21,7 +21,7 @@ const Editor = () => {
         <div className="w-1/2 p-3 h-full">
           <Problem theme={theme} />
         </div>
-        <div className="w-1/2 p-3 h-full">
+        <div className="w-1/2 p-3 h-full bg-gray-50 rounded-md dark:bg-gray-900">
           <Playground theme={theme} />
         </div>
       </div>

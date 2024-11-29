@@ -2,9 +2,12 @@ import { useState } from "react";
 import { GrNotes } from "react-icons/gr";
 import { FaRegMessage } from "react-icons/fa6";
 import { IoIosTimer } from "react-icons/io";
+import { useParams } from 'react-router-dom';
 
 const Problem = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("description");
+  const{id}=useParams();
+  console.log(id);
 
   // Define default themes (light and dark)
   const themes = {
