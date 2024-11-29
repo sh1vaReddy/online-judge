@@ -2,6 +2,9 @@ import { lazy, Suspense } from "react";
 import { ThemeProvider } from "./ThemeContext.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout.jsx";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+import Loader from "./components/Home/Loader.jsx";
 
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Login = lazy(() => import("./components/Loginandsinup/Loginandsingup.jsx"));
@@ -11,9 +14,11 @@ const Problem=lazy(()=>import('./components/Admin/ProblemCreation.jsx'));
 
 const App = () => {
   return (
+    <>
+     <ToastContainer/>
     <ThemeProvider>
       <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div><Loader/></div>}>
           <Routes>
             <Route path="/" element={<Layout/>}>
               <Route path="/" element={<Home />} />
@@ -26,6 +31,8 @@ const App = () => {
         </Suspense>
       </BrowserRouter>
     </ThemeProvider>
+    </>
+   
   );
 };
 

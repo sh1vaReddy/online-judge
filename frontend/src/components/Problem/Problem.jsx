@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GrNotes } from "react-icons/gr";
 import { FaRegMessage } from "react-icons/fa6";
 import { IoIosTimer } from "react-icons/io";
-import { useParams } from 'react-router-dom';
+import {  useParams } from 'react-router-dom';
+import axios from "axios";
+import { toast } from "react-toastify";
+import Submission from "./Submission";
 
 const Problem = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("description");
+  const[ProblemData,setProblemData]=useState(null);
   const{id}=useParams();
-  console.log(id);
 
   // Define default themes (light and dark)
   const themes = {
@@ -29,6 +32,21 @@ const Problem = ({ theme }) => {
 
   // Fallback to "dark" if theme prop is not provided or invalid
   const currentTheme = themes[theme] || themes.dark;
+
+  useEffect(()=>{
+    const fetchProblem=async()=>
+    {
+      try{
+         const response=await axios.get(`http://localhost:3000/api/v1/problems/${id}`);
+         setProblemData(response.data.problem);
+      }
+      catch(error)
+      {
+          toast.error("Problem Not Found");
+      }
+    };
+    fetchProblem();
+  },[id]);
 
   return (
     <div
@@ -77,13 +95,10 @@ const Problem = ({ theme }) => {
 
       {/* Content Area */}
       <div className={`p-6 ${currentTheme.content}`}>
-        {activeTab === "description" && (
+        {ProblemData && activeTab == 'description' && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Problem Title</h2>
-            <p className="leading-relaxed">
-              Welcome to the problem-solving platform! This is the problem
-              description.
-            </p>
+            <h1>{ProblemData.title}</h1>
+            <h1>{ProblemData.description}</h1>
           </div>
         )}
         {activeTab === "discussion" && (
@@ -96,9 +111,8 @@ const Problem = ({ theme }) => {
         )}
         {activeTab === "submissions" && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Submissions</h2>
             <p className="leading-relaxed">
-              View and manage your submissions here.
+              <Submission/>
             </p>
           </div>
         )}

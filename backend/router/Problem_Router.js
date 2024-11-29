@@ -26,7 +26,7 @@ router.get(
 );
 
 // Get problem by ID or title
-router.get('/problems/:id?', isAuthenticated, getproblem);
+router.get('/problems/:id?', getproblem);
 router.get('/problems/title/:title?', isAuthenticated, getproblem);
 
 // Delete problem by ID or title (admin-only)

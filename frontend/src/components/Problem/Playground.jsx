@@ -165,7 +165,7 @@ const Playground = ({ theme }) => {
           />
         </div>
       </div>
-      <div className="mt-3 h-[25vh] rounded-lg border shadow-lg overflow-auto">
+      <div className="mt-3 h-[25vh] rounded-lg  shadow-lg overflow-auto">
         <div
           className={`flex justify-between items-center px-4 py-2 ${currentTheme.header}`}
         >

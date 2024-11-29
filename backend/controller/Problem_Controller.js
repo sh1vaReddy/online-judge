@@ -67,7 +67,7 @@ export const getallproblem=trycatchmethod(async(req,res,next)=>{
 
 export const getproblem = trycatchmethod(async (req, res, next) => {
     const { id, title  } = req.params;
-
+    console.log(id);
     
     if (!id && !title ) {
         return res.status(400).json({
