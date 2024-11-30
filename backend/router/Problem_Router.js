@@ -31,13 +31,7 @@ router.get('/problems/title/:title?', isAuthenticated, getproblem);
 
 // Delete problem by ID or title (admin-only)
 router.delete(
-  '/problems/:id?',
-  isAuthenticated,
-  authoriesrole('admin'),
-  deleteproblem
-);
-router.delete(
-  '/problems/title/:title?',
+  '/problems',
   isAuthenticated,
   authoriesrole('admin'),
   deleteproblem

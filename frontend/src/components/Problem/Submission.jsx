@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaCode } from "react-icons/fa6";
+import { RxCross2 } from "react-icons/rx";
 
 const Submission = () => {
   const [showModel, setshowModel] = useState(null);
@@ -73,7 +74,7 @@ const Submission = () => {
             </pre>
             <button 
             className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
-            onClick={() => setshowModel(false)}>close</button>
+            onClick={() => setshowModel(false)}><RxCross2 className="font-bold text-xl"/></button>
           </div>
         
         </div>

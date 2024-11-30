@@ -136,7 +136,7 @@ const Compiler = () => {
       </div>
 
       {/* Code Editor Section */}
-      <div className="rounded-b-md h-fit  py-1">
+      <div className="rounded-b-md h-fit  py-2">
         <textarea
           value={code}
           onChange={(e) => setCode(e.target.value)}
@@ -145,11 +145,20 @@ const Compiler = () => {
           style={{ width: "100vw", height: "50vh" }}
         />
       </div>
-      <div className="flex-grow h-[50vh] overflow-auto bg-gray-100 dark:bg-gray-800 rounded-md hover:outline hover:outline-indigo-500 hover:outline-2 focus:outline-indigo-500 focus:outline-2">
+      <div className="flex-grow h-[50vh] justify-between overflow-auto bg-gray-100 dark:bg-gray-800 rounded-md hover:outline hover:outline-indigo-500 hover:outline-2 focus:outline-indigo-500 focus:outline-2">
         <div
-          className={`h-8 w-full flex items-center px-4 rounded-t-md relative ${currentTheme.header} hover:ring-indigo-500 hover:outline hover:outline-indigo-500 hover:outline-2`}
+          className={`h-8 w-full flex items-center px-4 rounded-t-md relative ${currentTheme.header}`}
         >
-          <Ouput />
+          <h1 className="text-xl">Output</h1>
+          {/* Move buttons to the right */}
+          <div className="ml-auto flex gap-6">
+            <button
+              className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
+              onClick={() => alert("Running test cases...")}
+            >
+              Run
+            </button>
+          </div>
         </div>
       </div>
     </div>

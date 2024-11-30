@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { GrNotes } from "react-icons/gr";
 import { FaRegMessage } from "react-icons/fa6";
 import { IoIosTimer } from "react-icons/io";
-import {  useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Submission from "./Submission";
 
 const Problem = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("description");
-  const[ProblemData,setProblemData]=useState(null);
-  const{id}=useParams();
+  const [ProblemData, setProblemData] = useState(null);
+  const { id } = useParams();
 
   // Define default themes (light and dark)
   const themes = {
@@ -33,20 +33,20 @@ const Problem = ({ theme }) => {
   // Fallback to "dark" if theme prop is not provided or invalid
   const currentTheme = themes[theme] || themes.dark;
 
-  useEffect(()=>{
-    const fetchProblem=async()=>
-    {
-      try{
-         const response=await axios.get(`http://localhost:3000/api/v1/problems/${id}`);
-         setProblemData(response.data.problem);
-      }
-      catch(error)
-      {
-          toast.error("Problem Not Found");
+  useEffect(() => {
+    const fetchProblem = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/problems/${id}`
+        );
+        setProblemData(response.data.problem);
+        console.log(response.data.problem);
+      } catch (error) {
+        toast.error("Problem Not Found");
       }
     };
     fetchProblem();
-  },[id]);
+  }, [id]);
 
   return (
     <div
@@ -95,10 +95,21 @@ const Problem = ({ theme }) => {
 
       {/* Content Area */}
       <div className={`p-6 ${currentTheme.content}`}>
-        {ProblemData && activeTab == 'description' && (
+        {ProblemData && activeTab == "description" && (
           <div>
-            <h1>{ProblemData.title}</h1>
-            <h1>{ProblemData.description}</h1>
+            <h1 className="text-xl font-bold px-4">
+              {ProblemData.problem_id}.{ProblemData.title}
+            </h1>
+            <div className="flex gap-6 px-4">
+              <h1 className="p-2 bg-gray-600 text-white rounded-2xl">Topics</h1>
+              <h1>{ProblemData.difficulty}</h1>
+            </div>
+
+            <h1 className="p-4">{ProblemData.description}</h1>
+            <div className="p-4">
+              <h1 className="font-semibold text-xl">Constraints:</h1>
+              <h1>{ProblemData.constraints}</h1>
+            </div>
           </div>
         )}
         {activeTab === "discussion" && (
@@ -112,7 +123,7 @@ const Problem = ({ theme }) => {
         {activeTab === "submissions" && (
           <div>
             <p className="leading-relaxed">
-              <Submission/>
+              <Submission />
             </p>
           </div>
         )}
