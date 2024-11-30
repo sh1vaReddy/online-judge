@@ -1,10 +1,13 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { ThemeProvider } from "./ThemeContext.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Loader from "./components/Home/Loader.jsx";
+import {server} from './constants/config.jsx';
+import {useDispatch} from 'react-redux';
+import axios from "axios";
 
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Login = lazy(() => import("./components/Loginandsinup/Loginandsingup.jsx"));
@@ -16,6 +19,10 @@ const ProblemDelete=lazy(()=>import('./components/Admin/ProblemDelete.jsx'))
 const ProblemUpdate=lazy(()=>import('./components/Admin/ProblemUpdate.jsx'));
 
 const App = () => {
+  
+
+   
+
   return (
     <>
      <ToastContainer/>
@@ -24,12 +31,14 @@ const App = () => {
         <Suspense fallback={<div><Loader/></div>}>
           <Routes>
             <Route path="/" element={<Layout/>}>
-              <Route path="/" element={<ProblemUpdate/>} />
+              <Route path="/" element={<Home/>} />
               <Route path="/sing" element={<Login />} />
-              <Route path="/create/problem" element={<ProblemCreation/>} />
+              <Route path="/problem/create" element={<ProblemCreation/>} />
               <Route path='/compiler'element={<Compiler/>}/>
               <Route path='/problem/:id' element={<Editor/>}/>
               <Route path='/problem' element={<ProblemList/>}/>
+              <Route path='/problem/update' element={<ProblemUpdate/>}/>
+              <Route path='/problme/delete' element={<ProblemDelete/>}/>
             </Route>
           </Routes>
         </Suspense>

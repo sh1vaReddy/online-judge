@@ -102,7 +102,6 @@ export const getproblem = trycatchmethod(async (req, res, next) => {
 
 export const deleteproblem = trycatchmethod(async (req, res, next) => {
   const { id, title } = req.body;
-  console.log(req.body);
 
   if (!id && !title) {
     return res.status(400).json({
