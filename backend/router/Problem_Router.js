@@ -39,16 +39,11 @@ router.delete(
 
 // Update problem by ID or title (admin-only)
 router.put(
-  '/problems/:id?',
+  '/update/problems',
   isAuthenticated,
   authoriesrole('admin'),
   updateproblem
 );
-router.put(
-  '/problems/title/:title?',
-  isAuthenticated,
-  authoriesrole('admin'),
-  updateproblem
-);
+
 
 export default router;

@@ -12,7 +12,8 @@ const Editor = lazy(() => import("./components/Problem/Editor.jsx"));
 const Compiler=lazy(()=>import('./components/Compiler/Compiler.jsx'));
 const ProblemCreation=lazy(()=>import('./components/Admin/ProblemCreation.jsx'));
 const ProblemList=lazy(()=>import('./components/Home/ProblemList.jsx'))
-const ProblemDelte=lazy(()=>import('./components/Admin/ProblemDelete.jsx'))
+const ProblemDelete=lazy(()=>import('./components/Admin/ProblemDelete.jsx'))
+const ProblemUpdate=lazy(()=>import('./components/Admin/ProblemUpdate.jsx'));
 
 const App = () => {
   return (
@@ -23,7 +24,7 @@ const App = () => {
         <Suspense fallback={<div><Loader/></div>}>
           <Routes>
             <Route path="/" element={<Layout/>}>
-              <Route path="/" element={<ProblemDelte />} />
+              <Route path="/" element={<ProblemUpdate/>} />
               <Route path="/sing" element={<Login />} />
               <Route path="/create/problem" element={<ProblemCreation/>} />
               <Route path='/compiler'element={<Compiler/>}/>
