@@ -21,8 +21,6 @@ const ProblemList = () => {
     fetchProblems();
   },[]);
 
-  console.log(ProblemData);
-
 
   const handleRowClick = (id) => {
     nav(`/problem/${id}`);

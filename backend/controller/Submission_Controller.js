@@ -4,6 +4,7 @@ import { SubmissionModel } from "../model/SubmissionSchema.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
 
 // Create a new submission
+
 export const createSubmission = trycatchmethod(async (req, res, next) => {
   const {
     user_id,
@@ -17,6 +18,7 @@ export const createSubmission = trycatchmethod(async (req, res, next) => {
     total_test_cases,
   } = req.body;
 
+  // Validate the presence of all fields
   if (
     !user_id ||
     !problem_id ||
@@ -31,6 +33,7 @@ export const createSubmission = trycatchmethod(async (req, res, next) => {
     return next(new ErrorHandler("All fields are required", 400));
   }
 
+  // Create the submission record in the database
   const newSubmissionResult = await SubmissionModel.create({
     user_id,
     problem_id,
@@ -43,12 +46,14 @@ export const createSubmission = trycatchmethod(async (req, res, next) => {
     total_test_cases,
   });
 
+  // Respond with success
   res.status(201).json({
     success: true,
     message: "Submission created successfully.",
     submission: newSubmissionResult,
   });
 });
+
 
 // Get all submissions
 export const getAllSubmissions = trycatchmethod(async (req, res, next) => {

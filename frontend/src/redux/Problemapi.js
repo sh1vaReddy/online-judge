@@ -22,7 +22,7 @@ const problemapi = createApi({
 
     getAllProblems: builder.query({
       query: () => ({
-        url: "/api/v1/getallproblems",
+        url: "/getallproblems",
         method: "GET",
         credentials: "include",
       }),
@@ -31,7 +31,7 @@ const problemapi = createApi({
 
     updateProblem: builder.mutation({
       query: (data) => ({
-        url: "/api/v1/update/problems",
+        url: "/update/problems",
         method: "PUT",
         body: data,
         credentials: "include",
@@ -41,7 +41,7 @@ const problemapi = createApi({
 
     deleteProblem: builder.mutation({
       query: (data) => ({
-        url: "/api/v1/problems",
+        url: "/problems",
         method: "DELETE",
         body: data,
         credentials: "include",
@@ -51,7 +51,7 @@ const problemapi = createApi({
 
     getProblemById: builder.query({
       query: (id) => ({
-        url: `/api/v1/problems/${id}`,
+        url: `/problems/${id}`,
         method: "GET",
         credentials: "include",
       }),
@@ -59,7 +59,7 @@ const problemapi = createApi({
     }),
     getProblemByTitle: builder.query({
       query: (title) => ({
-        url: `/api/v1/problems/title/${title}`,
+        url: `/problems/title/${title}`,
         method: "GET",
         credentials: "include",
       }),

@@ -4,6 +4,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {server} from '../../constants/config';
+import {useDispatch} from 'react-redux';
+import { userExists } from "../../redux/reducers/authslice";
 
 const Loginandsignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,6 +16,7 @@ const Loginandsignup = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const dispatch=useDispatch();
   const navigate=useNavigate();
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -59,8 +62,7 @@ const Loginandsignup = () => {
 
     try {
       const response=await axios.post(endpoint, payload, config);
-      const token=response.data.token;
-      localStorage.setItem("authToken",token);
+      dispatch(userExists(response.data.data));
       navigate("/");
     } catch (error) {
       toast.error("Invalid Username or Password");

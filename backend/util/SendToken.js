@@ -9,7 +9,9 @@ const cookieOptions = {
 
 const sendToken = (res, user, code, message) => {
     const token = jsonwebtoken.sign(
-        { _id: user._id },
+        { _id: user._id,
+            role: user.role,
+         },
         process.env.JWT_SECRET,
         { expiresIn: '1d' } 
     );

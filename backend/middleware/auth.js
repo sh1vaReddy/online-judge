@@ -20,25 +20,25 @@ export const isAuthenticated = trycatchmethod(async (req, res, next) => {
 
 
 export const authoriesrole = (...roles) => {
-    return (req, res, next) => {
-      // Ensure the user object exists and has a role
-      if (!req.user || !req.user.role) {
+  return (req, res, next) => {
+    // Ensure req.user exists and has a role
+    if (!req.user || !req.user.role) {
+        return next(new ErrorHandler("User role not defined", 403));
+    }
+
+    console.log("User Role:", req.user.role); // Log role for debugging
+    
+    if (!roles.includes(req.user.role)) {
         return next(
-          new ErrorHandler("User role is not available to check access", 403)
+            new ErrorHandler(
+                `Role: ${req.user.role} is not allowed to access this resource`,
+                403
+            )
         );
-      }
-  
-      // Check if the user's role is in the allowed roles
-      if (!roles.includes(req.user.role)) {
-        return next(
-          new ErrorHandler(
-            `Role: ${req.user.role} is not allowed to access this resource`,
-            403
-          )
-        );
-      }
-  
-      next();
-    };
+    }
+
+    next();
   };
+};
+
   

@@ -42,8 +42,7 @@ const ProblemCreation = () => {
     };
 
     try {
-      const response = await createProblem(problemData).unwrap();
-      console.log("Problem created successfully:", response);
+      await createProblem(problemData).unwrap();
     } catch (error) {
       console.error("Error creating problem:", error);
     }

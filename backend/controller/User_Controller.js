@@ -53,7 +53,7 @@ export const Login = trycatchmethod(async (req, res, next) => {
 });
 
 export const getmyprofile = trycatchmethod(async(req,res,next) => {
-  const user = await UserModel.find(req.user);
+  const user = await UserModel.findById(req.user._id);
   if (!user) return next(new ErrorHandler("User not found", 404));
   return res.status(200).json({
     sucess: true,

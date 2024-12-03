@@ -1,17 +1,23 @@
-import { useState,useContext } from "react";
+import { useState,useContext,useEffect} from "react";
 import { Link } from "react-router-dom"; 
 import compiler from "../../assets/compiler.png";
 import { ThemeContext } from "../../ThemeContext";
 import { CiLogin } from "react-icons/ci";
 import {server} from '../../constants/config';
+import { useSelector } from "react-redux";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  const [isAdmin, setIsAdmin] = useState(false); 
+  const {  user } = useSelector((state) => state.auth);
+  const nav=useNavigate();
 
+ 
   // Array of menu items
   const menuItems = [
     { label: "Home", to: "/"},
@@ -24,8 +30,6 @@ const Header = () => {
   const handlelogout=(()=>
     {
       axios.get(`${server}/api/v1/logout`);
-      localStorage.removeItem('token');
-      window.location.reload();
     })
   
   return (

@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { FaRedoAlt } from "react-icons/fa";
 import { MdFormatAlignLeft } from "react-icons/md";
 import { ThemeContext } from "../../ThemeContext";
-import Ouput from "./Ouput";
+import axios from 'axios';
 
 const Compiler = () => {
   // Access the theme and toggleTheme function from ThemeContext
@@ -53,6 +53,18 @@ const Compiler = () => {
     setCode(defaultCode[newLanguage]);
   };
 
+
+  const handlerun = async() =>
+  {
+    const response=await axios.post(`http://localhost:8080/compile`,
+      {
+        language: selectedLanguage,
+      code: code,
+      Input: "" 
+      }
+    );
+    console.log(response);
+  }
   // Language options for the dropdown menu
   const languageOptions = [
     { label: "JavaScript", value: "javascript" },
@@ -154,7 +166,7 @@ const Compiler = () => {
           <div className="ml-auto flex gap-6">
             <button
               className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
-              onClick={() => alert("Running test cases...")}
+              onClick={handlerun} 
             >
               Run
             </button>

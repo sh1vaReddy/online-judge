@@ -1,36 +1,27 @@
+import axios from "axios";
 import { useState } from "react";
 import { FaRedoAlt } from "react-icons/fa";
 import { MdFormatAlignLeft } from "react-icons/md";
+import { server } from "../../constants/config";
 
 const Playground = ({ theme }) => {
-  const [activeTab, setactiveTab] = useState("Input");
+  const [activeTab, setActiveTab] = useState("Input");
   // Default boilerplate code for each language
   const defaultCode = {
-    cpp: `
-    // C++: Hello World Program
-    #include <iostream>
-    using namespace std;
+    cpp: `#include <iostream>
+using namespace std;
 
-    int main() {
-        cout << "Hello, World!" << endl;
-        return 0;
-    }`,
-
-    java: `
-    // Java: Hello World Program
-    public class Main {
-        public static void main(String[] args) {
-            System.out.println("Hello, World!");
-        }
-    }`,
-
-    python: `
-    # Python: Hello World Program
-    print("Hello, World!")`,
-
-    javascript: `
-    // JavaScript: Hello World Program
-    console.log("Hello, World!");`,
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`,
+    java: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`,
+    python: `print("Hello, World!")`,
+    javascript: `console.log("Hello, World!");`,
   };
 
   // State for the selected language and its corresponding code
@@ -41,35 +32,45 @@ const Playground = ({ theme }) => {
   const handleLanguageChange = (e) => {
     const newLanguage = e.target.value;
     setSelectedLanguage(newLanguage);
-    setCode(defaultCode[newLanguage]);
+    setCode(defaultCode[newLanguage] || "");
+  };
+
+  // Submission handler
+  const handleSubmission = async () => {
+    try {
+      const response = await axios.post(
+        `${server}/api/v1/submissions`,
+        { code },
+        { withCredentials: true }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderTabContent = () => {
-    if (activeTab == "Input") {
+    if (activeTab === "Input") {
       return (
         <textarea
           className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
           placeholder="Enter test case input here..."
         />
       );
-    }
-    else if(activeTab=="Output")
-    {
-      return(
+    } else if (activeTab === "Output") {
+      return (
         <textarea
-        className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
-        placeholder="Output appear here..."
-      />
-      )
-    }
-    else if(activeTab=="Verdict")
-    {
-      return(
+          className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
+          placeholder="Output will appear here..."
+        />
+      );
+    } else if (activeTab === "Verdict") {
+      return (
         <textarea
-        className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
-        placeholder="Verdict will apperar here..."
-      />
-      )
+          className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
+          placeholder="Verdict will appear here..."
+        />
+      );
     }
   };
 
@@ -130,7 +131,7 @@ const Playground = ({ theme }) => {
           <div className="absolute top-1/2 right-4 transform -translate-y-1/2 flex gap-6">
             {/* Reset Button */}
             <button
-              onClick={() => setCode(defaultCode[selectedLanguage])}
+              onClick={() => setCode(defaultCode[selectedLanguage] || "")}
               className={`flex items-center justify-center gap-2 px-5 py-3 font-semibold rounded-lg shadow-lg transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
             >
               <FaRedoAlt className="text-lg" />
@@ -179,7 +180,7 @@ const Playground = ({ theme }) => {
             </button>
             <button
               className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 ${currentTheme.buttonFormat}`}
-              onClick={() => alert("Submitting test cases...")}
+              onClick={handleSubmission}
             >
               Submit
             </button>
@@ -188,35 +189,30 @@ const Playground = ({ theme }) => {
 
         <div className="flex gap-4 px-4 py-2">
           <button
-            className={`px-4 py-2 rounded-lg  ${activeTab === "Input" ? "bg-green-600" : "bg-green-500"} bg-green-500 text-white font-semibold hover:bg-green-600 focus:outline-none`}
-            onClick={() => setactiveTab("Input")}
+            className={`px-4 py-2 rounded-lg  ${activeTab === "Input" ? "bg-green-600" : "bg-green-500"} text-white font-semibold hover:bg-green-600 focus:outline-none`}
+            onClick={() => setActiveTab("Input")}
           >
             Input
           </button>
           <button
             className={`px-4 py-2 rounded-lg ${activeTab === "Output" ? "bg-blue-600" : "bg-blue-500"} text-white font-semibold hover:bg-blue-600 focus:outline-none`}
-            onClick={() => setactiveTab("Output")}
+            onClick={() => setActiveTab("Output")}
           >
             Output
           </button>
           <button
-            className={`px-4 py-2 rounded-lg ${activeTab==="Verdict" ? "bg-red-600" : "bg-red-500"} text-white font-semibold hover:bg-red-600 focus:outline-none`}
-            onClick={() => setactiveTab("Verdict")}
+            className={`px-4 py-2 rounded-lg ${activeTab === "Verdict" ? "bg-purple-600" : "bg-purple-500"} text-white font-semibold hover:bg-purple-600 focus:outline-none`}
+            onClick={() => setActiveTab("Verdict")}
           >
             Verdict
           </button>
         </div>
-        <div className="p-2">
-         {renderTabContent()}
-        </div>
+
+        {/* Active Tab Content */}
+        {renderTabContent()}
       </div>
     </div>
   );
-};
-
-const formatCode = (code, language) => {
-  // Mock implementation: Trim leading/trailing spaces
-  return code.trim();
 };
 
 export default Playground;
