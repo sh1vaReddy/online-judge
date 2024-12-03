@@ -1,7 +1,9 @@
 import { useState} from "react";
 import login from "../../assets/login.png";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import {server} from '../../constants/config';
 
 const Loginandsignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +14,7 @@ const Loginandsignup = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const navigate=useNavigate();
   const toggleForm = () => {
     setIsLogin(!isLogin);
     setError(""); 
@@ -33,8 +36,8 @@ const Loginandsignup = () => {
     }
 
     const endpoint = isLogin
-      ? "http://localhost:3000/api/v1/Login"
-      : "http://localhost:3000/api/v1/sing_up";
+      ? `${server}/api/v1/Login`
+      : `${server}/api/v1/sing_up`;
 
     const payload = isLogin
       ? {
@@ -51,18 +54,16 @@ const Loginandsignup = () => {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
-      },
+      },  
     };
 
     try {
-      await axios.post(endpoint, payload, config);
-      console.log(
-        isLogin ? "Login successful!" : "Signup successful!",
-        payload
-      );
+      const response=await axios.post(endpoint, payload, config);
+      const token=response.data.token;
+      localStorage.setItem("authToken",token);
+      navigate("/");
     } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      setError(error.response?.data?.message || "Something went wrong!");
+      toast.error("Invalid Username or Password");
     }
   };
 

@@ -6,13 +6,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Submission from "./Submission";
+import { server } from "../../constants/config";
 
 const Problem = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("description");
   const [ProblemData, setProblemData] = useState(null);
   const { id } = useParams();
 
-  // Define default themes (light and dark)
   const themes = {
     light: {
       container: "bg-white text-black border-gray-300 shadow-md",
@@ -30,17 +30,16 @@ const Problem = ({ theme }) => {
     },
   };
 
+
+  
   // Fallback to "dark" if theme prop is not provided or invalid
   const currentTheme = themes[theme] || themes.dark;
 
   useEffect(() => {
     const fetchProblem = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/problems/${id}`
-        );
+        const response = await axios.get(`${server}/api/v1/problems/${id}`);
         setProblemData(response.data.problem);
-        console.log(response.data.problem);
       } catch (error) {
         toast.error("Problem Not Found");
       }
@@ -102,7 +101,16 @@ const Problem = ({ theme }) => {
             </h1>
             <div className="flex gap-6 px-4">
               <h1 className="p-2 bg-gray-600 text-white rounded-2xl">Topics</h1>
-              <h1>{ProblemData.difficulty}</h1>
+              <h1
+                className={`${
+                  ProblemData.difficulty === "Easy"
+                    ? "text-green-500"
+                    : ProblemData.difficulty === "Medium"
+                    ? "text-yellow-500"
+                    : "text-red-500"
+                }`}>
+                {ProblemData.difficulty}
+              </h1>
             </div>
 
             <h1 className="p-4">{ProblemData.description}</h1>

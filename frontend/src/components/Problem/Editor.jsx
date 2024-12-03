@@ -7,7 +7,7 @@ const Editor = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <div className={`h-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
+      <div className={`h-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
       {/* Theme Toggle Button */}
       <div className="absolute top-4 right-4">
         <button
@@ -26,6 +26,7 @@ const Editor = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

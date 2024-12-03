@@ -1,47 +1,74 @@
 import mongoose, { Schema } from "mongoose";
-import AutoIncrement from 'mongoose-sequence';
+import AutoIncrement from "mongoose-sequence";
 
 const AutoIncrementFactory = AutoIncrement(mongoose);
 
-
-const ProblemSchema=new Schema({
-    problem_id:{
-        type:Number,
-        unique: true, 
-    },
-    title:{
-        type:String,
-        unique:true,
-        required:true,
-    },
-    description:{
-        type:String,
-       required:true,
-    },
-    difficulty:
-    {
-        type:String,
-        enum:["Easy","Medium","Hard"],
-        required:true,
-    },
-    constraints:{
-        type:[String],
-        required:true,
-    },
-    topics:
-    {
-        type:[String],
-    },
-    created_at:{
-        type:Date,
-        default:Date.now,
-    },
-    update_at:{
-        type:Date,
-        default:Date.now,
-    }
+const ExampleSchema = new Schema({
+  input: {
+    type: String,
+    required: [true, "Input is required for an example."],
+  },
+  output: {
+    type: String,
+    required: [true, "Output is required for an example."],
+  },
 });
 
-ProblemSchema.plugin(AutoIncrementFactory,{inc_field:'problem_id'});
+const ProblemSchema = new Schema({
+  problem_id: {
+    type: Number,
+    unique: true,
+  },
+  title: {
+    type: String,
+    unique: true,
+    required: [true, "Title is required."],
+  },
+  description: {
+    type: String,
+    required: [true, "Description is required."],
+  },
+  inputFormat: {
+    type: String,
+    required: [true, "Input format is required."],
+  },
+  outputFormat: {
+    type: String,
+    required: [true, "Output format is required."],
+  },
+  constraints: {
+    type: String,
+    required: [true, "Constraints are required."],
+  },
+  examples: {
+    type: [ExampleSchema],
+    required: [true, "Examples are required."],
+  },
+  tags: {
+    type: [String],
+    required: [true, "Tags are required."],
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+  difficulty: {
+    type: String,
+    enum: ["Easy", "Medium", "Hard"],
+    required: [true, "Difficulty is required."],
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-export const ProblemModel=mongoose.model("Problem",ProblemSchema);
+ProblemSchema.plugin(AutoIncrementFactory, { inc_field: "problem_id" });
+
+
+ProblemSchema.pre("save", function (next) {
+  this.updated_at = Date.now();
+  next();
+});
+
+export const ProblemModel = mongoose.model("Problem", ProblemSchema);

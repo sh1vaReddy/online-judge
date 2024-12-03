@@ -39,6 +39,7 @@ const App = () => {
               <Route path='/problem' element={<ProblemList/>}/>
               <Route path='/problem/update' element={<ProblemUpdate/>}/>
               <Route path='/problme/delete' element={<ProblemDelete/>}/>
+              <Route path='/contest' element={<ProblemCreation/>}/>
             </Route>
           </Routes>
         </Suspense>

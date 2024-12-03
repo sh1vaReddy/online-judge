@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import compiler from "../../assets/compiler.png";
 import { ThemeContext } from "../../ThemeContext";
 import { CiLogin } from "react-icons/ci";
+import {server} from '../../constants/config';
+import axios from 'axios';
+
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,6 +21,13 @@ const Header = () => {
     { label: "Contact", to: "/contact" },
   ];
 
+  const handlelogout=(()=>
+    {
+      axios.get(`${server}/api/v1/logout`);
+      localStorage.removeItem('token');
+      window.location.reload();
+    })
+  
   return (
     <nav className="bg-white shadow-md dark:bg-gray-800">
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -51,6 +61,7 @@ const Header = () => {
           <Link
             to="/home"
             className=" flex  gap-2 text-gray-800 hover:bg-gray-300 py-2 px-4 rounded-md dark:text-white dark:hover:bg-gray-900 text-lg"
+            onClick={handlelogout}
           >
             <CiLogin  className="text-2xl"/> Log out
           </Link>

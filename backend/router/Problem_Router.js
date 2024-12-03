@@ -13,15 +13,12 @@ import { isAuthenticated, authoriesrole } from "../middleware/auth.js";
 router.post(
   "/create/problem",
   isAuthenticated,
-  authoriesrole("admin"),
   createproblem
 );
 
 // Get all problems (authenticated users)
 router.get(
   "/getallproblems",
-  isAuthenticated,
-  authoriesrole("admin", "user"),
   getallproblem
 );
 

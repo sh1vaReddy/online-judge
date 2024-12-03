@@ -1,20 +1,32 @@
-import {useNavigate} from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { server } from '../../constants/config';
 
 const ProblemList = () => {
+  const nav = useNavigate();
+  const [ProblemData,setProblemData]=useState([]);
+  useEffect(()=>{
+    const fetchProblems=async()=>
+    {
+      try{
+           const response=await axios.get(`${server}/api/v1/getallproblems`);
+           setProblemData(response.data.problem);
+      }
+      catch(error)
+      {
+        console.log(error);    
+      } 
+    };
+    fetchProblems();
+  },[]);
 
-  const nav=useNavigate();
-  // Generate 1000 mock problems with status
-  const problems = Array.from({ length: 1000 }, (_, index) => ({
-    number: index + 1,          // Problem number
-    title: `Problem ${index + 1}`, // Problem title
-    difficulty: index % 3 === 0 ? 'Easy' : index % 3 === 1 ? 'Medium' : 'Hard', // Difficulty
-    status: index % 3 === 0 ? 'Solved' : index % 3 === 1 ? 'Unsolved' : 'In Progress', // Status
-  }));
+  console.log(ProblemData);
 
-  const handleRowclick = (id) =>
-  {
+
+  const handleRowClick = (id) => {
     nav(`/problem/${id}`);
-  }
+  };
 
   return (
     <div>
@@ -25,26 +37,42 @@ const ProblemList = () => {
             <th className="px-4 py-2">Problem Number</th>
             <th className="px-4 py-2">Title</th>
             <th className="px-4 py-2">Difficulty</th>
-            <th className="px-4 py-2">Status</th> {/* New Status column */}
+            <th className="px-4 py-2">Status</th> 
           </tr>
         </thead>
         <tbody>
-          {problems.map((problem) => (
-            <tr key={problem.number} className="border-b dark:border-gray-700"
-            onClick={()=>handleRowclick(problem.number)}
+          {ProblemData.map((problem) => (
+            <tr
+              key={problem.problem_id}
+              className="border-b dark:border-gray-700"
+              onClick={() => handleRowClick(problem.problem_id)} 
             >
-              <td className="px-4 py-2">{problem.number}</td>
+              <td className="px-4 py-2">{problem.problem_id}</td>
               <td className="px-4 py-2">{problem.title}</td>
-              <td className={`px-4 py-2 ${problem.difficulty === 'Easy' ? 'text-green-500' : problem.difficulty === 'Medium' ? 'text-yellow-500' : 'text-red-500'}`}>
+              <td
+                className={`px-4 py-2 ${
+                  problem.difficulty === 'Easy'
+                    ? 'text-green-500'
+                    : problem.difficulty === 'Medium'
+                    ? 'text-yellow-500'
+                    : 'text-red-500'
+                }`}
+              >
                 {problem.difficulty}
               </td>
-              <td className={`px-4 py-2 ${problem.status === 'Solved' ? 'text-green-500' : problem.status === 'Unsolved' ? 'text-red-500' : 'text-yellow-500'}`}>
+              <td
+                className={`px-4 py-2 ${
+                  problem.status === 'Solved'
+                    ? 'text-green-500'
+                    : problem.status === 'Unsolved'
+                    ? 'text-red-500'
+                    : 'text-yellow-500'
+                }`}
+              >
                 {problem.status}
-
-              </td> 
+              </td>
             </tr>
-          )
-          )}
+          ))}
         </tbody>
       </table>
     </div>

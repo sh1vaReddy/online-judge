@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useCreateProblemMutation } from "../../redux/Problemapi";
+
 
 const ProblemCreation = () => {
   const [title, setTitle] = useState("");
@@ -10,6 +12,10 @@ const ProblemCreation = () => {
   const [tags, setTags] = useState([]);
   const [difficulty, setDifficulty] = useState("Easy");
 
+
+  const [createProblem, { isLoading, isSuccess, isError }] = useCreateProblemMutation();
+
+
   const addExample = () => {
     setExamples([...examples, { input: "", output: "" }]);
   };
@@ -20,10 +26,29 @@ const ProblemCreation = () => {
     setExamples(examples.filter((example, index) => index !== examples.length - 1));
   }
 
-  const saveproblem = ()=>
+
+
+  const saveproblem = async () =>
   {
-    console.log(title);
+    const problemData = {
+      title,
+      description,
+      inputFormat,
+      outputFormat,
+      constraints,
+      examples,
+      tags,
+      difficulty,
+    };
+
+    try {
+      const response = await createProblem(problemData).unwrap();
+      console.log("Problem created successfully:", response);
+    } catch (error) {
+      console.error("Error creating problem:", error);
+    }
   }
+
 
   const updateExample = (index, key, value) => {
     const updatedExamples = [...examples];

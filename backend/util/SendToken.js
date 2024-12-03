@@ -1,10 +1,10 @@
 import jsonwebtoken from "jsonwebtoken";
 
 const cookieOptions = {
-    maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-    sameSite: "None", // Important for cross-site cookies
-    httpOnly: true, // Prevents client-side JS access to the cookie
-    secure: process.env.NODE_ENV === 'production', // Only set secure cookie in production
+    maxAge: 15 * 24 * 60 * 60 * 1000, 
+    sameSite: "None",
+    httpOnly: true, 
+    secure:true, 
 };
 
 const sendToken = (res, user, code, message) => {

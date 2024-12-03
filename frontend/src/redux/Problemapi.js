@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { server } from "../../constants/config.jsx";
+import { server } from '../constants/config.jsx';
 
 const problemapi = createApi({
   reducerPath: "problemapi",
@@ -12,14 +12,17 @@ const problemapi = createApi({
         url: "/create/problem",
         method: "POST",
         credentials: "include",
-        body: data,
+        headers:{
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       }),
       invalidatesTags: ["Problem"],
     }),
 
     getAllProblems: builder.query({
       query: () => ({
-        url: "/getallproblems",
+        url: "/api/v1/getallproblems",
         method: "GET",
         credentials: "include",
       }),
@@ -28,7 +31,7 @@ const problemapi = createApi({
 
     updateProblem: builder.mutation({
       query: (data) => ({
-        url: "/update/problems",
+        url: "/api/v1/update/problems",
         method: "PUT",
         body: data,
         credentials: "include",
@@ -38,7 +41,7 @@ const problemapi = createApi({
 
     deleteProblem: builder.mutation({
       query: (data) => ({
-        url: "/problems",
+        url: "/api/v1/problems",
         method: "DELETE",
         body: data,
         credentials: "include",
@@ -48,7 +51,7 @@ const problemapi = createApi({
 
     getProblemById: builder.query({
       query: (id) => ({
-        url: `/problems/${id}`,
+        url: `/api/v1/problems/${id}`,
         method: "GET",
         credentials: "include",
       }),
@@ -56,7 +59,7 @@ const problemapi = createApi({
     }),
     getProblemByTitle: builder.query({
       query: (title) => ({
-        url: `/problems/title/${title}`,
+        url: `/api/v1/problems/title/${title}`,
         method: "GET",
         credentials: "include",
       }),

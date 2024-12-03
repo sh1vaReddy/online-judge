@@ -2,49 +2,87 @@ import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { ProblemModel } from "../model/ProblemSchema.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
 
-export const createproblem = trycatchmethod(async (req, res, next) => {
-  const { title, description, difficulty, constraints, topics } = req.body;
 
-  if (!title || !description || !difficulty || !constraints || !topics) {
+export const createproblem= trycatchmethod(async (req, res, next) => {
+  const {
+    title,
+    description,
+    difficulty,
+    constraints,
+    tags,
+    inputFormat,
+    outputFormat,
+    examples,
+  } = req.body;
+
+  // Validate required fields
+  if (
+    !title ||
+    !description ||
+    !difficulty ||
+    !constraints ||
+    !inputFormat ||
+    !outputFormat ||
+    !examples ||
+    !tags
+  ) {
     return res
       .status(400)
-      .json({ success: false, message: "All fields are required" });
+      .json({ success: false, message: "All fields are required." });
   }
 
+  // Validate difficulty
   const allowedDifficulties = ["Easy", "Medium", "Hard"];
   if (!allowedDifficulties.includes(difficulty)) {
     return res.status(400).json({
       success: false,
-      message: "Invaild difficulty.Allowed values:Easy,Medium,Hard",
+      message: "Invalid difficulty. Allowed values: Easy, Medium, Hard.",
     });
   }
 
-  if (!Array.isArray(constraints) || !Array.isArray(topics)) {
+  // Validate arrays
+  if (!Array.isArray(tags) || !Array.isArray(examples)) {
     return res.status(400).json({
       success: false,
-      message: "Constraints and topics must be arrays.",
+      message: "Tags and examples must be arrays.",
     });
   }
 
-  const existingproblem = await ProblemModel.findOne({ title });
-
-  if (existingproblem) {
-    return res
-      .status(409)
-      .json({ success: false, message: "Problem Already Exists." });
+  // Ensure examples follow correct format
+  const areExamplesValid = examples.every(
+    (ex) => ex.input && ex.output
+  );
+  if (!areExamplesValid) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Examples must be an array of objects with 'input' and 'output' properties.",
+    });
   }
 
+  // Check if a problem with the same title exists
+  const existingProblem = await ProblemModel.findOne({ title });
+  if (existingProblem) {
+    return res
+      .status(409)
+      .json({ success: false, message: "Problem already exists." });
+  }
+
+  // Create a new problem
   const problem = await ProblemModel.create({
     title,
     description,
     difficulty,
     constraints,
-    topics,
+    tags,
+    inputFormat,
+    outputFormat,
+    examples,
   });
 
   return res
     .status(201)
-    .json({ success: true, message: "Problem Sucessfully Created", problem });
+    .json({ success: true, message: "Problem successfully created.", problem });
 });
 
 export const getallproblem = trycatchmethod(async (req, res, next) => {
