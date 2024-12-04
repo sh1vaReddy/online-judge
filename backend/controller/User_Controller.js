@@ -61,7 +61,7 @@ export const getmyprofile = trycatchmethod(async(req,res,next) => {
   });
 });
 
-export const logout=trycatchmethod(async()=>
+export const logout=trycatchmethod(async(req,res)=>
 {
     return res.status(200).cookie("token"," ",{...cookieOptions,maxAge:0}).json({
         sucess:true,

@@ -1,40 +1,57 @@
 import { useState } from "react";
-import { useCreateProblemMutation } from "../../redux/Problemapi";
-
+import {
+  useCreateProblemMutation,
+  useCreateTestcaseMutation,
+} from "../../redux/Problemapi";
 
 const ProblemCreation = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [inputFormat, setInputFormat] = useState("");
-  const [outputFormat, setOutputFormat] = useState("");
   const [constraints, setConstraints] = useState("");
   const [examples, setExamples] = useState([{ input: "", output: "" }]);
   const [tags, setTags] = useState([]);
   const [difficulty, setDifficulty] = useState("Easy");
+  const [testcase, setTestcases] = useState([{ input: " ", output: " " }]);
 
+  const [createProblem, { isLoading, isSuccess, isError }] =
+    useCreateProblemMutation();
 
-  const [createProblem, { isLoading, isSuccess, isError }] = useCreateProblemMutation();
-
+  const [createTestcase] = useCreateTestcaseMutation();
 
   const addExample = () => {
     setExamples([...examples, { input: "", output: "" }]);
   };
 
+  const addTsetCase = () => {
+    setTestcases([...testcase, { input: " ", output: " " }]);
+  };
 
-  const deleteExample = () =>
-  {
-    setExamples(examples.filter((example, index) => index !== examples.length - 1));
-  }
+  const deleteTestcase = () => {
+    setTestcases(testcase.filter((_, index) => index !== testcase.length - 1));
+  };
 
+  const updateCase = (index, key, value) => {
+    if (index < 0 || index >= testcase.length) {
+      console.error("Invalid index for updating test case.");
+      return;
+    }
+    const updatedTestcase = [...testcase];
+    updatedTestcase[index][key] = value;
+    setTestcases(updatedTestcase);
+  };
 
+  const deleteExample = () => {
+    setExamples(
+      examples.filter((example, index) => index !== examples.length - 1)
+    );
+  };
 
-  const saveproblem = async () =>
-  {
+  console.log(testcase);
+
+  const saveproblem = async () => {
     const problemData = {
       title,
       description,
-      inputFormat,
-      outputFormat,
       constraints,
       examples,
       tags,
@@ -42,12 +59,20 @@ const ProblemCreation = () => {
     };
 
     try {
-      await createProblem(problemData).unwrap();
+      const Problem = await createProblem(problemData).unwrap();
+      const ProblemId = Problem.problem.problem_id;
+      for (const test of testcase) {
+        const testData = {
+          ...test,
+          problem_id: ProblemId,
+        };
+
+        await createTestcase(testData).unwrap();
+      }
     } catch (error) {
       console.error("Error creating problem:", error);
     }
-  }
-
+  };
 
   const updateExample = (index, key, value) => {
     const updatedExamples = [...examples];
@@ -81,30 +106,6 @@ const ProblemCreation = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Describe the problem statement in detail"
-          ></textarea>
-        </div>
-
-        {/* Input Format */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Input Format</label>
-          <textarea
-            className="w-full mt-1 p-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none"
-            rows="3"
-            value={inputFormat}
-            onChange={(e) => setInputFormat(e.target.value)}
-            placeholder="Describe the input format"
-          ></textarea>
-        </div>
-
-        {/* Output Format */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Output Format</label>
-          <textarea
-            className="w-full mt-1 p-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none"
-            rows="3"
-            value={outputFormat}
-            onChange={(e) => setOutputFormat(e.target.value)}
-            placeholder="Describe the output format"
           ></textarea>
         </div>
 
@@ -160,6 +161,46 @@ const ProblemCreation = () => {
           </div>
         </div>
 
+        {/* Test Cases */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium">Test Cases</label>
+          {testcase.map((testCase, index) => (
+            <div key={index} className="mb-2">
+              <label className="block text-xs font-medium">
+                Test Case {index + 1}
+              </label>
+              <input
+                type="text"
+                className="w-full mt-1 mb-2 p-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none"
+                value={testCase.input}
+                onChange={(e) => updateCase(index, "input", e.target.value)}
+                placeholder="Test case input"
+              />
+              <input
+                type="text"
+                className="w-full mt-1 p-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none"
+                value={testCase.output}
+                onChange={(e) => updateCase(index, "output", e.target.value)}
+                placeholder="Expected output"
+              />
+            </div>
+          ))}
+          <div className="">
+            <button
+              className="mt-2 mr-2 px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
+              onClick={addTsetCase}
+            >
+              Add Test Case
+            </button>
+            <button
+              className="mt-2  px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
+              onClick={deleteTestcase}
+            >
+              Remove Test Case
+            </button>
+          </div>
+        </div>
+
         {/* Tags */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Tags</label>
@@ -187,8 +228,9 @@ const ProblemCreation = () => {
         </div>
 
         {/* Submit Button */}
-        <button className="w-full px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-lg hover:opacity-90"
-        onClick={saveproblem}
+        <button
+          className="w-full px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-lg hover:opacity-90"
+          onClick={saveproblem}
         >
           Save Problem
         </button>

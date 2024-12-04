@@ -4,16 +4,15 @@ import { ErrorHandler } from "../util/ErrorHandler.js";
 
 // Create Test Case
 export const createTestcase = trycatchmethod(async (req, res, next) => {
-  const { problem_id, input, expected_output } = req.body;
-
-  if (!problem_id || !input || !expected_output) {
+  const { problem_id, input,output} = req.body;
+  if (!problem_id || !input || !output) {
     return next(new ErrorHandler("All fields are required", 400));
   }
 
   const newTestcase = await TestcaseModel.create({
     problem_id,
     input,
-    expected_output,
+    expected_output:output,
   });
   res.status(201).json({
     success: true,
@@ -52,7 +51,7 @@ export const gettestcasebyid = trycatchmethod(async (req, res, next) => {
 
 // Get Test Cases by Problem ID
 export const gettestcasebyproblemid = trycatchmethod(async (req, res, next) => {
-  const { problemId } = req.params;
+  const { problemId } = req.body;
 
   if (!problemId) {
     return next(new ErrorHandler("Problem ID is required", 400));

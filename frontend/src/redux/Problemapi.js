@@ -65,6 +65,17 @@ const problemapi = createApi({
       }),
       providesTags: ["Problem"],
     }),
+    createTestcase: builder.mutation({
+      query: (data) => ({
+        url: `/testcases`,
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+      invalidatesTags: ["Problem"],
+    }),
+    
   }),
 });
 
@@ -75,6 +86,7 @@ export const {
   useDeleteProblemMutation,
   useGetProblemByIdQuery,
   useGetProblemByTitleQuery,
+  useCreateTestcaseMutation,
 } = problemapi;
 
 export default problemapi;

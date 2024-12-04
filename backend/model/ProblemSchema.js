@@ -28,14 +28,6 @@ const ProblemSchema = new Schema({
     type: String,
     required: [true, "Description is required."],
   },
-  inputFormat: {
-    type: String,
-    required: [true, "Input format is required."],
-  },
-  outputFormat: {
-    type: String,
-    required: [true, "Output format is required."],
-  },
   constraints: {
     type: String,
     required: [true, "Constraints are required."],

@@ -7,6 +7,7 @@ import {server} from '../../constants/config';
 import { useSelector } from "react-redux";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 const Header = () => {
@@ -17,19 +18,38 @@ const Header = () => {
   const {  user } = useSelector((state) => state.auth);
   const nav=useNavigate();
 
- 
+  useEffect(() => {
+    if (user?.role === "admin") {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [user?.role]);
   // Array of menu items
   const menuItems = [
-    { label: "Home", to: "/"},
+    { label: "Home", to: "/home"},
     { label: "Problems", to: "/problem" },
     { label: "Contest", to: "/contest" },
     { label: "Compiler", to: "/compiler" },
     { label: "Contact", to: "/contact" },
   ];
 
-  const handlelogout=(()=>
+  const handlelogout=(async()=>
     {
-      axios.get(`${server}/api/v1/logout`);
+      try
+      {
+         const response=await axios.get(`${server}/api/v1/logout`,
+          {
+            withCredentials:true,
+          }
+         )
+         toast.success(response.data.message);
+         nav("/login")
+      }
+      catch(error)
+      {
+        toast.error("Failed to Log out");
+      }
     })
   
   return (
@@ -60,7 +80,10 @@ const Header = () => {
             );
           })}
         </div>
-
+      {
+        isAdmin &&
+        <button>Admin</button>
+      }
         <div className="flex items-center space-x-4">
           <Link
             to="/home"

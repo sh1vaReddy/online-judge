@@ -2,11 +2,15 @@ import axios from "axios";
 import { useState } from "react";
 import { FaRedoAlt } from "react-icons/fa";
 import { MdFormatAlignLeft } from "react-icons/md";
-import { server } from "../../constants/config";
+import { useParams } from "react-router-dom";
 
 const Playground = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("Input");
-  // Default boilerplate code for each language
+  const [input, setinput] = useState("");
+  const [output, setouput] = useState("");
+  const [verdict, setVerdict] = useState("");
+  const { id } = useParams();
+ 
   const defaultCode = {
     cpp: `#include <iostream>
 using namespace std;
@@ -24,28 +28,37 @@ int main() {
     javascript: `console.log("Hello, World!");`,
   };
 
-  // State for the selected language and its corresponding code
+  
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(defaultCode["cpp"]);
 
-  // Handle language change and update the code editor content
+  
   const handleLanguageChange = (e) => {
     const newLanguage = e.target.value;
     setSelectedLanguage(newLanguage);
     setCode(defaultCode[newLanguage] || "");
   };
 
-  // Submission handler
   const handleSubmission = async () => {
     try {
       const response = await axios.post(
-        `${server}/api/v1/submissions`,
-        { code },
+        `http://localhost:8080/run`,
+        {
+          language: selectedLanguage,
+          code,
+          input,
+          ProblemId: id,
+        },
         { withCredentials: true }
       );
-      console.log(response);
+      if (response.data.success) {
+        setVerdict(response.data.verdictResult.messag);
+      } else {
+        alert(`Error: ${response.data.message}`);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error during submission:", error);
+      alert("An error occurred while submitting the code.");
     }
   };
 
@@ -53,6 +66,8 @@ int main() {
     if (activeTab === "Input") {
       return (
         <textarea
+          value={input}
+          onChange={(e) => setinput(e.target.value)}
           className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
           placeholder="Enter test case input here..."
         />
@@ -60,6 +75,8 @@ int main() {
     } else if (activeTab === "Output") {
       return (
         <textarea
+          value={output}
+          readOnly
           className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
           placeholder="Output will appear here..."
         />
@@ -67,6 +84,8 @@ int main() {
     } else if (activeTab === "Verdict") {
       return (
         <textarea
+          value={verdict}
+          readOnly
           className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
           placeholder="Verdict will appear here..."
         />
@@ -74,7 +93,6 @@ int main() {
     }
   };
 
-  // Language options for the dropdown menu
   const languageOptions = [
     { label: "JavaScript", value: "javascript" },
     { label: "Python", value: "python" },
@@ -102,18 +120,16 @@ int main() {
     },
   };
 
-  const currentTheme = themes[theme] || themes.dark; // Default to dark theme
+  const currentTheme = themes[theme] || themes.dark;
 
   return (
     <div>
       <div
         className={`rounded-lg border shadow-lg overflow-hidden h-[70vh] ${currentTheme.container}`}
       >
-        {/* Header Section */}
         <div
           className={`h-16 w-full flex items-center px-4 rounded-t-md relative ${currentTheme.header}`}
         >
-          {/* Language Selector */}
           <select
             id="language"
             value={selectedLanguage}
@@ -189,19 +205,25 @@ int main() {
 
         <div className="flex gap-4 px-4 py-2">
           <button
-            className={`px-4 py-2 rounded-lg  ${activeTab === "Input" ? "bg-green-600" : "bg-green-500"} text-white font-semibold hover:bg-green-600 focus:outline-none`}
+            className={`px-4 py-2 rounded-lg  ${
+              activeTab === "Input" ? "bg-green-600" : "bg-green-500"
+            } text-white font-semibold hover:bg-green-600 focus:outline-none`}
             onClick={() => setActiveTab("Input")}
           >
             Input
           </button>
           <button
-            className={`px-4 py-2 rounded-lg ${activeTab === "Output" ? "bg-blue-600" : "bg-blue-500"} text-white font-semibold hover:bg-blue-600 focus:outline-none`}
+            className={`px-4 py-2 rounded-lg ${
+              activeTab === "Output" ? "bg-blue-600" : "bg-blue-500"
+            } text-white font-semibold hover:bg-blue-600 focus:outline-none`}
             onClick={() => setActiveTab("Output")}
           >
             Output
           </button>
           <button
-            className={`px-4 py-2 rounded-lg ${activeTab === "Verdict" ? "bg-purple-600" : "bg-purple-500"} text-white font-semibold hover:bg-purple-600 focus:outline-none`}
+            className={`px-4 py-2 rounded-lg ${
+              activeTab === "Verdict" ? "bg-purple-600" : "bg-purple-500"
+            } text-white font-semibold hover:bg-purple-600 focus:outline-none`}
             onClick={() => setActiveTab("Verdict")}
           >
             Verdict

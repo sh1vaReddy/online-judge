@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from "axios";
 import { userExists, userNotExists } from "./redux/reducers/authslice.js";
 import ProtectRoute from './components/auth/ProtectRoute.jsx';
+import { useState } from "react";
 
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Login = lazy(() => import("./components/Loginandsinup/Loginandsingup.jsx"));
@@ -19,25 +20,33 @@ const ProblemCreation = lazy(() => import('./components/Admin/ProblemCreation.js
 const ProblemList = lazy(() => import('./components/Home/ProblemList.jsx'));
 const ProblemDelete = lazy(() => import('./components/Admin/ProblemDelete.jsx'));
 const ProblemUpdate = lazy(() => import('./components/Admin/ProblemUpdate.jsx'));
+const Unauthorized =lazy(()=>import('./components/Admin/unauthorized.jsx'));
 
 const App = () => {
   const dispatch = useDispatch();
   const { user} = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`${server}/api/v1/me`, { withCredentials: true });
-        dispatch(userExists(response.data.data)); 
+        dispatch(userExists(response.data.data));
       } catch (error) {
-        dispatch(userNotExists()); 
+        dispatch(userNotExists());
+      } finally {
+        setLoading(false);
       }
     };
-
-    fetchUserData(); 
+    fetchUserData();
   }, [dispatch]);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
+    
     <>
       <ToastContainer />
       <ThemeProvider>
@@ -45,15 +54,16 @@ const App = () => {
           <Suspense fallback={<div><Loader /></div>}>
             <Routes>
               <Route path="/" element={<Layout />}>
-                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/compiler" element={<Compiler />} />
                 <Route path="/problem/:id" element={<Editor />} />
                 <Route path="/problem" element={<ProblemList />} />
+                <Route path='/unauthorized' element={<Unauthorized/>}/>
               </Route>
 
               {/* Protect Routes */}
-              <Route element={<ProtectRoute user={user}   requirerole="admin" redirect="/login" />}>
+              <Route element={<ProtectRoute user={user}  role={user?.role} requirerole="admin" redirect="/login" />}>
                 <Route path="/problem/create" element={<ProblemCreation />} />
                 <Route path="/problem/update" element={<ProblemUpdate />} />
                 <Route path="/problem/delete" element={<ProblemDelete />} />

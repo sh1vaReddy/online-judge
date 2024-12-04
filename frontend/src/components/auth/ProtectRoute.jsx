@@ -7,9 +7,9 @@ const ProtectRoute = ({ children, user,role,requirerole, redirect = '/login' }) 
 
   if(requirerole && role != requirerole)
   {
-    return <Navigate to='/problem'/>
+    return <Navigate to='/unauthorized'/>
   }
-  return children ? children : <Outlet />;
+  return <Outlet />;
 };
 
 export default ProtectRoute;

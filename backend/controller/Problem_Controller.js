@@ -10,8 +10,6 @@ export const createproblem= trycatchmethod(async (req, res, next) => {
     difficulty,
     constraints,
     tags,
-    inputFormat,
-    outputFormat,
     examples,
   } = req.body;
 
@@ -21,8 +19,6 @@ export const createproblem= trycatchmethod(async (req, res, next) => {
     !description ||
     !difficulty ||
     !constraints ||
-    !inputFormat ||
-    !outputFormat ||
     !examples ||
     !tags
   ) {
@@ -75,8 +71,6 @@ export const createproblem= trycatchmethod(async (req, res, next) => {
     difficulty,
     constraints,
     tags,
-    inputFormat,
-    outputFormat,
     examples,
   });
 

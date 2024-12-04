@@ -40,6 +40,7 @@ const Compiler = () => {
   // State for the selected language and its corresponding code
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(defaultCode["cpp"]);
+  const[output,setoutput]=useState("");
 
   // Dummy function to simulate code formatting
   const formatCode = (code, language) => {
@@ -61,9 +62,9 @@ const Compiler = () => {
         language: selectedLanguage,
       code: code,
       Input: "" 
-      }
+      },
     );
-    console.log(response);
+      setoutput(response.data.output);
   }
   // Language options for the dropdown menu
   const languageOptions = [
@@ -157,7 +158,7 @@ const Compiler = () => {
           style={{ width: "100vw", height: "50vh" }}
         />
       </div>
-      <div className="flex-grow h-[50vh] justify-between overflow-auto bg-gray-100 dark:bg-gray-800 rounded-md hover:outline hover:outline-indigo-500 hover:outline-2 focus:outline-indigo-500 focus:outline-2">
+      <div className="flex-grow h-[30vh] justify-between overflow-auto bg-gray-100 dark:bg-gray-800 rounded-md hover:outline hover:outline-indigo-500 hover:outline-2 focus:outline-indigo-500 focus:outline-2">
         <div
           className={`h-8 w-full flex items-center px-4 rounded-t-md relative ${currentTheme.header}`}
         >
@@ -172,6 +173,13 @@ const Compiler = () => {
             </button>
           </div>
         </div>
+        <div className="mt-4">
+        <textarea
+          readOnly
+          value={output}
+          className={`w-full h-32 p-3 rounded-md resize-none ${currentTheme.textarea}`}
+        ></textarea>
+      </div>
       </div>
     </div>
   );
