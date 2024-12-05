@@ -16,7 +16,7 @@ const Submission = () => {
     const fetchSubmissions = async () => {
       try {
         const response = await axios.get(`${server}/api/v1/submissions/problem/${id}`);
-        setSubmissions(response.data.submissions);  // Store submissions data
+        setSubmissions(response.data.submissions); 
       } catch (error) {
         console.error("Error fetching submissions:", error);
       }

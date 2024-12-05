@@ -71,6 +71,7 @@ int main() {
         },
         { withCredentials: true }
       );
+      await axios.post(`${server}//api/v1//submissions`)
       if (response.data.success) {
         const verdictMessage = response.data.verdictResult.message;
         setVerdict(verdictMessage);

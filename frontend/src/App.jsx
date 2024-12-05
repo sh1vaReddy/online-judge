@@ -21,6 +21,7 @@ const ProblemList = lazy(() => import('./components/Home/ProblemList.jsx'));
 const ProblemDelete = lazy(() => import('./components/Admin/ProblemDelete.jsx'));
 const ProblemUpdate = lazy(() => import('./components/Admin/ProblemUpdate.jsx'));
 const Unauthorized =lazy(()=>import('./components/Admin/unauthorized.jsx'));
+const Dashboard=lazy(()=>import('./components/Admin/Dashborad.jsx'));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -67,6 +68,7 @@ const App = () => {
                 <Route path="/problem/create" element={<ProblemCreation />} />
                 <Route path="/problem/update" element={<ProblemUpdate />} />
                 <Route path="/problem/delete" element={<ProblemDelete />} />
+                <Route path="/admin/dashboard" element={<Dashboard/>}/>
               </Route>
             </Routes>
           </Suspense>

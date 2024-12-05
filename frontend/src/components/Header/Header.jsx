@@ -24,6 +24,15 @@ const Header = () => {
     { label: "Contact", to: "/contact" },
   ];
 
+  if(isAdmin)
+  {
+    menuItems.push({label:"Admin",to:'/admin/dashboard'})
+  }
+
+  if(!isAuthenticated)
+{
+  menuItems.push({label:"Login",to:'/login'})
+}
   return (
     <nav className="bg-white shadow-md dark:bg-gray-800">
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -52,7 +61,6 @@ const Header = () => {
             );
           })}
         </div>
-        {isAdmin && <button>Admin</button>}
         <div className="flex items-center space-x-4">
           {isAuthenticated && <Profile />}
 

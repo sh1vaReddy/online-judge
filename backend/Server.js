@@ -8,8 +8,10 @@ import UserRoute from "./router/User_Router.js";
 import ProblemRoute from "./router/Problem_Router.js";
 import TestcaseRouter from "./router/Testcase_Router.js";
 import SubmissionRouter from "./router/Submission_Router.js";
-
 import cors from "cors";
+
+
+server.use(express.json());
 
 server.use(
   cors({
@@ -18,7 +20,7 @@ server.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
-server.use(express.json());
+
 
 server.use(cookieParser());
 

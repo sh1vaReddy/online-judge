@@ -2,12 +2,12 @@ import mongoose, { Schema } from "mongoose";
 
 const SubmissionResultSchema = new Schema({
   user_id: {
-    type: mongoose.Schema.Types.ObjectId, 
+    type:mongoose.Schema.ObjectId, 
     ref:'User',
     required: true,
   },
   problem_id: {
-    type: mongoose.Schema.Types.ObjectId, 
+    type:mongoose.Schema.ObjectId, 
     ref:'Problem',
     required: true,
   },
@@ -46,6 +46,8 @@ const SubmissionResultSchema = new Schema({
     default: Date.now,
   },
 });
+
+SubmissionResultSchema.index({ user_id: 1, problem_id: 1 });
 
 export const SubmissionModel  = mongoose.model(
   'SubmissionResult',
