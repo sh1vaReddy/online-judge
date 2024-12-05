@@ -8,4 +8,4 @@ router.post('/Login',Login)
 router.get('/me',isAuthenticated,getmyprofile);
 router.get('/logout',isAuthenticated,logout);
 
-export default router;
+export default router;  

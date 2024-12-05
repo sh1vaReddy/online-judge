@@ -93,8 +93,9 @@ export const getSubmissionsByUserId = trycatchmethod(async (req, res, next) => {
 
 // Get submissions by problem_id
 export const getSubmissionsByProblemId = trycatchmethod(async (req, res, next) => {
-  const { problem_id } = req.params;
-  const submissions = await SubmissionModel.find({ problem_id }).populate(
+  const { id } = req.params;
+
+  const submissions = await SubmissionModel.find({ problem_id:id}).populate(
     "problem_id",
     "title"
   );

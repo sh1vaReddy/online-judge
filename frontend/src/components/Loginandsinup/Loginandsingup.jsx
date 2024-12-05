@@ -64,7 +64,7 @@ const Loginandsignup = () => {
       const response=await axios.post(endpoint, payload, config);
       toast.success("Successfully Logged")
       dispatch(userExists(response.data.data));
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       toast.error("Invalid Username or Password");
     }

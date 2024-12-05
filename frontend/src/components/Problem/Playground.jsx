@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRedoAlt } from "react-icons/fa";
 import { MdFormatAlignLeft } from "react-icons/md";
 import { useParams } from "react-router-dom";
+import { server } from "../../constants/config";
 
 const Playground = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("Input");
@@ -10,7 +11,28 @@ const Playground = ({ theme }) => {
   const [output, setouput] = useState("");
   const [verdict, setVerdict] = useState("");
   const { id } = useParams();
- 
+  const [testCases, setTestCases] = useState();
+
+  const fetchTestCases = async () => {
+    try {
+      const response = await axios.get(
+        `${server}/api/v1/testcases/problem/${id}`,
+        { withCredentials: true }
+      );
+
+      const testCasesData = response.data.testcases.map((testCase) => ({
+        input: testCase.input,
+        expectedOutput: testCase.expectedOutput,
+        result: testCase.status === "pass" ? "Passed" : "Failed",
+      }));
+      setTestCases(testCasesData);
+    } catch (error) {
+      console.error("Error fetching test cases:", error.message);
+    }
+  };
+
+  
+
   const defaultCode = {
     cpp: `#include <iostream>
 using namespace std;
@@ -28,11 +50,9 @@ int main() {
     javascript: `console.log("Hello, World!");`,
   };
 
-  
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(defaultCode["cpp"]);
 
-  
   const handleLanguageChange = (e) => {
     const newLanguage = e.target.value;
     setSelectedLanguage(newLanguage);
@@ -52,7 +72,16 @@ int main() {
         { withCredentials: true }
       );
       if (response.data.success) {
-        setVerdict(response.data.verdictResult.messag);
+        const verdictMessage = response.data.verdictResult.message;
+        setVerdict(verdictMessage);
+        if (verdictMessage === "All test cases passed!") {
+          setTestCases((prevTestCases) => 
+            prevTestCases.map((testCase) => ({
+              ...testCase,
+              result: "Passed",
+            }))
+          );
+        }
       } else {
         alert(`Error: ${response.data.message}`);
       }
@@ -74,12 +103,37 @@ int main() {
       );
     } else if (activeTab === "Output") {
       return (
-        <textarea
-          value={output}
-          readOnly
-          className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
-          placeholder="Output will appear here..."
-        />
+        <div className="w-56 rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white">
+          {testCases ? (
+            testCases.map((testCase, index) => (
+              <div
+              key={index}
+              className={`${
+                testCase.result === "Passed"
+                  ? "bg-green-200 border-green-400 text-green-800"
+                  : "bg-red-200 border-red-400 text-red-800"
+              } p-4 rounded-lg mb-2`}
+            >
+              <div>
+                <strong>Test Case {index + 1}</strong>
+              </div>
+              <div>
+                <strong>Result:</strong>
+                <span
+                  className={`${
+                    testCase.result === "Passed" ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {testCase.result}
+                </span>
+              </div>
+            </div>
+            
+            ))
+          ) : (
+            <div>No test cases available</div>
+          )}
+        </div>
       );
     } else if (activeTab === "Verdict") {
       return (
@@ -196,7 +250,7 @@ int main() {
             </button>
             <button
               className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 ${currentTheme.buttonFormat}`}
-              onClick={handleSubmission}
+              onClick={()=>{handleSubmission(),fetchTestCases()}}
             >
               Submit
             </button>
@@ -230,7 +284,6 @@ int main() {
           </button>
         </div>
 
-        {/* Active Tab Content */}
         {renderTabContent()}
       </div>
     </div>

@@ -4,6 +4,7 @@ const  initialState = {
     user:null,
     isAdmin:false,
     loader:true,
+    isAuthenticated:false,
 }
 const authSLice=createSlice({
     name:"auth",
@@ -11,10 +12,13 @@ const authSLice=createSlice({
     reducers:{
         userExists:(state,action)=>{
             state.user=action.payload;
+            state.isAdmin = action.payload?.role === "admin";
+            state.isAuthenticated=true,
             state.loader=false;
         },
         userNotExists:(state)=>{
             state.user=null;
+            state.isAuthenticated=false;
             state.loader=false;
         }
     }

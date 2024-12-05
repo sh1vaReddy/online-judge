@@ -18,7 +18,7 @@ const generateInputFiles=(inputs)=>
 {
     const inputId=uuid();
 
-    const input_filename=`${inputId}.text`;
+    const input_filename=`${inputId}.txt`;
     const input_filepath=path.join(dirInputs,input_filename);
 
     fs.writeFileSync(input_filepath,inputs);

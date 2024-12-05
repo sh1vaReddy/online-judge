@@ -27,15 +27,15 @@ const ProblemList = () => {
   };
 
   return (
-    <div>
+    <div className='min-h-screen dark:bg-gray-800 '>
       <h2 className="text-xl font-bold mb-4">Problem List</h2>
       <table className="min-w-full table-auto">
         <thead>
           <tr className="bg-gray-200 dark:bg-gray-800 text-left">
-            <th className="px-4 py-2">Problem Number</th>
-            <th className="px-4 py-2">Title</th>
-            <th className="px-4 py-2">Difficulty</th>
-            <th className="px-4 py-2">Status</th> 
+            <th className="px-4 py-2 dark:text-gray-100">Problem Number</th>
+            <th className="px-4 py-2 dark:text-gray-100">Title</th>
+            <th className="px-4 py-2 dark:text-gray-100">Difficulty</th>
+            <th className="px-4 py-2 dark:text-gray-100">Status</th> 
           </tr>
         </thead>
         <tbody>
@@ -45,8 +45,8 @@ const ProblemList = () => {
               className="border-b dark:border-gray-700"
               onClick={() => handleRowClick(problem.problem_id)} 
             >
-              <td className="px-4 py-2">{problem.problem_id}</td>
-              <td className="px-4 py-2">{problem.title}</td>
+              <td className="px-4 py-2 dark:text-gray-100">{problem.problem_id}</td>
+              <td className="px-4 py-2 dark:text-gray-100 ">{problem.title}</td>
               <td
                 className={`px-4 py-2 ${
                   problem.difficulty === 'Easy'

@@ -20,7 +20,7 @@ router.get("/testcases", getalltestcase);
 router.get("/testcases/:id", gettestcasebyid);
 
 // Get all test cases for a specific problem ID
-router.get("/testcases/problem/:problemId", gettestcasebyproblemid);
+router.get("/testcases/problem/:id", gettestcasebyproblemid);
 
 // Update a test case by its ID
 router.put("/testcases/:id", updatetestcase);

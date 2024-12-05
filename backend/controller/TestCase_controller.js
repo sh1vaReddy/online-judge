@@ -51,13 +51,13 @@ export const gettestcasebyid = trycatchmethod(async (req, res, next) => {
 
 // Get Test Cases by Problem ID
 export const gettestcasebyproblemid = trycatchmethod(async (req, res, next) => {
-  const { problemId } = req.body;
+  const { id } = req.params;
 
-  if (!problemId) {
+  if (!id) {
     return next(new ErrorHandler("Problem ID is required", 400));
   }
 
-  const testcases = await TestcaseModel.find({ problem_id: problemId }).populate(
+  const testcases = await TestcaseModel.find({ problem_id: id }).populate(
     "problem_id",
     "title"
   );

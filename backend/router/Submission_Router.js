@@ -14,7 +14,7 @@ import {isAuthenticated} from '../middleware/auth.js';
 router.post('/submissions',isAuthenticated,createSubmission);
 router.get('/submissions',isAuthenticated,getAllSubmissions);
 router.get('/submissions/user/:user_id',getSubmissionsByUserId);
-router.get('/submissions/problem/:problem_id',isAuthenticated,getSubmissionsByProblemId);
+router.get('/submissions/problem/:id',getSubmissionsByProblemId);
 router.put('/submissions/:id',isAuthenticated,updateSubmission);
 router.delete('/submissions/:id',isAuthenticated,deleteSubmission);
 

@@ -16,16 +16,15 @@ if (!fs.existsSync(outputpath)) {
 
 export const excuteCPP = async (filepath, inputpath) => {
     const outputId = path.basename(filepath).split(".")[0];
-    const outputExecutablePath = path.join(outputpath, `${outputId}.out`);
+    const outputExecutablePath = path.join(outputpath, `${outputId}.exe`);
 
     try {
         const compileCommand = `g++ -std=c++11 "${filepath}" -o "${outputExecutablePath}"`;
-        const { stdout: compileStdout, stderr: compilerstderr } = await execAsync(compileCommand);
+        const {stderr: compilerstderr } = await execAsync(compileCommand);
 
         if (compilerstderr) {
             return new Error(`Compilation error: ${compilerstderr}`);
         }
-
 
         const executeCommand = `"${outputExecutablePath}" < "${inputpath}"`;
         const { stdout, stderr } = await execAsync(executeCommand);

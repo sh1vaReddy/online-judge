@@ -1,57 +1,29 @@
-import { useState,useContext,useEffect} from "react";
-import { Link } from "react-router-dom"; 
+import { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import compiler from "../../assets/compiler.png";
 import { ThemeContext } from "../../ThemeContext";
-import { CiLogin } from "react-icons/ci";
-import {server} from '../../constants/config';
 import { useSelector } from "react-redux";
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-
+import Profile from "./Profile";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const toggleMenu = () => setMenuOpen(!menuOpen);
-  const [isAdmin, setIsAdmin] = useState(false); 
-  const {  user } = useSelector((state) => state.auth);
-  const nav=useNavigate();
+  const { isAdmin, isAuthenticated } = useSelector((state) => state.auth);
+  const location = useLocation();
 
-  useEffect(() => {
-    if (user?.role === "admin") {
-      setIsAdmin(true);
-    } else {
-      setIsAdmin(false);
-    }
-  }, [user?.role]);
+  if (location.pathname === "/login") return null;
+
   // Array of menu items
   const menuItems = [
-    { label: "Home", to: "/home"},
+    { label: "Home", to: "/" },
     { label: "Problems", to: "/problem" },
     { label: "Contest", to: "/contest" },
     { label: "Compiler", to: "/compiler" },
     { label: "Contact", to: "/contact" },
   ];
 
-  const handlelogout=(async()=>
-    {
-      try
-      {
-         const response=await axios.get(`${server}/api/v1/logout`,
-          {
-            withCredentials:true,
-          }
-         )
-         toast.success(response.data.message);
-         nav("/login")
-      }
-      catch(error)
-      {
-        toast.error("Failed to Log out");
-      }
-    })
-  
   return (
     <nav className="bg-white shadow-md dark:bg-gray-800">
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -80,32 +52,24 @@ const Header = () => {
             );
           })}
         </div>
-      {
-        isAdmin &&
-        <button>Admin</button>
-      }
+        {isAdmin && <button>Admin</button>}
         <div className="flex items-center space-x-4">
-          <Link
-            to="/home"
-            className=" flex  gap-2 text-gray-800 hover:bg-gray-300 py-2 px-4 rounded-md dark:text-white dark:hover:bg-gray-900 text-lg"
-            onClick={handlelogout}
-          >
-            <CiLogin  className="text-2xl"/> Log out
-          </Link>
+          {isAuthenticated && <Profile />}
+
           <label className="relative inline-flex items-center cursor-pointer">
-        <input
-          type="checkbox"
-          className="sr-only"
-          checked={theme === "dark"}
-          onChange={toggleTheme}
-        />
-        <span className="block w-14 h-8 bg-gray-300 rounded-full"></span>
-        <span
-          className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform duration-300 ${
-            theme === "dark" ? "translate-x-6" : ""
-          }`}
-        ></span>
-      </label>
+            <input
+              type="checkbox"
+              className="sr-only"
+              checked={theme === "dark"}
+              onChange={toggleTheme}
+            />
+            <span className="block w-14 h-8 bg-gray-300 rounded-full"></span>
+            <span
+              className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform duration-300 ${
+                theme === "dark" ? "translate-x-6" : ""
+              }`}
+            ></span>
+          </label>
           <button
             onClick={toggleMenu}
             type="button"

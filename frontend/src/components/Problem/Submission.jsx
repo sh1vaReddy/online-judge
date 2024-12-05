@@ -1,10 +1,30 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { FaCode } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
+import { useParams } from "react-router-dom";
+import axios from 'axios';
+import { server } from "../../constants/config";
 
 const Submission = () => {
   const [showModel, setshowModel] = useState(null);
   const [code, setcode] = useState(null);
+  const { id } = useParams();
+  const [submissions, setSubmissions] = useState([]);
+  console.log(submissions);
+
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      try {
+        const response = await axios.get(`${server}/api/v1/submissions/problem/${id}`);
+        setSubmissions(response.data.submissions);  // Store submissions data
+      } catch (error) {
+        console.error("Error fetching submissions:", error);
+      }
+    };
+  
+    fetchSubmissions();
+  }, [id]);
+  
 
   const sampleCode = `
   function example() {
@@ -55,7 +75,7 @@ const Submission = () => {
                 4.5 MB
               </td>
               <td className="px-6 py-4 text-blue-500 dark:text-blue-400 hover:underline cursor-pointer"
-              onClick={() => handleViewCode(sampleCode)}
+              onClick={sampleCode}
               >
                 <FaCode size={20}  />
               </td>
