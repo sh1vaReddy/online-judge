@@ -10,12 +10,11 @@ export const verdict = async (ProblemId, executeCode) => {
 
   try {
     const response = await axios.get(`http://localhost:3000/api/v1/testcases/problem/${ProblemId}`);
-    const testcases = response.data;
+    const testcases = response.data.testcases; 
+  
 
     for (let i = 0; i < testcases.length; i++) {
-      const { input, expected_output } = testcases[i];
-
-      
+      const { input, expected_output } = testcases[i];      
       const actualOutput = await executeCode(input);
 
       

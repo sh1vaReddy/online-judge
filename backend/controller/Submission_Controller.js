@@ -18,25 +18,17 @@ export const createSubmission = trycatchmethod(async (req, res, next) => {
     total_test_cases,
   } = req.body;
 
+
+  const PorBlemId=await ProblemModel.find({problem_id})
+    const ObjectId =PorBlemId[0]._id;
+
   // Validate the presence of all fields
-  if (
-    !user_id ||
-    !problem_id ||
-    !code ||
-    !language ||
-    !execution_time ||
-    !memory_used ||
-    !status ||
-    !test_cases_passed ||
-    !total_test_cases
-  ) {
-    return next(new ErrorHandler("All fields are required", 400));
-  }
+  
 
   // Create the submission record in the database
   const newSubmissionResult = await SubmissionModel.create({
     user_id,
-    problem_id,
+    problem_id:ObjectId,
     code,
     language,
     execution_time,

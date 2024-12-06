@@ -65,9 +65,9 @@ const App = () => {
 
               {/* Protect Routes */}
               <Route element={<ProtectRoute user={user}  role={user?.role} requirerole="admin" redirect="/login" />}>
-                <Route path="/problem/create" element={<ProblemCreation />} />
-                <Route path="/problem/update" element={<ProblemUpdate />} />
-                <Route path="/problem/delete" element={<ProblemDelete />} />
+                <Route path="/admin/problem/create" element={<ProblemCreation />} />
+                <Route path="/admin/problem/update" element={<ProblemUpdate />} />
+                <Route path="/admin/problem/delete" element={<ProblemDelete />} />
                 <Route path="/admin/dashboard" element={<Dashboard/>}/>
               </Route>
             </Routes>

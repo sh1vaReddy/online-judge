@@ -97,7 +97,7 @@ const Problem = ({ theme }) => {
         {ProblemData && activeTab == "description" && (
           <div>
             <h1 className="text-xl font-bold px-4">
-              {ProblemData.problem_id}.{ProblemData.title}
+              {ProblemData.problem_id}. {ProblemData.title}
             </h1>
             <div className="flex gap-6 px-4">
               <h1 className="p-2 bg-gray-600 text-white rounded-2xl">Topics</h1>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaRedoAlt } from "react-icons/fa";
 import { MdFormatAlignLeft } from "react-icons/md";
 import { useParams } from "react-router-dom";
@@ -12,6 +12,8 @@ const Playground = ({ theme }) => {
   const [verdict, setVerdict] = useState("");
   const { id } = useParams();
   const [testCases, setTestCases] = useState();
+  const [syntaxError, setSyntaxError] = useState("");
+
 
   const fetchTestCases = async () => {
     try {
@@ -71,7 +73,14 @@ int main() {
         },
         { withCredentials: true }
       );
-      await axios.post(`${server}//api/v1//submissions`)
+      await axios.post(`${server}/api/v1//submissions`,{
+        problem_id:id,
+        code,
+        language:selectedLanguage,
+      },
+    {withCredentials:true}
+    )
+    setouput(response.data.output);
       if (response.data.success) {
         const verdictMessage = response.data.verdictResult.message;
         setVerdict(verdictMessage);
@@ -83,7 +92,23 @@ int main() {
             }))
           );
         }
-      } else {
+
+        else {
+          setTestCases((prevTestCases)=>
+          {
+            prevTestCases.map((testCases,index)=>({
+              ...testCases,
+              result:response.data.testCaseResults[index].status === "pass"
+              ? "Passed"
+              : "Failed",
+            }))
+          })
+        }
+      } 
+      else if (response.data.syntaxError) {
+        setSyntaxError(response.data.message);
+      }
+      else {
         alert(`Error: ${response.data.message}`);
       }
     } catch (error) {
@@ -102,7 +127,7 @@ int main() {
           placeholder="Enter test case input here..."
         />
       );
-    } else if (activeTab === "Output") {
+    } else if (activeTab === "Verdict") {
       return (
         <div className="w-56 rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white">
           {testCases ? (
@@ -136,13 +161,12 @@ int main() {
           )}
         </div>
       );
-    } else if (activeTab === "Verdict") {
+    } else if (activeTab === "Output") {
       return (
         <textarea
-          value={verdict}
+          value={syntaxError || output }
           readOnly
           className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
-          placeholder="Verdict will appear here..."
         />
       );
     }
@@ -284,7 +308,6 @@ int main() {
             Verdict
           </button>
         </div>
-
         {renderTabContent()}
       </div>
     </div>

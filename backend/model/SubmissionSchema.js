@@ -4,7 +4,6 @@ const SubmissionResultSchema = new Schema({
   user_id: {
     type:mongoose.Schema.ObjectId, 
     ref:'User',
-    required: true,
   },
   problem_id: {
     type:mongoose.Schema.ObjectId, 
@@ -22,24 +21,21 @@ const SubmissionResultSchema = new Schema({
   },
   execution_time: {
     type: Number,
-    required: true,
   },
   memory_used: {
     type: Number,
-    required: true,
   },
   status: {
     type: String,
-    enum: ['Accepted', 'Wrong Answer', 'Runtime Error', 'Time Limit Exceeded'],
-    required: true,
+    enum: ['Accepted', 'Wrong Answer', 'Partial', 'Runtime Error', 'Time Limit Exceeded'], 
   },
   test_cases_passed: {
     type: Number,
-    required: true,
+    default:0
   },
   total_test_cases: {
     type: Number,
-    required: true,
+    
   },
   created_at: {
     type: Date,

@@ -29,7 +29,8 @@ const Profile = () => {
   };
 
   const Options = [
-    { icon: <CiLogin size={28} />, name: "Log out",func:handlelogout}, 
+    { icon: <CiLogin size={28} />, 
+    name: "Log out",func:handlelogout}, 
     { icon: <IoPersonCircle size={28} />, name: "Profile" },
   ];
 
@@ -39,8 +40,9 @@ const Profile = () => {
         ariaLabel="SpeedDial basic example"
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
-        sx={{ position: "absolute", top: 16,right:20 }}
+        sx={{ position: "absolute", top:8,right:20 }}
         open={opean}
+        style={{ color: "red" }}
         direction="down"
       >
         {Options.map((action) => (
