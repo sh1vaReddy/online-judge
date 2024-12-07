@@ -39,7 +39,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="min-h-full w-full bg-white flex flex-col p-16">
+    <div className="min-h-full w-full bg-gray-100 flex flex-col p-16">
       {menuItem.map((item, index) => {
         return (
           <Link

@@ -68,3 +68,15 @@ export const logout=trycatchmethod(async(req,res)=>
         message:"Logged out successfully",
     })
 })
+
+
+export const getallusers=trycatchmethod(async(req,res)=>
+{
+  const user=await UserModel.find();
+
+  res.status(200).json({
+    sucess:true,
+    message:"All users",
+    user
+  })
+})
