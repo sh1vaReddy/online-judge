@@ -3,23 +3,35 @@ import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
 
 // Create Test Case
-export const createTestcase = trycatchmethod(async (req, res, next) => {
-  const { problem_id, input,output} = req.body;
-  if (!problem_id || !input || !output) {
-    return next(new ErrorHandler("All fields are required", 400));
+export const createTestcases = trycatchmethod(async (req, res, next) => {
+  const { testcases } = req.body;
+
+  if (!Array.isArray(testcases) || testcases.length === 0) {
+    return next(new ErrorHandler("Testcases must be a non-empty array", 400));
   }
 
-  const newTestcase = await TestcaseModel.create({
-    problem_id,
-    input,
-    expected_output:output,
-  });
+  // Validate each testcase in the array
+  for (const testcase of testcases) {
+    if (!testcase.problem_id || !testcase.input || !testcase.output) {
+      return next(new ErrorHandler("Each testcase must include problem_id, input, and output", 400));
+    }
+  }
+
+  const createdTestcases = await TestcaseModel.insertMany(
+    testcases.map(({ problem_id, input, output }) => ({
+      problem_id,
+      input,
+      expected_output: output,
+    }))
+  );
+
   res.status(201).json({
     success: true,
-    message: "Successfully created test case.",
-    newTestcase,
+    message: "Successfully created test cases.",
+    createdTestcases,
   });
 });
+
 
 // Get All Test Cases
 export const getalltestcase = trycatchmethod(async (req, res, next) => {

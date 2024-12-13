@@ -1,5 +1,5 @@
 import {
-  createTestcase,
+  createTestcases,
   getalltestcase,
   gettestcasebyid,
   gettestcasebyproblemid,
@@ -11,7 +11,7 @@ const router=express.Router();
 // Routes for test cases
 
 // Create a new test case
-router.post("/testcases", createTestcase);
+router.post("/testcases",createTestcases );
 
 // Get all test cases
 router.get("/testcases", getalltestcase);

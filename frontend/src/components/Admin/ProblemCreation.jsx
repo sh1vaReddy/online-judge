@@ -23,21 +23,20 @@ const ProblemCreation = () => {
   };
 
   const addTsetCase = () => {
-    setTestcases([...testcase, { input: " ", output: " " }]);
+    setTestcases((prevTestcases) => [...prevTestcases, { input: "", output: "" }]);
   };
 
   const deleteTestcase = () => {
-    setTestcases(testcase.filter((_, index) => index !== testcase.length - 1));
+    setTestcases((prevTestcases) => prevTestcases.slice(0, -1));
   };
 
   const updateCase = (index, key, value) => {
-    if (index < 0 || index >= testcase.length) {
-      console.error("Invalid index for updating test case.");
-      return;
-    }
-    const updatedTestcase = [...testcase];
-    updatedTestcase[index][key] = value;
-    setTestcases(updatedTestcase);
+    setTestcases((prevTestcases) =>
+      prevTestcases.map((testcase, i) =>
+        i === index ? { ...testcase, [key]: value } : testcase
+      )
+    );
+  
   };
 
   const deleteExample = () => {
@@ -49,6 +48,11 @@ const ProblemCreation = () => {
   console.log(testcase);
 
   const saveproblem = async () => {
+    if (testcase.length === 0) {
+      console.error("Testcases must be a non-empty array");
+      return;
+    }
+  
     const problemData = {
       title,
       description,
@@ -57,28 +61,26 @@ const ProblemCreation = () => {
       tags,
       difficulty,
     };
-
+  
     try {
       const Problem = await createProblem(problemData).unwrap();
       const ProblemId = Problem.problem.problem_id;
-      for (const test of testcase) {
-        const testData = {
-          ...test,
-          problem_id: ProblemId,
-        };
-
-        await createTestcase(testData).unwrap();
-      }
+  
+      const testcasesToSend = testcase.map((test) => ({
+        ...test,
+        problem_id: ProblemId,
+      }));
+  
+      const createdTestcases = await createTestcase({
+        testcases: testcasesToSend,
+      }).unwrap();
+  
+      console.log("Problem and testcases created successfully:", createdTestcases);
     } catch (error) {
-      console.error("Error creating problem:", error);
+      console.error("Error creating problem or testcases:", error);
     }
   };
-
-  const updateExample = (index, key, value) => {
-    const updatedExamples = [...examples];
-    updatedExamples[index][key] = value;
-    setExamples(updatedExamples);
-  };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6 text-gray-900 dark:text-white">

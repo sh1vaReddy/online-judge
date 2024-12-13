@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext} from "react";
 import { Link } from "react-router-dom";
 import compiler from "../../assets/compiler.png";
 import { ThemeContext } from "../../ThemeContext";
@@ -23,7 +23,6 @@ const Header = () => {
     { label: "Compiler", to: "/compiler" },
     { label: "Contact", to: "/contact" },
   ];
-
   if(isAdmin)
   {
     menuItems.push({label:"Admin",to:'/admin/dashboard'})

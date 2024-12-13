@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const verdict = async (ProblemId, executeCode) => {
   if (!ProblemId) {
@@ -9,16 +9,19 @@ export const verdict = async (ProblemId, executeCode) => {
   }
 
   try {
-    const response = await axios.get(`http://localhost:3000/api/v1/testcases/problem/${ProblemId}`);
-    const testcases = response.data.testcases; 
-  
+    const response = await axios.get(
+      `http://localhost:3000/api/v1/testcases/problem/${ProblemId}`
+    );
+    const testcases = response.data.testcases;
 
     for (let i = 0; i < testcases.length; i++) {
-      const { input, expected_output } = testcases[i];      
+      const { input, expected_output } = testcases[i];
       const actualOutput = await executeCode(input);
 
-      
-      if (actualOutput.trim() !== expected_output.trim()) {
+      if (
+        actualOutput.trim().replace(/\s+/g, " ") !==
+        expected_output.trim().replace(/\s+/g, " ")
+      ) {
         return {
           success: false,
           message: `Test case failed at index ${i + 1}`,

@@ -14,7 +14,6 @@ const Playground = ({ theme }) => {
   const [testCases, setTestCases] = useState();
   const [syntaxError, setSyntaxError] = useState("");
 
-
   const fetchTestCases = async () => {
     try {
       const response = await axios.get(
@@ -32,8 +31,6 @@ const Playground = ({ theme }) => {
       console.error("Error fetching test cases:", error.message);
     }
   };
-
-  
 
   const defaultCode = {
     cpp: `#include <iostream>
@@ -71,44 +68,73 @@ int main() {
           input,
           ProblemId: id,
         },
+        
+      );
+      setouput(response.data.output);
+
+      const verdictResult = response.data.verdictResult.message;
+      let status;
+
+      if (verdictResult === "All test cases passed!") {
+        status = "Accepted";
+        setVerdict("All test cases passed!");
+      } else if (verdictResult.includes("Test case failed")) {
+        status = "Wrong Answer";
+        setVerdict(`Test case failed: ${verdictResult}`);
+      } else {
+        status = "Runtime Error";
+        setVerdict("Runtime Error occurred.");
+      }
+
+      console.log(response.data.verdictResult.message);
+      await axios.post(
+        `${server}/api/v1/submissions`,
+        {
+          problem_id: id,
+          code,
+          status,
+          language: selectedLanguage,
+        },
         { withCredentials: true }
       );
-      await axios.post(`${server}/api/v1//submissions`,{
-        problem_id:id,
-        code,
-        language:selectedLanguage,
-      },
-    {withCredentials:true}
-    )
-    setouput(response.data.output);
+
+      setouput(response.data.output);
+
       if (response.data.success) {
         const verdictMessage = response.data.verdictResult.message;
         setVerdict(verdictMessage);
+
         if (verdictMessage === "All test cases passed!") {
-          setTestCases((prevTestCases) => 
+          setTestCases((prevTestCases) =>
             prevTestCases.map((testCase) => ({
               ...testCase,
               result: "Passed",
             }))
           );
+        } else {
+          setTestCases((prevTestCases) => {
+            if (
+              !response.data.testCaseResults ||
+              response.data.testCaseResults.length === 0
+            ) {
+              console.warn(
+                "testCaseResults is undefined or empty:",
+                response.data.testCaseResults
+              );
+              return prevTestCases;
+            }
+            return prevTestCases.map((testCase, index) => ({
+              ...testCase,
+              result:
+                response.data.testCaseResults[index]?.status === "pass"
+                  ? "Passed"
+                  : "Failed",
+            }));
+          });
         }
-
-        else {
-          setTestCases((prevTestCases)=>
-          {
-            prevTestCases.map((testCases,index)=>({
-              ...testCases,
-              result:response.data.testCaseResults[index].status === "pass"
-              ? "Passed"
-              : "Failed",
-            }))
-          })
-        }
-      } 
-      else if (response.data.syntaxError) {
+      } else if (response.data.syntaxError) {
         setSyntaxError(response.data.message);
-      }
-      else {
+      } else {
         alert(`Error: ${response.data.message}`);
       }
     } catch (error) {
@@ -123,39 +149,44 @@ int main() {
         <textarea
           value={input}
           onChange={(e) => setinput(e.target.value)}
-          className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
+          className="w-full rounded-3xl p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
           placeholder="Enter test case input here..."
         />
       );
     } else if (activeTab === "Verdict") {
       return (
-        <div className="w-56 rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white">
+        <div className="rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white">
           {testCases ? (
-            testCases.map((testCase, index) => (
-              <div
-              key={index}
-              className={`${
-                testCase.result === "Passed"
-                  ? "bg-green-200 border-green-400 text-green-800"
-                  : "bg-red-200 border-red-400 text-red-800"
-              } p-4 rounded-lg mb-2`}
-            >
-              <div>
-                <strong>Test Case {index + 1}</strong>
-              </div>
-              <div>
-                <strong>Result:</strong>
-                <span
+            <div className="flex flex-row gap-4">
+              {" "}
+              {/* Ensure vertical layout with consistent spacing */}
+              {testCases.map((testCase, index) => (
+                <div
+                  key={index}
                   className={`${
-                    testCase.result === "Passed" ? "text-green-500" : "text-red-500"
-                  }`}
+                    testCase.result === "Passed"
+                      ? "bg-green-200 border-green-400 text-green-800"
+                      : "bg-red-200 border-red-400 text-red-800"
+                  } p-4 rounded-lg`}
                 >
-                  {testCase.result}
-                </span>
-              </div>
+                  <div>
+                    <strong>Test Case {index + 1}</strong>
+                  </div>
+                  <div>
+                    <strong>Result:</strong>
+                    <span
+                      className={`${
+                        testCase.result === "Passed"
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {testCase.result}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
-            
-            ))
           ) : (
             <div>No test cases available</div>
           )}
@@ -164,7 +195,7 @@ int main() {
     } else if (activeTab === "Output") {
       return (
         <textarea
-          value={syntaxError || output }
+          value={syntaxError || output}
           readOnly
           className="w-full rounded-lg p-4 mt-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-lg transition-all placeholder-gray-500 dark:placeholder-gray-400 text-black dark:text-white"
         />
@@ -179,7 +210,6 @@ int main() {
     { label: "C++", value: "cpp" },
   ];
 
-  // Define themes
   const themes = {
     light: {
       container: "bg-gray-100 text-black border-gray-300",
@@ -275,7 +305,9 @@ int main() {
             </button>
             <button
               className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 ${currentTheme.buttonFormat}`}
-              onClick={()=>{handleSubmission(),fetchTestCases()}}
+              onClick={() => {
+                handleSubmission(), fetchTestCases();
+              }}
             >
               Submit
             </button>
