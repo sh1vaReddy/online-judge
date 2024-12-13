@@ -46,4 +46,4 @@ const contestSchema=new Schema({
 });
 
 
-module.exports=mongoose.model('Contest',contestSchema);
+export const ContestModel=mongoose.model('Contest',contestSchema);

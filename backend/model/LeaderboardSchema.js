@@ -29,4 +29,4 @@ const LeaderboardSchema=new Schema({
 });
 
 
-module.exports=mongoose.model('Leaderboard',LeaderboardSchema);
+export const LeaderboardModel=mongoose.model('Leaderboard',LeaderboardSchema);
