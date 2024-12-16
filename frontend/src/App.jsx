@@ -22,6 +22,8 @@ const ProblemDelete = lazy(() => import('./components/Admin/ProblemDelete.jsx'))
 const ProblemUpdate = lazy(() => import('./components/Admin/ProblemUpdate.jsx'));
 const Unauthorized =lazy(()=>import('./components/Admin/unauthorized.jsx'));
 const Dashboard=lazy(()=>import('./components/Admin/Dashborad.jsx'));
+const Contest =lazy(()=>import('./components/Admin/Contest.jsx'));
+import { SocketProvider} from './Socket.jsx';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -62,6 +64,14 @@ const App = () => {
                 <Route path="/problem" element={<ProblemList />} />
                 <Route path='/unauthorized' element={<Unauthorized/>}/>
               </Route>
+              <Route
+                path="/contest"
+                element={
+                  <SocketProvider>
+                    <Contest/>
+                  </SocketProvider>
+                }
+              />
 
               {/* Protect Routes */}
               <Route element={<ProtectRoute user={user}  role={user?.role} requirerole="admin" redirect="/login" />}>
