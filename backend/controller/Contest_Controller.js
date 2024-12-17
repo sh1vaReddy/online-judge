@@ -1,14 +1,17 @@
 import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { ContestModel } from "../model/ContestSchema.js";
 import schedule from "node-schedule";
-
+import mongoose from "mongoose";
 
 export const createContest = trycatchmethod(async (req, res, next) => {
-  const { name, description, startTime, endTime, problems, participants } = req.body;
+  const { name, description, startTime, endTime, problems, participants } =
+    req.body;
 
   // Validate required fields
   if (!name || !description || !startTime || !endTime || !participants) {
-    return res.status(400).json({ success: false, message: "All fields are required." });
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required." });
   }
 
   const startDate = new Date(startTime);
@@ -33,11 +36,17 @@ export const createContest = trycatchmethod(async (req, res, next) => {
       participants,
     });
 
-    // Schedule the contest start
-    const job = schedule.scheduleJob(startDate, async function () {
+    // Schedule the contest using cron-style syntax
+    const cronExpression = `${startDate.getUTCSeconds()} ${startDate.getUTCMinutes()} ${startDate.getUTCHours()} ${startDate.getUTCDate()} ${
+      startDate.getUTCMonth() + 1
+    } *`;
+
+    console.log("Scheduling job with cron expression:", cronExpression);
+
+    const job = schedule.scheduleJob(cronExpression, async function () {
       try {
         console.log(`Contest "${newContest.name}" has started!`);
-        console.log("Updating contest status for ID:", newContest._id);
+        console.log("Contest ID to be updated:", newContest._id);
 
         const updatedContest = await ContestModel.findByIdAndUpdate(
           newContest._id,
@@ -56,6 +65,7 @@ export const createContest = trycatchmethod(async (req, res, next) => {
     });
 
     console.log("Job scheduled:", job ? "Successfully" : "Failed");
+
     if (!job) {
       return res.status(500).json({
         success: false,
@@ -78,13 +88,15 @@ export const createContest = trycatchmethod(async (req, res, next) => {
 });
 
 
-
-export const getallContest = async (req, res) => {
+//get all contest
+export const getallContest = trycatchmethod(async (req, res) => {
   try {
     const contests = await ContestModel.find();
 
     // Filter contests with status "active"
-    const activeContests = contests.filter((contest) => contest.status === "active");
+    const activeContests = contests.filter(
+      (contest) => contest.status === "active"
+    );
 
     if (activeContests.length > 0) {
       return res.status(200).json({
@@ -105,5 +117,59 @@ export const getallContest = async (req, res) => {
       message: "Internal server error.",
     });
   }
-};
+});
 
+
+export const getallcontestbyid = trycatchmethod(async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid contest ID format. ID must be a 24-character hexadecimal string.",
+    });
+  }
+
+  try {
+    const contest = await ContestModel.findById(id)
+      .populate("problems") 
+      .populate("participants");
+
+    if (!contest) {
+      return res.status(404).json({
+        success: false,
+        message: "Contest not found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Contest retrieved successfully.",
+      contest,
+    });
+  } catch (error) {
+    console.error("Error retrieving contest by ID:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+});
+
+
+
+export const deletecontest = trycatchmethod(async (req, res) => {
+  try {
+    const deletedContest = await ContestModel.findByIdAndDelete(req.params.id);
+    if (!deletedContest) {
+      return res.status(404).json({ success: false, message: "Contest not found" });
+    }
+
+    return res.status(200).json({ success: true, message: "Contest deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting contest:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+}); 
