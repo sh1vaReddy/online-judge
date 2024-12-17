@@ -2,10 +2,10 @@ import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { ContestModel } from "../model/ContestSchema.js";
 import schedule from "node-schedule";
 import mongoose from "mongoose";
+import { UserModel } from "../model/User.js";
 
 export const createContest = trycatchmethod(async (req, res, next) => {
-  const { name, description, startTime, endTime, problems, participants } =
-    req.body;
+ const { name, description, startTime, endTime, problems, participants } = req.body;
 
   // Validate required fields
   if (!name || !description || !startTime || !endTime || !participants) {
@@ -18,10 +18,28 @@ export const createContest = trycatchmethod(async (req, res, next) => {
   const endDate = new Date(endTime);
 
   // Validate start and end time
+  if (isNaN(startDate) || isNaN(endDate)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid start or end time." });
+  }
+
   if (endDate <= startDate) {
     return res.status(400).json({
       success: false,
       message: "End time must be later than start time.",
+    });
+  }
+
+  // Convert participants (usernames) to ObjectIds
+  const userIds = await UserModel.find({
+    username: { $in: participants }, // Find users matching the provided usernames
+  }).select("_id");
+
+  if (userIds.length !== participants.length) {
+    return res.status(400).json({
+      success: false,
+      message: "One or more participants do not exist.",
     });
   }
 
@@ -32,11 +50,11 @@ export const createContest = trycatchmethod(async (req, res, next) => {
       description,
       startTime: startDate,
       endTime: endDate,
-      problems,
-      participants,
+      problems: problems || [], // Default to an empty array if problems are not provided
+      participants: userIds.map((user) => user._id), // Save ObjectIds
     });
 
-    // Schedule the contest using cron-style syntax
+    // Schedule the contest using cron
     const cronExpression = `${startDate.getUTCSeconds()} ${startDate.getUTCMinutes()} ${startDate.getUTCHours()} ${startDate.getUTCDate()} ${
       startDate.getUTCMonth() + 1
     } *`;
@@ -64,8 +82,6 @@ export const createContest = trycatchmethod(async (req, res, next) => {
       }
     });
 
-    console.log("Job scheduled:", job ? "Successfully" : "Failed");
-
     if (!job) {
       return res.status(500).json({
         success: false,
@@ -86,6 +102,7 @@ export const createContest = trycatchmethod(async (req, res, next) => {
     });
   }
 });
+
 
 
 //get all contest
