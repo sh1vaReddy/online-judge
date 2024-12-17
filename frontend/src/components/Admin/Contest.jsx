@@ -15,6 +15,7 @@ const Contest = () => {
       socket.on("leaderboardupdate", (leaderboard) => {
         console.log("Leaderboard updated:", leaderboard);
       });
+      socket.emit("message",{data:"hello"});
     });
 
     return () => {

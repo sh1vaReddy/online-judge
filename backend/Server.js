@@ -10,6 +10,7 @@ import ProblemRoute from "./router/Problem_Router.js";
 import TestcaseRouter from "./router/Testcase_Router.js";
 import SubmissionRouter from "./router/Submission_Router.js";
 import ContestRouter from './router/Constesr_Router.js'
+import schedule from 'node-schedule'
 
 dotenv.config();
 
@@ -52,6 +53,10 @@ io.of("/api/v1").on("connection", (socket) => {
     console.log(`User joined contest: ${contestId}`);
   });
 
+  socket.on("message", (data) => {
+    console.log("Message received from client:", data.data);
+  });
+
   // Update Leaderboard
   socket.on("updateLeaderboard", (data) => {
     io.to(data.contestId).emit("leaderboardupdate", data.leaderboard);
@@ -65,6 +70,14 @@ io.of("/api/v1").on("connection", (socket) => {
 
 // Connect to Database
 ConnectDB();
+
+const data = new Date(2024, 11, 17, 9, 20, 0); 
+
+
+const job = schedule.scheduleJob(data, function() {
+  console.log('FUCK YOU TIME');
+});
+
 
 // Start the Server
 const PORT = process.env.PORT || 3000;
