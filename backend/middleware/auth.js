@@ -26,7 +26,6 @@ export const authoriesrole = (...roles) => {
         return next(new ErrorHandler("User role not defined", 403));
     }
 
-    console.log("User Role:", req.user.role); // Log role for debugging
     
     if (!roles.includes(req.user.role)) {
         return next(
