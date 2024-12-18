@@ -43,7 +43,7 @@ const ProblemList = () => {
             <tr
               key={problem.problem_id}
               className="border-b dark:border-gray-700"
-              onClick={() => handleRowClick(problem.problem_id)} 
+              onClick={() => handleRowClick(problem._id)} 
             >
               <td className="px-4 py-2 dark:text-gray-100">{problem.problem_id}</td>
               <td className="px-4 py-2 dark:text-gray-100 ">{problem.title}</td>

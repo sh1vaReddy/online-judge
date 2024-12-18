@@ -6,6 +6,6 @@ import { isAuthenticated,authoriesrole } from '../middleware/auth.js';
 
 router.post('/create/contest',isAuthenticated,authoriesrole,createContest);
 router.get('/getallcontest',getallContest);
-router.get('/getcontest/:id',isAuthenticated,restrictToParticipants,getallcontestbyid);
+router.get('/getcontest/:id',getallcontestbyid);
 
 export default router;
