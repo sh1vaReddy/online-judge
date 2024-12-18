@@ -5,9 +5,9 @@ import mongoose from "mongoose";
 import { UserModel } from "../model/User.js";
 
 export const createContest = trycatchmethod(async (req, res, next) => {
- const { name, description, startTime, endTime, problems, participants } = req.body;
+  const { name, description, startTime, endTime, problems, participants } = req.body;
 
-  // Validate required fields
+  
   if (!name || !description || !startTime || !endTime || !participants) {
     return res
       .status(400)
@@ -17,7 +17,6 @@ export const createContest = trycatchmethod(async (req, res, next) => {
   const startDate = new Date(startTime);
   const endDate = new Date(endTime);
 
-  // Validate start and end time
   if (isNaN(startDate) || isNaN(endDate)) {
     return res
       .status(400)
@@ -31,9 +30,8 @@ export const createContest = trycatchmethod(async (req, res, next) => {
     });
   }
 
-  // Convert participants (usernames) to ObjectIds
   const userIds = await UserModel.find({
-    username: { $in: participants }, // Find users matching the provided usernames
+    username: { $in: participants },
   }).select("_id");
 
   if (userIds.length !== participants.length) {
@@ -44,28 +42,24 @@ export const createContest = trycatchmethod(async (req, res, next) => {
   }
 
   try {
-    // Create the contest
     const newContest = await ContestModel.create({
       name,
       description,
       startTime: startDate,
       endTime: endDate,
-      problems: problems || [], // Default to an empty array if problems are not provided
-      participants: userIds.map((user) => user._id), // Save ObjectIds
+      problems: problems || [], 
+      participants: userIds.map((user) => user._id),
     });
 
-    // Schedule the contest using cron
-    const cronExpression = `${startDate.getUTCSeconds()} ${startDate.getUTCMinutes()} ${startDate.getUTCHours()} ${startDate.getUTCDate()} ${
+    const startCronExpression = `${startDate.getUTCSeconds()} ${startDate.getUTCMinutes()} ${startDate.getUTCHours()} ${startDate.getUTCDate()} ${
       startDate.getUTCMonth() + 1
     } *`;
 
-    console.log("Scheduling job with cron expression:", cronExpression);
+    console.log("Scheduling start job with cron expression:", startCronExpression);
 
-    const job = schedule.scheduleJob(cronExpression, async function () {
+    const startJob = schedule.scheduleJob(startCronExpression, async function () {
       try {
         console.log(`Contest "${newContest.name}" has started!`);
-        console.log("Contest ID to be updated:", newContest._id);
-
         const updatedContest = await ContestModel.findByIdAndUpdate(
           newContest._id,
           { status: "active" },
@@ -78,11 +72,36 @@ export const createContest = trycatchmethod(async (req, res, next) => {
           console.error("Contest not found or could not be updated.");
         }
       } catch (err) {
-        console.error("Error updating contest status:", err);
+        console.error("Error updating contest start status:", err);
       }
     });
 
-    if (!job) {
+    const endCronExpression = `${endDate.getUTCSeconds()} ${endDate.getUTCMinutes()} ${endDate.getUTCHours()} ${endDate.getUTCDate()} ${
+      endDate.getUTCMonth() + 1
+    } *`;
+
+    console.log("Scheduling end job with cron expression:", endCronExpression);
+
+    const endJob = schedule.scheduleJob(endCronExpression, async function () {
+      try {
+        console.log(`Contest "${newContest.name}" has ended!`);
+        const updatedContest = await ContestModel.findByIdAndUpdate(
+          newContest._id,
+          { status: "deactive" },
+          { new: true }
+        );
+
+        if (updatedContest) {
+          console.log(`Contest "${updatedContest.name}" status set to deactive.`);
+        } else {
+          console.error("Contest not found or could not be updated.");
+        }
+      } catch (err) {
+        console.error("Error updating contest end status:", err);
+      }
+    });
+
+    if (!startJob || !endJob) {
       return res.status(500).json({
         success: false,
         message: "Failed to schedule the contest.",
@@ -102,6 +121,7 @@ export const createContest = trycatchmethod(async (req, res, next) => {
     });
   }
 });
+
 
 
 
