@@ -22,7 +22,7 @@ const ProblemDelete = lazy(() => import('./components/Admin/ProblemDelete.jsx'))
 const ProblemUpdate = lazy(() => import('./components/Admin/ProblemUpdate.jsx'));
 const Unauthorized =lazy(()=>import('./components/Admin/unauthorized.jsx'));
 const Dashboard=lazy(()=>import('./components/Admin/Dashborad.jsx'));
-const Contest =lazy(()=>import('./components/Admin/CreateContest.jsx'));
+const Contest =lazy(()=>import('./components/Admin/Contest.jsx'));
 import { SocketProvider} from './Socket.jsx';
 
 const App = () => {
