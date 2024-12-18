@@ -20,8 +20,12 @@ const Contest = () => {
     fetchContests();
   }, []);
 
-  const handleclickAssignment = (id) => {
-    navigate(`/Assignment/${id}`);
+  const handleclickAssignment = (contest) => {
+    if (contest.status === "active") {
+      navigate(`/Assignment/${contest._id}`);
+    } else {
+      alert("This contest is not active.");
+    }
   };
 
   return (
@@ -31,10 +35,10 @@ const Contest = () => {
           Contest List
         </h1>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto dark:bg-gray-900">
         <table className="w-full table-auto border-collapse border border-gray-300 dark:border-gray-700 shadow-lg rounded-lg">
-          <thead>
-            <tr className="bg-gray-100">
+          <thead className="dark:bg-gray-900">
+            <tr className="bg-gray-100 dark:bg-gray-700 dark:text-gray-100">
               <th className="border border-gray-300 px-4 py-2 text-left">
                 Contest Name
               </th>
@@ -57,8 +61,8 @@ const Contest = () => {
               contestList.map((contest) => (
                 <tr
                   key={contest._id}
-                  className="hover:bg-gray-100 even:bg-gray-50 odd:bg-white"
-                  onClick={() => handleclickAssignment(contest._id)}
+                  className="hover:bg-gray-100 even:bg-gray-50 odd:bg-white cursor-pointer dark:bg-gray-700 dark:text-gray-200 font-semibold"
+                  onClick={() => handleclickAssignment(contest)}
                 >
                   <td className="border border-gray-300 px-4 py-2">
                     {contest.name}

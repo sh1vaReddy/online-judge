@@ -98,7 +98,7 @@ export const getallproblem = trycatchmethod(async (req, res, next) => {
 
 export const getproblem = trycatchmethod(async (req, res, next) => {
   const problemId = req.params.id;
-  console.log("Problem ID:", problemId);
+
 
   if (!problemId) {
     return res.status(400).json({
