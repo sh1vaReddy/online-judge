@@ -7,60 +7,97 @@ const Contest = () => {
   const [contestList, setContestList] = useState([]);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const fetchContests = async () => {
       try {
         const response = await axios.get(`${server}/api/v1/getallcontest`);
-        setContestList(response.data.contests); 
+        setContestList(response.data.contests);
       } catch (error) {
         console.error("Error fetching contests:", error);
       }
     };
 
     fetchContests();
-  }, []); 
+  }, []);
 
-
-  const handleclickAssignment=(id)=>{
-    navigate(`/Assignment/${id}`)
-  }
+  const handleclickAssignment = (id) => {
+    navigate(`/Assignment/${id}`);
+  };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Contest List</h1>
-      <table className="table-auto w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border border-gray-300 px-4 py-2 text-left">Contest Name</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Start Time</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">End Time</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">No. of Participants</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {contestList.length > 0 ? (
-            contestList.map((contest) => (
-              <tr key={contest._id} className="hover:bg-gray-100 even:bg-gray-50 odd:bg-white"
-               onClick={()=>handleclickAssignment(contest._id)}
-              >
-                <td className="border border-gray-300 px-4 py-2">{contest.name}</td>
-                <td className="border border-gray-300 px-4 py-2">{new Date(contest.startTime).toLocaleString()}</td>
-                <td className="border border-gray-300 px-4 py-2">{new Date(contest.endTime).toLocaleString()}</td>
-                <td className="border border-gray-300 px-4 py-2">{contest.participants.length}</td>
-                <td className="border border-gray-300 px-4 py-2">{contest.status}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="text-center p-4">
-                No contests available
-              </td>
+    <div className="p-6 min-h-screen bg-gray-100 dark:bg-gray-900">
+      <div className="flex justify-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          Contest List
+        </h1>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto border-collapse border border-gray-300 dark:border-gray-700 shadow-lg rounded-lg">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Contest Name
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Start Time
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                End Time
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                No. of Participants
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Status
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {contestList.length > 0 ? (
+              contestList.map((contest) => (
+                <tr
+                  key={contest._id}
+                  className="hover:bg-gray-100 even:bg-gray-50 odd:bg-white"
+                  onClick={() => handleclickAssignment(contest._id)}
+                >
+                  <td className="border border-gray-300 px-4 py-2">
+                    {contest.name}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {new Date(contest.startTime).toLocaleString()}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {new Date(contest.endTime).toLocaleString()}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {contest.participants.length}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        contest.status === "active"
+                          ? "bg-green-200 text-green-800"
+                          : contest.status === "deactive"
+                          ? "bg-red-200 text-red-800"
+                          : "bg-orange-200 text-orange-800"
+                      }`}
+                    >
+                      {contest.status.charAt(0).toUpperCase() +
+                        contest.status.slice(1)}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center p-4">
+                  No contests available
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

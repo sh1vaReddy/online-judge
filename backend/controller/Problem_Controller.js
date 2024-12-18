@@ -97,40 +97,31 @@ export const getallproblem = trycatchmethod(async (req, res, next) => {
 });
 
 export const getproblem = trycatchmethod(async (req, res, next) => {
-  const { id, title } = req.params;
-  console.log(req.params.id);
+  const problemId = req.params.id;
+  console.log("Problem ID:", problemId);
 
-  if (!id && !title) {
+  if (!problemId) {
     return res.status(400).json({
       success: false,
-      message: "Problem identifier (ID or title ) is required.",
+      message: "Problem identifier ID is required.",
     });
   }
 
-  let problem;
+  const problem = await ProblemModel.findById(problemId);
 
-  try {
-    if (id && /^\d+$/.test(id)) {
-      problem = await ProblemModel.findOne({ problem_id: parseInt(id, 10) });
-    } else if (title) {
-      problem = await ProblemModel.findOne({ title: title });
-    }
-
-    if (!problem) {
-      return next(new ErrorHandler("Problem not found", 404));
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Problem successfully found.",
-      problem,
+  if (!problem) {
+    return res.status(404).json({
+      success: false,
+      message: "Problem not found.",
     });
-  } catch (error) {
-    return next(
-      new ErrorHandler("An error occurred while fetching the problem.", 500)
-    );
   }
+
+  return res.status(200).json({
+    success: true,
+    problem,
+  });
 });
+
 
 export const deleteproblem = trycatchmethod(async (req, res, next) => {
   const { id, title } = req.body;
