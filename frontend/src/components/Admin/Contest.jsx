@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { server } from "../../constants/config";
+import { useNavigate } from "react-router-dom";
 
 const Contest = () => {
   const [contestList, setContestList] = useState([]);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchContests = async () => {
@@ -17,6 +20,11 @@ const Contest = () => {
 
     fetchContests();
   }, []); 
+
+
+  const handleclickAssignment=(id)=>{
+    navigate(`/Assignment/${id}`)
+  }
 
   return (
     <div className="p-6">
@@ -34,7 +42,9 @@ const Contest = () => {
         <tbody>
           {contestList.length > 0 ? (
             contestList.map((contest) => (
-              <tr key={contest._id} className="hover:bg-gray-100 even:bg-gray-50 odd:bg-white">
+              <tr key={contest._id} className="hover:bg-gray-100 even:bg-gray-50 odd:bg-white"
+               onClick={()=>handleclickAssignment(contest._id)}
+              >
                 <td className="border border-gray-300 px-4 py-2">{contest.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{new Date(contest.startTime).toLocaleString()}</td>
                 <td className="border border-gray-300 px-4 py-2">{new Date(contest.endTime).toLocaleString()}</td>

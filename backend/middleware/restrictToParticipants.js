@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { ContestModel } from "../model/ContestSchema.js";
 import { trycatchmethod } from "../middleware/trycatchmethod.js";
-import { ErrorHandler } from "../utils/ErrorHandler.js";
+import  {ErrorHandler}  from '../util/ErrorHandler.js'
 
 export const restrictToParticipants = trycatchmethod(async (req, res, next) => {
     const token = req.cookies['token'];
@@ -12,9 +12,9 @@ export const restrictToParticipants = trycatchmethod(async (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded._id;
-        const { contestId } = req.params;
+        const { id } = req.params;
 
-        const contest = await ContestModel.findById(contestId);
+        const contest = await ContestModel.findById(id);
 
         if (!contest) {
             return res
