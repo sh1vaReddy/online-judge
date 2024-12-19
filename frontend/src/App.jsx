@@ -24,6 +24,7 @@ const Unauthorized =lazy(()=>import('./components/Admin/unauthorized.jsx'));
 const Dashboard=lazy(()=>import('./components/Admin/Dashborad.jsx'));
 const Contest =lazy(()=>import('./components/Admin/Contest.jsx'));
 const Assignment=lazy(()=>import('./components/Contest/Assignment.jsx'));
+const ContestList=lazy(()=>import('./components/Contest/Contestlist.jsx'));
 import { SocketProvider} from './Socket.jsx';
 
 const App = () => {
@@ -63,6 +64,7 @@ const App = () => {
                 <Route path="/compiler" element={<Compiler />} />
                 <Route path="/problem/:id" element={<Editor />} />
                 <Route path="/problem" element={<ProblemList />} />
+                <Route path='/contest' element={<ContestList/>}/>
                 <Route path='/Assignment/:id' element={<Assignment/>}/>
                 <Route path='/unauthorized' element={<Unauthorized/>}/>
               </Route>

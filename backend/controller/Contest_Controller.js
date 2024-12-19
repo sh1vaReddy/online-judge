@@ -210,3 +210,35 @@ export const deletecontest = trycatchmethod(async (req, res) => {
     });
   }
 }); 
+
+
+export const getContestsOfTheUser = trycatchmethod(async (req, res, next) => {
+  if (!req.user || !req.user._id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized access. User information is missing.",
+    });
+  }
+
+  try {
+    // Fetch contests where the user is a participant
+    const contests = await ContestModel.find({ participants: req.user._id });
+
+    // If no contests are found
+    if (!contests || contests.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No contests found for this user.",
+      });
+    }
+
+    // Send the contests as a response
+    res.status(200).json({
+      success: true,
+      contests,
+    });
+  } catch (error) {
+    // Pass error to the next middleware
+    next(error);
+  }
+});
