@@ -118,7 +118,7 @@ app.post('/time-complexity', async (req, res) => {
 
   try {
     let timeComplexity = calculateTimeComplexity(code, language);
-    res.json({ timeComplexity });
+    res.json({TImeComplexity:timeComplexity });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

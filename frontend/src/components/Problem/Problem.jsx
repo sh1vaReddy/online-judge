@@ -7,11 +7,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Submission from "./Submission";
 import { server } from "../../constants/config";
+import { useLocation } from "react-router-dom";
 
 const Problem = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("description");
   const [ProblemData, setProblemData] = useState(null);
   const { id } = useParams();
+  const location = useLocation();
+  const { code, language } = location.state || {};
 
   const themes = {
     light: {
@@ -30,11 +33,14 @@ const Problem = ({ theme }) => {
     },
   };
 
+  
 
   
   // Fallback to "dark" if theme prop is not provided or invalid
   const currentTheme = themes[theme] || themes.dark;
 
+
+  
   useEffect(() => {
     const fetchProblem = async () => {
       try {
@@ -91,7 +97,7 @@ const Problem = ({ theme }) => {
           </button>
         </nav>
       </div>
-
+      
       {/* Content Area */}
       <div className={`p-6 ${currentTheme.content}`}>
         {ProblemData && activeTab == "description" && (
@@ -120,6 +126,7 @@ const Problem = ({ theme }) => {
             </div>
           </div>
         )}
+      
         {activeTab === "discussion" && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Discussion</h2>
