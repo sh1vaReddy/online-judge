@@ -3,8 +3,10 @@ import Problem from "./Problem";
 import { useContext } from "react";
 import { ThemeContext } from "../../ThemeContext";
 
+
 const Editor = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+
 
   return (
       <div className={`h-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>

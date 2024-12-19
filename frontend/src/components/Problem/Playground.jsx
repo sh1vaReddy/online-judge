@@ -4,6 +4,7 @@ import { FaRedoAlt } from "react-icons/fa";
 import { MdFormatAlignLeft } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import { server } from "../../constants/config";
+import { useSelector } from "react-redux";
 
 const Playground = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("Input");
@@ -13,6 +14,7 @@ const Playground = ({ theme }) => {
   const { id } = useParams();
   const [testCases, setTestCases] = useState();
   const [syntaxError, setSyntaxError] = useState("");
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const fetchTestCases = async () => {
     try {
@@ -59,88 +61,95 @@ int main() {
   };
 
   const handleSubmission = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/run`,
-        {
-          language: selectedLanguage,
-          code,
-          input,
-          ProblemId: id,
-        },
-        
-      );
-      setouput(response.data.output);
-
-      const verdictResult = response.data.verdictResult.message;
-      let status;
-
-      if (verdictResult === "All test cases passed!") {
-        status = "Accepted";
-        setVerdict("All test cases passed!");
-      } else if (verdictResult.includes("Test case failed")) {
-        status = "Wrong Answer";
-        setVerdict(`Test case failed: ${verdictResult}`);
-      } else {
-        status = "Runtime Error";
-        setVerdict("Runtime Error occurred.");
-      }
-
-      console.log(response.data.verdictResult.message);
-      await axios.post(
-        `${server}/api/v1/submissions`,
-        {
-          problem_id: id,
-          code,
-          status,
-          language: selectedLanguage,
-        },
-        { withCredentials: true }
-      );
-
-      setouput(response.data.output);
-
-      if (response.data.success) {
-        const verdictMessage = response.data.verdictResult.message;
-        setVerdict(verdictMessage);
-
-        if (verdictMessage === "All test cases passed!") {
-          setTestCases((prevTestCases) =>
-            prevTestCases.map((testCase) => ({
-              ...testCase,
-              result: "Passed",
-            }))
-          );
+    if(isAuthenticated)
+    {
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/run`,
+          {
+            language: selectedLanguage,
+            code,
+            input,
+            ProblemId: id,
+          },
+          
+        );
+        setouput(response.data.output);
+  
+        const verdictResult = response.data.verdictResult.message;
+        let status;
+  
+        if (verdictResult === "All test cases passed!") {
+          status = "Accepted";
+          setVerdict("All test cases passed!");
+        } else if (verdictResult.includes("Test case failed")) {
+          status = "Wrong Answer";
+          setVerdict(`Test case failed: ${verdictResult}`);
         } else {
-          setTestCases((prevTestCases) => {
-            if (
-              !response.data.testCaseResults ||
-              response.data.testCaseResults.length === 0
-            ) {
-              console.warn(
-                "testCaseResults is undefined or empty:",
-                response.data.testCaseResults
-              );
-              return prevTestCases;
-            }
-            return prevTestCases.map((testCase, index) => ({
-              ...testCase,
-              result:
-                response.data.testCaseResults[index]?.status === "pass"
-                  ? "Passed"
-                  : "Failed",
-            }));
-          });
+          status = "Runtime Error";
+          setVerdict("Runtime Error occurred.");
         }
-      } else if (response.data.syntaxError) {
-        setSyntaxError(response.data.message);
-      } else {
-        alert(`Error: ${response.data.message}`);
+  
+        console.log(response.data.verdictResult.message);
+        await axios.post(
+          `${server}/api/v1/submissions`,
+          {
+            problem_id: id,
+            code,
+            status,
+            language: selectedLanguage,
+          },
+          { withCredentials: true }
+        );
+  
+        setouput(response.data.output);
+  
+        if (response.data.success) {
+          const verdictMessage = response.data.verdictResult.message;
+          setVerdict(verdictMessage);
+  
+          if (verdictMessage === "All test cases passed!") {
+            setTestCases((prevTestCases) =>
+              prevTestCases.map((testCase) => ({
+                ...testCase,
+                result: "Passed",
+              }))
+            );
+          } else {
+            setTestCases((prevTestCases) => {
+              if (
+                !response.data.testCaseResults ||
+                response.data.testCaseResults.length === 0
+              ) {
+                console.warn(
+                  "testCaseResults is undefined or empty:",
+                  response.data.testCaseResults
+                );
+                return prevTestCases;
+              }
+              return prevTestCases.map((testCase, index) => ({
+                ...testCase,
+                result:
+                  response.data.testCaseResults[index]?.status === "pass"
+                    ? "Passed"
+                    : "Failed",
+              }));
+            });
+          }
+        } else if (response.data.syntaxError) {
+          setSyntaxError(response.data.message);
+        } else {
+          alert(`Error: ${response.data.message}`);
+        }
+      } catch (error) {
+        console.error("Error during submission:", error);
+        alert("An error occurred while submitting the code.");
       }
-    } catch (error) {
-      console.error("Error during submission:", error);
-      alert("An error occurred while submitting the code.");
     }
+   else
+   {
+    alert("plese login or singup to submit the code")
+   }
   };
 
   const renderTabContent = () => {

@@ -28,10 +28,15 @@ const Profile = () => {
     }
   };
 
+  const handleopenprofile = () =>
+  {
+      nav('/User/profile')
+  }
+
   const Options = [
-    { icon: <CiLogin size={28} />, 
+    { icon: <CiLogin size={28}/>, 
     name: "Log out",func:handlelogout}, 
-    { icon: <IoPersonCircle size={28} />, name: "Profile" },
+    { icon: <IoPersonCircle size={28} />, name: "Profile" ,func:handleopenprofile},
   ];
 
   return (

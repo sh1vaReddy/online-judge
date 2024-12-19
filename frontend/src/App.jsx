@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { ThemeProvider } from "./ThemeContext.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout.jsx";
@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from "axios";
 import { userExists, userNotExists } from "./redux/reducers/authslice.js";
 import ProtectRoute from './components/auth/ProtectRoute.jsx';
-import { useState } from "react";
+import { SocketProvider } from './Socket.jsx';
 
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Login = lazy(() => import("./components/Loginandsinup/Loginandsingup.jsx"));
@@ -20,16 +20,16 @@ const ProblemCreation = lazy(() => import('./components/Admin/ProblemCreation.js
 const ProblemList = lazy(() => import('./components/Home/ProblemList.jsx'));
 const ProblemDelete = lazy(() => import('./components/Admin/ProblemDelete.jsx'));
 const ProblemUpdate = lazy(() => import('./components/Admin/ProblemUpdate.jsx'));
-const Unauthorized =lazy(()=>import('./components/Admin/unauthorized.jsx'));
-const Dashboard=lazy(()=>import('./components/Admin/Dashborad.jsx'));
-const Contest =lazy(()=>import('./components/Admin/Contest.jsx'));
-const Assignment=lazy(()=>import('./components/Contest/Assignment.jsx'));
-const ContestList=lazy(()=>import('./components/Contest/Contestlist.jsx'));
-import { SocketProvider} from './Socket.jsx';
+const Unauthorized = lazy(() => import('./components/Admin/unauthorized.jsx'));
+const Dashboard = lazy(() => import('./components/Admin/Dashborad.jsx'));
+const Contest = lazy(() => import('./components/Admin/Contest.jsx'));
+const Assignment = lazy(() => import('./components/Contest/Assignment.jsx'));
+const ContestList = lazy(() => import('./components/Contest/Contestlist.jsx'));
+const UserProfile=lazy(()=>(import('./components/Header/UserProfile.jsx')));
 
 const App = () => {
   const dispatch = useDispatch();
-  const { user} = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,38 +51,66 @@ const App = () => {
   }
 
   return (
-    
     <>
       <ToastContainer />
       <ThemeProvider>
         <BrowserRouter>
-          <Suspense fallback={<div><Loader /></div>}>
+          <Suspense fallback={<Loader />}>
             <Routes>
+              {/* Public Routes */}
               <Route path="/" element={<Layout />}>
-                <Route path="/" element={<Home />} />
+                <Route index element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/compiler" element={<Compiler />} />
                 <Route path="/problem/:id" element={<Editor />} />
                 <Route path="/problem" element={<ProblemList />} />
-                <Route path='/contest' element={<ContestList/>}/>
-                <Route path='/Assignment/:id' element={<Assignment/>}/>
-                <Route path='/unauthorized' element={<Unauthorized/>}/>
+                <Route path='/unauthorized' element={<Unauthorized />} />
               </Route>
+
+              {/* Protected Routes */}
               <Route
                 path="/contest"
                 element={
-                  <SocketProvider>
-                    <Contest/>
-                  </SocketProvider>
+                  <ProtectRoute user={user} redirect="/login">
+                    <SocketProvider>
+                      <Contest />
+                    </SocketProvider>
+                  </ProtectRoute>
+                }
+              />
+              <Route
+                path="/contestlist"
+                element={
+                  <ProtectRoute user={user} redirect="/login">
+                    <ContestList />
+                  </ProtectRoute>
+                }
+              />
+              <Route
+                path="/Assignment/:id"
+                element={
+                  <ProtectRoute user={user} redirect="/login">
+                    <Assignment />
+                  </ProtectRoute>
+                }
+              />
+               <Route
+                path="/User/profile"
+                element={
+                  <ProtectRoute user={user} redirect="/login">
+                    <UserProfile />
+                  </ProtectRoute>
                 }
               />
 
-              {/* Protect Routes */}
-              <Route element={<ProtectRoute user={user}  role={user?.role} requirerole="admin" redirect="/login" />}>
+              {/* Admin Protected Routes */}
+              <Route
+                element={<ProtectRoute user={user} role={user?.role} requirerole="admin" redirect="/unauthorized" />}
+              >
                 <Route path="/admin/problem/create" element={<ProblemCreation />} />
                 <Route path="/admin/problem/update" element={<ProblemUpdate />} />
                 <Route path="/admin/problem/delete" element={<ProblemDelete />} />
-                <Route path="/admin/dashboard" element={<Dashboard/>}/>
+                <Route path="/admin/dashboard" element={<Dashboard />} />
               </Route>
             </Routes>
           </Suspense>
