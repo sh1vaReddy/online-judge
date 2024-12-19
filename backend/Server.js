@@ -9,10 +9,12 @@ import UserRoute from "./router/User_Router.js";
 import ProblemRoute from "./router/Problem_Router.js";
 import TestcaseRouter from "./router/Testcase_Router.js";
 import SubmissionRouter from "./router/Submission_Router.js";
-import ContestRouter from './router/Constesr_Router.js'
-import schedule from 'node-schedule'
+import ContestRouter from './router/Constesr_Router.js';
+
 
 dotenv.config();
+
+
 
 const server = express();
 const app = http.createServer(server);
@@ -41,7 +43,8 @@ server.use("/api/v1", UserRoute);
 server.use("/api/v1", ProblemRoute);
 server.use("/api/v1", TestcaseRouter);
 server.use("/api/v1", SubmissionRouter);
-server.use("/api/v1", ContestRouter); // Corrected typo here
+server.use("/api/v1", ContestRouter); 
+
 
 // WebSocket Namespace for Real-Time Updates
 io.of("/api/v1").on("connection", (socket) => {
@@ -71,12 +74,7 @@ io.of("/api/v1").on("connection", (socket) => {
 // Connect to Database
 ConnectDB();
 
-const data = new Date(2024, 11, 17, 9, 20, 0); 
 
-
-const job = schedule.scheduleJob(data, function() {
-  console.log('FUCK YOU TIME');
-});
 
 
 // Start the Server
