@@ -87,7 +87,7 @@ export const createContest = trycatchmethod(async (req, res, next) => {
         console.log(`Contest "${newContest.name}" has ended!`);
         const updatedContest = await ContestModel.findByIdAndUpdate(
           newContest._id,
-          { status: "deactive" },
+          { status: "completed" },
           { new: true }
         );
 
