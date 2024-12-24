@@ -68,7 +68,7 @@ Welcome to Code Master! This platform is designed to evaluate programming skills
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/online-judge.git
+   git clone https://github.com/sh1vaReddy/online-judge.git
    cd online-judge
    ```
 
