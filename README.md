@@ -115,7 +115,7 @@ Welcome to Code Master! This platform is designed to evaluate programming skills
    docker-compose up
    ```
 
-6. Access the application at `http://localhost:3000`.
+6. Access the application at `http://localhost:5173`.
 
 ## Contributing
 
