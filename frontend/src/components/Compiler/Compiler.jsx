@@ -138,7 +138,7 @@ console.log("Hello, World!");`,
       </div>
 
       {/* Main Content Section */}
-      <div className="flex h-[calc(100vh-10rem)]">
+      <div className="flex h-[calc(103.5vh-10rem)]">
         {/* Code Editor Section */}
         <div className="w-3/4 p-4">
           <textarea
@@ -169,7 +169,7 @@ console.log("Hello, World!");`,
           <textarea
             readOnly
             value={output}
-            className={`h-[calc(100%-2.5rem)] w-full rounded-b-md px-4 py-2 resize-none shadow-inner ${currentTheme.editor}`}
+            className={`h-[calc(97%-2.5rem)] w-full rounded-b-md px-4 py-2 resize-none shadow-inner ${currentTheme.editor}`}
             placeholder="Program output will appear here..."
           />
         </div>
