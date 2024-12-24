@@ -131,3 +131,19 @@ export const updateLeaderboard = trycatchmethod(async (req, res) => {
         data: leaderboard.rankings,
     });
 });
+
+
+export const deleteLeaderboar=trycatchmethod(async()=>{
+    const {id}=req.params;
+
+    const deleteLeaderboard=await LeaderboardModel.findByIdAndDelete(id);
+    if (!deleteLeaderboard) {
+        return res.status(404).json({ success: false, message: 'Leaderboard not found' });
+      }
+    
+      res.status(200).json({
+        success: true,
+        message: 'Leaderboard deleted successfully',
+      });
+
+})

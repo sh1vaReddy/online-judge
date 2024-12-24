@@ -6,7 +6,8 @@ const router=express.Router();
 router.post("/create/leaderborad",createLeaderboard);
 router.get("/GetallLeaderBoard",getAllLeaderboards);
 router.get("/Leaderboard/:id",getLeaderboardByContestId);
-router.put('update/Leaderboard/:id',updateLeaderboard);
+router.put("/update/Leaderboard/:id",updateLeaderboard);
+router.delete("/delete/Leaderborad/:id",getAllLeaderboards);
 
 
 export default router;
