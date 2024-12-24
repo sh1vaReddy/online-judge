@@ -12,6 +12,7 @@ import { userExists, userNotExists } from "./redux/reducers/authslice.js";
 import ProtectRoute from './components/auth/ProtectRoute.jsx';
 import { SocketProvider } from './Socket.jsx';
 
+
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Login = lazy(() => import("./components/Loginandsinup/Loginandsingup.jsx"));
 const Editor = lazy(() => import("./components/Problem/Editor.jsx"));
@@ -65,6 +66,7 @@ const App = () => {
                 <Route path="/problem/:id" element={<Editor />} />
                 <Route path="/problem" element={<ProblemList />} />
                 <Route path='/unauthorized' element={<Unauthorized />} />
+          
               </Route>
 
               {/* Protected Routes */}

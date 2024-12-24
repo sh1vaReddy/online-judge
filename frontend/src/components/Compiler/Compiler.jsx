@@ -2,71 +2,60 @@ import { useState, useContext } from "react";
 import { FaRedoAlt } from "react-icons/fa";
 import { MdFormatAlignLeft } from "react-icons/md";
 import { ThemeContext } from "../../ThemeContext";
-import axios from 'axios';
+import axios from "axios";
+import { FaPlay } from "react-icons/fa";
 
 const Compiler = () => {
-  // Access the theme and toggleTheme function from ThemeContext
   const { theme, toggleTheme } = useContext(ThemeContext);
 
-  // Default code snippets for each language
   const defaultCode = {
     cpp: `
-    // C++: Hello World Program
-    #include <iostream>
-    using namespace std;
+// C++: Hello World Program
+#include <iostream>
+using namespace std;
 
-    int main() {
-        cout << "Hello, World!" << endl;
-        return 0;
-    }`,
-
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`,
     java: `
-    // Java: Hello World Program
-    public class Main {
-        public static void main(String[] args) {
-            System.out.println("Hello, World!");
-        }
-    }`,
-
+// Java: Hello World Program
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`,
     python: `
-    # Python: Hello World Program
-    print("Hello, World!")`,
-
+# Python: Hello World Program
+print("Hello, World!")`,
     javascript: `
-    // JavaScript: Hello World Program
-    console.log("Hello, World!");`,
+// JavaScript: Hello World Program
+console.log("Hello, World!");`,
   };
 
-  // State for the selected language and its corresponding code
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(defaultCode["cpp"]);
-  const[output,setoutput]=useState("");
+  const [output, setOutput] = useState("");
 
-  // Dummy function to simulate code formatting
   const formatCode = (code, language) => {
-    return code.trim(); // Replace this with an actual formatting library if needed
+    return code.trim();
   };
 
-  // Handle language change and update the code editor content
   const handleLanguageChange = (e) => {
     const newLanguage = e.target.value;
     setSelectedLanguage(newLanguage);
     setCode(defaultCode[newLanguage]);
   };
 
-
-  const handlerun = async() =>
-  {
-    const response=await axios.post(`http://localhost:8080/compile`,
-      {
-        language: selectedLanguage,
+  const handleRun = async () => {
+    const response = await axios.post(`http://localhost:8080/compile`, {
+      language: selectedLanguage,
       code: code,
-      Input: "" 
-      },
-    );
-      setoutput(response.data.output);
-  }
-  // Language options for the dropdown menu
+      Input: "",
+    });
+    setOutput(response.data.output);
+  };
+
   const languageOptions = [
     { label: "JavaScript", value: "javascript" },
     { label: "Python", value: "python" },
@@ -74,7 +63,6 @@ const Compiler = () => {
     { label: "C++", value: "cpp" },
   ];
 
-  // Define themes
   const themes = {
     light: {
       container: "bg-gray-100 text-black border-gray-300",
@@ -94,18 +82,15 @@ const Compiler = () => {
     },
   };
 
-  // Get the current theme styles based on the context value
   const currentTheme = themes[theme];
 
   return (
     <div
       className={`rounded-lg border shadow-lg overflow-hidden h-full ${currentTheme.container}`}
     >
-      {/* Header Section */}
       <div
         className={`h-16 w-full flex items-center px-4 rounded-t-md relative ${currentTheme.header}`}
       >
-        {/* Language Selector */}
         <select
           id="language"
           value={selectedLanguage}
@@ -119,9 +104,14 @@ const Compiler = () => {
           ))}
         </select>
 
-        {/* Button Container */}
         <div className="absolute top-1/2 right-4 transform -translate-y-1/2 flex gap-6">
-          {/* Reset Button */}
+          <button
+            onClick={handleRun}
+            className={`flex items-center justify-center gap-2 px-5 py-3 font-semibold rounded-lg shadow-lg transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
+          >
+            <FaPlay className="text-lg" />
+            <span className="text-sm">Run</span>
+          </button>
           <button
             onClick={() => setCode(defaultCode[selectedLanguage])}
             className={`flex items-center justify-center gap-2 px-5 py-3 font-semibold rounded-lg shadow-lg transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
@@ -130,7 +120,6 @@ const Compiler = () => {
             <span className="text-sm">Reset</span>
           </button>
 
-          {/* Format Button */}
           <button
             onClick={() => {
               try {
@@ -148,38 +137,42 @@ const Compiler = () => {
         </div>
       </div>
 
-      {/* Code Editor Section */}
-      <div className="rounded-b-md h-fit  py-2">
-        <textarea
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className={`h-full rounded-md px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner ${currentTheme.editor}`}
-          placeholder="Write your code here..."
-          style={{ width: "100vw", height: "50vh" }}
-        />
-      </div>
-      <div className="flex-grow h-[30vh] justify-between overflow-auto bg-gray-100 dark:bg-gray-800 rounded-md hover:outline hover:outline-indigo-500 hover:outline-2 focus:outline-indigo-500 focus:outline-2">
-        <div
-          className={`h-8 w-full flex items-center px-4 rounded-t-md relative ${currentTheme.header}`}
-        >
-          <h1 className="text-xl">Output</h1>
-          {/* Move buttons to the right */}
-          <div className="ml-auto flex gap-6">
+      {/* Main Content Section */}
+      <div className="flex h-[calc(100vh-10rem)]">
+        {/* Code Editor Section */}
+        <div className="w-3/4 p-4">
+          <textarea
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className={`h-full w-full rounded-md px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner ${currentTheme.editor}`}
+            placeholder="Write your code here..."
+            style={{ height: "100%" }}
+          />
+        </div>
+
+        {/* Output Section */}
+        <div className="w-1/2 p-4 h-full">
+          {/* Header Section */}
+          <div
+            className={`flex justify-between items-center px-4 py-2 rounded-t-md ${currentTheme.editor}`}
+          >
+            <h2 className="text-lg font-semibold">Output</h2>
             <button
-              className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
-              onClick={handlerun} 
+              onClick={() => setOutput("")}
+              className="px-4 py-2 bg-cyan-500 text-white font-semibold rounded-md hover:bg-cyan-600 transition duration-300 shadow"
             >
-              Run
+              Clear
             </button>
           </div>
+
+          {/* Output Textarea */}
+          <textarea
+            readOnly
+            value={output}
+            className={`h-[calc(100%-2.5rem)] w-full rounded-b-md px-4 py-2 resize-none shadow-inner ${currentTheme.editor}`}
+            placeholder="Program output will appear here..."
+          />
         </div>
-        <div className="mt-4">
-        <textarea
-          readOnly
-          value={output}
-          className={`w-full h-32 p-3 rounded-md resize-none ${currentTheme.textarea}`}
-        ></textarea>
-      </div>
       </div>
     </div>
   );
