@@ -24,7 +24,7 @@ const Assignment = () => {
   }, [id]);
 
   const hendleopenproblem=(id)=>{
-    navigate(`/problem/${id}`);
+    navigate(`/Contest/problem/${id}`);
   }
 
   return (
