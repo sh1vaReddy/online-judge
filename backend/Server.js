@@ -51,25 +51,10 @@ server.use("/api/v1", ContestRouter,LeaderRouter);
 io.of("/api/v1").on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // Join Contest Room
-  socket.on("joinContest", (contestId) => {
-    socket.join(contestId);
-    console.log(`User joined contest: ${contestId}`);
-  });
-
-  socket.on("message", (data) => {
-    console.log("Message received from client:", data.data);
-  });
-
-  // Update Leaderboard
-  socket.on("updateLeaderboard", (data) => {
-    io.to(data.contestId).emit("leaderboardupdate", data.leaderboard);
-  });
-
-  // Handle Disconnection
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
+  socket.on('disconnect',()=>{
+    console.log("A User Disconnected:",socket.id);
+  })
+ 
 });
 
 // Connect to Database

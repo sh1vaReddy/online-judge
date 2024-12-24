@@ -1,10 +1,16 @@
 import { LeaderboardModel } from '../model/LeaderboardSchema.js';
 import mongoose from 'mongoose';
 import { trycatchmethod } from "../middleware/trycatchmethod.js";
+import { ContestModel } from "../model/ContestSchema.js";
 
 export const createLeaderboard = trycatchmethod(async (req, res) => {
-    const { contestId, userId, score } = req.body;
+    const { contestId, score } = req.body;
 
+    // Threshold for submissions after which score is reduced
+    const SUBMISSION_THRESHOLD =process.env.SUBMISSION_THRESHOLD;
+    const SCORE_PENALTY = process.env.SCORE_PENALTY;
+
+    // Fetch or create leaderboard for the contest
     let leaderboard = await LeaderboardModel.findOne({ contestId });
 
     if (!leaderboard) {
@@ -12,7 +18,7 @@ export const createLeaderboard = trycatchmethod(async (req, res) => {
             contestId,
             rankings: [
                 {
-                    userId,
+                    userId: req.user._id,
                     score,
                     submissions: 1,
                     rank: 1,
@@ -21,23 +27,47 @@ export const createLeaderboard = trycatchmethod(async (req, res) => {
         });
     } else {
         const userIndex = leaderboard.rankings.findIndex(
-            (entry) => entry.userId.toString() === userId
+            (entry) => entry.userId.toString() === req.user._id.toString()
         );
 
         if (userIndex !== -1) {
-            leaderboard.rankings[userIndex].score += score;
+            // Update existing user's score and submission count
             leaderboard.rankings[userIndex].submissions += 1;
+
+            // Apply penalty if submissions exceed the threshold
+            if (leaderboard.rankings[userIndex].submissions > SUBMISSION_THRESHOLD) {
+                leaderboard.rankings[userIndex].score = Math.max(
+                    0,
+                    leaderboard.rankings[userIndex].score - SCORE_PENALTY
+                );
+            } else {
+                leaderboard.rankings[userIndex].score += score;
+            }
         } else {
+            // Add new user to the rankings
             leaderboard.rankings.push({
-                userId,
+                userId: req.user._id,
                 score,
                 submissions: 1,
                 rank: leaderboard.rankings.length + 1,
             });
         }
+
+        // Sort rankings by score in descending order
+        leaderboard.rankings.sort((a, b) => b.score - a.score);
+
+        // Reassign ranks based on the sorted order
+        leaderboard.rankings.forEach((entry, index) => {
+            entry.rank = index + 1;
+        });
     }
 
     await leaderboard.save();
+
+    io.emit('leaderboardUpdated', {
+        contestId: leaderboard.contestId,
+        rankings: leaderboard.rankings,
+    });
 
     res.status(200).json({
         success: true,
@@ -45,6 +75,8 @@ export const createLeaderboard = trycatchmethod(async (req, res) => {
         data: leaderboard,
     });
 });
+
+
 
 export const getAllLeaderboards = trycatchmethod(async (req, res) => {
     // Fetch all leaderboards from the database
@@ -57,6 +89,8 @@ export const getAllLeaderboards = trycatchmethod(async (req, res) => {
             message: "No leaderboards found.",
         });
     }
+     // Emit live results to all connected clients
+    io.emit("allLeaderboardsFetched", { leaderboards });
 
     // Successfully fetched leaderboards
     return res.status(200).json({
@@ -66,37 +100,37 @@ export const getAllLeaderboards = trycatchmethod(async (req, res) => {
     });
 });
 
-export const getLeaderboardByContestId = trycatchmethod(async (req, res) => {
-    const { id } = req.params;
+    export const getLeaderboardByContestId = trycatchmethod(async (req, res) => {
+        const { id } = req.params;
 
-    // Validate the ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({
-            success: false,
-            message: "Invalid contest ID format. ID must be a 24-character hexadecimal string.",
+        // Validate the ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid contest ID format. ID must be a 24-character hexadecimal string.",
+            });
+        }
+
+        // Find the leaderboard by ID
+        const leaderboard = await LeaderboardModel.findById(id);
+
+        if (!leaderboard) {
+            return res.status(404).json({
+                success: false,
+                message: "Leaderboard not found.",
+            });
+        }
+
+        // Return the found leaderboard
+        return res.status(200).json({
+            success: true,
+            message: "Leaderboard retrieved successfully.",
+            data: leaderboard,
         });
-    }
-
-    // Find the leaderboard by ID
-    const leaderboard = await LeaderboardModel.findById(id);
-
-    if (!leaderboard) {
-        return res.status(404).json({
-            success: false,
-            message: "Leaderboard not found.",
-        });
-    }
-
-    // Return the found leaderboard
-    return res.status(200).json({
-        success: true,
-        message: "Leaderboard retrieved successfully.",
-        data: leaderboard,
     });
-});
 
-export const updateLeaderboard = trycatchmethod(async (req, res) => {
-    const { id } = req.params;
+    export const updateLeaderboard = trycatchmethod(async (req, res) => {
+        const { id } = req.params;
     const { userId, score } = req.body;
 
     const leaderboard = await LeaderboardModel.findById(id);
@@ -141,6 +175,9 @@ export const deleteLeaderboar=trycatchmethod(async()=>{
         return res.status(404).json({ success: false, message: 'Leaderboard not found' });
       }
     
+      // Notify clients about leaderboard deletion
+      io.emit("leaderboardDeleted", { contestId: id });
+
       res.status(200).json({
         success: true,
         message: 'Leaderboard deleted successfully',
