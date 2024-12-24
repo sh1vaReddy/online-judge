@@ -10,6 +10,7 @@ import ProblemRoute from "./router/Problem_Router.js";
 import TestcaseRouter from "./router/Testcase_Router.js";
 import SubmissionRouter from "./router/Submission_Router.js";
 import ContestRouter from './router/Constesr_Router.js';
+import LeaderRouter from './router/Leaderboard_Router.js';
 
 
 dotenv.config();
@@ -43,7 +44,7 @@ server.use("/api/v1", UserRoute);
 server.use("/api/v1", ProblemRoute);
 server.use("/api/v1", TestcaseRouter);
 server.use("/api/v1", SubmissionRouter);
-server.use("/api/v1", ContestRouter); 
+server.use("/api/v1", ContestRouter,LeaderRouter); 
 
 
 // WebSocket Namespace for Real-Time Updates

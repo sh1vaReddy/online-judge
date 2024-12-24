@@ -1,5 +1,6 @@
-import { LeaderboardModel } from '../model/LeaderboardSchema';
-import { trycatchmethod } from "../middleware/trycatchmethod";
+import { LeaderboardModel } from '../model/LeaderboardSchema.js';
+import { trycatchmethod } from "../middleware/trycatchmethod.js";
+import { FakeSplitIntoListParser } from 'langchain/embeddings/fake';
 
 export const createLeaderboard = trycatchmethod(async (req, res) => {
     const { contestId, userId, score } = req.body;
@@ -43,4 +44,25 @@ export const createLeaderboard = trycatchmethod(async (req, res) => {
     }
 });
 
+
+export const getAllLeaderboards = trycatchmethod(async (req, res) => {
+    // Fetch all leaderboards from the database
+    const leaderboards = await LeaderboardModel.find();
+  
+    if (!leaderboards || leaderboards.length === 0) {
+      // No leaderboards found
+      return res.status(400).json({
+        success: false,
+        message: "No leaderboards found.",
+      });
+    }
+  
+    // Successfully fetched leaderboards
+    return res.status(200).json({
+      success: true,
+      message: "Leaderboards retrieved successfully.",
+      data: leaderboards,
+    });
+  });
+  
 
