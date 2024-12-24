@@ -66,3 +66,31 @@ export const getAllLeaderboards = trycatchmethod(async (req, res) => {
   });
   
 
+  export const getLeaderboardByContestId = trycatchmethod(async (req, res) => {
+    const { id } = req.params;
+
+    // Validate the ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid contest ID format. ID must be a 24-character hexadecimal string.",
+        });
+    }
+
+    // Find the leaderboard by ID
+    const leaderboard = await LeaderboardModel.findById(id);
+
+    if (!leaderboard) {
+        return res.status(404).json({
+            success: false,
+            message: "Leaderboard not found.",
+        });
+    }
+
+    // Return the found leaderboard
+    return res.status(200).json({
+        success: true,
+        message: "Leaderboard retrieved successfully.",
+        data: leaderboard,
+    });
+});
