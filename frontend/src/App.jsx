@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { userExists, userNotExists } from "./redux/reducers/authslice.js";
 import ProtectRoute from "./components/auth/ProtectRoute.jsx";
-import { SocketProvider } from "./Socket.jsx";
+import { SocketProvider } from "./Socket";
 
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Login = lazy(() =>
@@ -37,6 +37,7 @@ const UserProfile = lazy(() => import("./components/Header/UserProfile.jsx"));
 const ContestProblem = lazy(() =>
   import("./components/Contest/ContestProblem.jsx")
 );
+const Leaderboard = lazy(() => import("./components/Home/Leaderboard.jsx"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -78,6 +79,14 @@ const App = () => {
                 <Route path="/problem/:id" element={<Editor />} />
                 <Route path="/problem" element={<ProblemList />} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
+                <Route
+                  path="/leaderboard"
+                  element={
+                    <SocketProvider>
+                      <Leaderboard />
+                    </SocketProvider>
+                  }
+                />
               </Route>
 
               {/* Protected Routes */}
@@ -91,6 +100,7 @@ const App = () => {
                   </ProtectRoute>
                 }
               />
+
               <Route
                 path="/contestlist"
                 element={

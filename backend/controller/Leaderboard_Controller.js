@@ -2,6 +2,7 @@ import { LeaderboardModel } from '../model/LeaderboardSchema.js';
 import mongoose from 'mongoose';
 import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { ContestModel } from "../model/ContestSchema.js";
+import { UserModel } from "../model/User.js";
 
 export const createLeaderboard = trycatchmethod(async (req, res) => {
     const { contestId, score } = req.body;
@@ -12,6 +13,7 @@ export const createLeaderboard = trycatchmethod(async (req, res) => {
 
     // Fetch or create leaderboard for the contest
     let leaderboard = await LeaderboardModel.findOne({ contestId });
+    let username=await UserModel.findById(req.user._id);
 
     if (!leaderboard) {
         leaderboard = await LeaderboardModel.create({
@@ -19,6 +21,7 @@ export const createLeaderboard = trycatchmethod(async (req, res) => {
             rankings: [
                 {
                     userId: req.user._id,
+                    Username:username.username,
                     score,
                     submissions: 1,
                     rank: 1,
@@ -64,10 +67,7 @@ export const createLeaderboard = trycatchmethod(async (req, res) => {
 
     await leaderboard.save();
 
-    io.emit('leaderboardUpdated', {
-        contestId: leaderboard.contestId,
-        rankings: leaderboard.rankings,
-    });
+    
 
     res.status(200).json({
         success: true,
@@ -82,6 +82,7 @@ export const getAllLeaderboards = trycatchmethod(async (req, res) => {
     // Fetch all leaderboards from the database
     const leaderboards = await LeaderboardModel.find();
 
+    
     if (!leaderboards || leaderboards.length === 0) {
         // No leaderboards found
         return res.status(400).json({
@@ -89,8 +90,7 @@ export const getAllLeaderboards = trycatchmethod(async (req, res) => {
             message: "No leaderboards found.",
         });
     }
-     // Emit live results to all connected clients
-    io.emit("allLeaderboardsFetched", { leaderboards });
+    
 
     // Successfully fetched leaderboards
     return res.status(200).json({
@@ -100,7 +100,7 @@ export const getAllLeaderboards = trycatchmethod(async (req, res) => {
     });
 });
 
-    export const getLeaderboardByContestId = trycatchmethod(async (req, res) => {
+export const getLeaderboardByContestId = trycatchmethod(async (req, res) => {
         const { id } = req.params;
 
         // Validate the ObjectId
@@ -129,7 +129,7 @@ export const getAllLeaderboards = trycatchmethod(async (req, res) => {
         });
     });
 
-    export const updateLeaderboard = trycatchmethod(async (req, res) => {
+export const updateLeaderboard = trycatchmethod(async (req, res) => {
         const { id } = req.params;
     const { userId, score } = req.body;
 

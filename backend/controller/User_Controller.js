@@ -80,3 +80,32 @@ export const getallusers=trycatchmethod(async(req,res)=>
     user
   })
 })
+
+export const getuserbyid=trycatchmethod(async(req,res)=>{
+  try {
+    const { userIds } = req.body;
+   
+
+    if (!userIds || userIds.length === 0) {
+        return res.status(400).json({
+            success: false,
+            message: "No user IDs provided.",
+        });
+    }
+
+    // Find users by their IDs
+    const users = await UserModel.find({ _id: { $in: userIds } });
+
+  
+    return res.status(200).json({
+        success: true,
+        data: users,
+    });
+} catch (error) {
+    console.log(error);
+    return res.status(500).json({
+        success: false,
+        message: "Server error",
+    });
+}
+})

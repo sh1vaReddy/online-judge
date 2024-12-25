@@ -28,7 +28,7 @@ const Home = () => {
           </div>
 
           {/* Leaderboard */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-5">
+          <div className="bg-white  dark:bg-gray-800 rounded-lg shadow-lg p-5">
             <h2 className="text-2xl mb-4">Leaderboard</h2>
             <Leaderboard />
           </div>

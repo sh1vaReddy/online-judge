@@ -12,6 +12,10 @@ const LeaderboardSchema=new Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:'User',
         },
+        Username:{
+            type:String,
+            required:true,
+        },
         score:{
             type:Number,
             default:0,

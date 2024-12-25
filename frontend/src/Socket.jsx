@@ -1,30 +1,22 @@
-import React, { createContext, useContext, useMemo, useEffect } from "react";
+import { createContext, useMemo, useContext } from "react";
 import io from "socket.io-client";
-import { server } from "./constants/config.jsx";
+import { server } from './constants/config.jsx';
 
 const SocketContext = createContext();
 
-const useSocket = () => useContext(SocketContext);
+const getsocket = () => useContext(SocketContext);
 
 const SocketProvider = ({ children }) => {
-  // Memoize the socket instance
-  const socket = useMemo(() => io(server, { withCredentials: true }), [server]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (socket) {
-        socket.disconnect();
-        console.log("Socket disconnected");
-      }
-    };
-  }, [socket]);
+  const socket = useMemo(() =>{
+    const instance = io("http://localhost:3000", { withCredentials: true });
+    console.log("Socket Initialized:", instance); 
+    return instance;
+  },
+  []);
 
   return (
-    <SocketContext.Provider value={socket}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );
 };
 
-export { useSocket, SocketProvider };
+export { SocketProvider, getsocket };

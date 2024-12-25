@@ -21,7 +21,6 @@ const Header = () => {
     { label: "Problems", to: "/problem" },
     { label: "Contest", to: "/contest" },
     { label: "Compiler", to: "/compiler" },
-    { label: "Contact", to: "/contact" },
   ];
   if(isAdmin)
   {
@@ -33,7 +32,7 @@ const Header = () => {
   menuItems.push({label:"Login",to:'/login'})
 }
   return (
-    <nav className="bg-white shadow-md dark:bg-gray-800">
+    <nav className="bg-gray-100 shadow-md dark:bg-gray-800">
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
         <Link to="/" className="flex items-center">
           <img src={compiler} alt="Flowbite Logo" className="mr-3 h-6 sm:h-9" />
