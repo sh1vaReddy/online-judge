@@ -1,6 +1,7 @@
 import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { ProblemModel } from "../model/ProblemSchema.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
+import ApiFeatures from "../util/ApiFeatures.js";
 
 
 export const createproblem= trycatchmethod(async (req, res, next) => {
@@ -79,20 +80,26 @@ export const createproblem= trycatchmethod(async (req, res, next) => {
     .json({ success: true, message: "Problem successfully created.", problem });
 });
 
-export const getallproblem = trycatchmethod(async (req, res, next) => {
-  const problem = await ProblemModel.find();
+export const getAllProblems = trycatchmethod(async (req, res, next) => {
+  const resultsPerPage = 10; // Number of results per page
+  const apiFeatures = new ApiFeatures(ProblemModel.find(), req.query)
+    .search()
+    .filter()
+    .pagination(resultsPerPage);
 
-  if (!problem) {
+  const problems = await apiFeatures.query;
+
+  if (!problems || problems.length === 0) {
     return res.status(404).json({
-      sucess: true,
-      message: "Problems Are NOt Found",
+      success: false,
+      message: "Problems are not found",
     });
   }
 
   res.status(200).json({
-    sucess: true,
-    message: "All Problem",
-    problem,
+    success: true,
+    message: "All Problems",
+    problems,
   });
 });
 

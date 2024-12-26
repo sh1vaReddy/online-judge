@@ -5,12 +5,16 @@ import { server } from '../../constants/config';
 
 const ProblemList = () => {
   const nav = useNavigate();
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
   const [ProblemData,setProblemData]=useState([]);
   useEffect(()=>{
     const fetchProblems=async()=>
     {
       try{
-           const response=await axios.get(`${server}/api/v1/getallproblems`);
+           const response=await axios.get(`${server}/api/v1/getallproblems`,{
+            params:{page,serach:searchTerm}
+           });
            setProblemData(response.data.problem);
       }
       catch(error)
@@ -19,7 +23,7 @@ const ProblemList = () => {
       } 
     };
     fetchProblems();
-  },[]);
+  },[page,searchTerm]);
 
 
   const handleRowClick = (id) => {

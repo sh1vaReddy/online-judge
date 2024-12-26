@@ -3,7 +3,7 @@ const router = express.Router();
 import {
   createproblem,
   deleteproblem,
-  getallproblem,
+  getAllProblems,
   getproblem,
   updateproblem,
 } from "../controller/Problem_Controller.js";
@@ -20,7 +20,7 @@ router.post(
 // Get all problems (authenticated users)
 router.get(
   "/getallproblems",
-  getallproblem
+   getAllProblems
 );
 
 // Get problem by ID or title
