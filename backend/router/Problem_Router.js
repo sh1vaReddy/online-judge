@@ -17,7 +17,7 @@ router.post(
   createproblem
 );
 
-// Get all problems (authenticated users)
+
 router.get(
   "/getallproblems",
    getAllProblems

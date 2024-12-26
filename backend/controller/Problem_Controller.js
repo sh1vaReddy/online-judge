@@ -3,16 +3,9 @@ import { ProblemModel } from "../model/ProblemSchema.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
 import ApiFeatures from "../util/ApiFeatures.js";
 
-
-export const createproblem= trycatchmethod(async (req, res, next) => {
-  const {
-    title,
-    description,
-    difficulty,
-    constraints,
-    tags,
-    examples,
-  } = req.body;
+export const createproblem = trycatchmethod(async (req, res, next) => {
+  const { title, description, difficulty, constraints, tags, examples } =
+    req.body;
 
   // Validate required fields
   if (
@@ -46,9 +39,7 @@ export const createproblem= trycatchmethod(async (req, res, next) => {
   }
 
   // Ensure examples follow correct format
-  const areExamplesValid = examples.every(
-    (ex) => ex.input && ex.output
-  );
+  const areExamplesValid = examples.every((ex) => ex.input && ex.output);
   if (!areExamplesValid) {
     return res.status(400).json({
       success: false,
@@ -81,31 +72,38 @@ export const createproblem= trycatchmethod(async (req, res, next) => {
 });
 
 export const getAllProblems = trycatchmethod(async (req, res, next) => {
-  const resultsPerPage = 10; // Number of results per page
-  const apiFeatures = new ApiFeatures(ProblemModel.find(), req.query)
-    .search()
-    .filter()
-    .pagination(resultsPerPage);
+  const resultsPerPage = 8;
+ 
+    const apiFeatures = new ApiFeatures(ProblemModel.find(), req.query)
+      .search()
+      .filter()
+      
+    let problems = await apiFeatures.query;
+    let filterProblemCount = problems.length;
+    apiFeatures.pagination(resultsPerPage);
 
-  const problems = await apiFeatures.query;
 
-  if (!problems || problems.length === 0) {
-    return res.status(404).json({
-      success: false,
-      message: "Problems are not found",
+    problems=await apiFeatures.query.clone();
+
+    if (!problems || problems.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Problems not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "All Problems",
+      problems,
+      filterProblemCount,
+     
+      resultsPerPage,
     });
-  }
-
-  res.status(200).json({
-    success: true,
-    message: "All Problems",
-    problems,
-  });
 });
 
 export const getproblem = trycatchmethod(async (req, res, next) => {
   const problemId = req.params.id;
-
 
   if (!problemId) {
     return res.status(400).json({
@@ -128,7 +126,6 @@ export const getproblem = trycatchmethod(async (req, res, next) => {
     problem,
   });
 });
-
 
 export const deleteproblem = trycatchmethod(async (req, res, next) => {
   const { id, title } = req.body;
