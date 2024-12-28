@@ -90,7 +90,7 @@ const ProblemList = () => {
                     : "text-yellow-500"
                 }`}
               >
-                {problem.status}
+                {problem.tags}
               </td>
             </tr>
           ))}

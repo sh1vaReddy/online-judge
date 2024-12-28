@@ -72,7 +72,7 @@ export const createproblem = trycatchmethod(async (req, res, next) => {
 });
 
 export const getAllProblems = trycatchmethod(async (req, res, next) => {
-  const resultsPerPage = 8;
+  const resultsPerPage = 10;
  
     const apiFeatures = new ApiFeatures(ProblemModel.find(), req.query)
       .search()
@@ -234,3 +234,19 @@ export const updateproblem = trycatchmethod(async (req, res, next) => {
     );
   }
 });
+
+export const ProblemData=async(req,res)=>{
+  try{
+    const ProblemDta=req.body;
+    const newProblem=new ProblemModel(ProblemData);
+    await newProblem.save();
+    res.status(201).json({
+      message:"Problem Created Sucesfully",
+      Problem:newProblem,
+    })
+  }
+  catch(error)
+  {
+    res.status(500).json({message:"error creating Problem",error});
+  }
+}
