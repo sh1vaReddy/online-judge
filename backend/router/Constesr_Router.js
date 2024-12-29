@@ -9,4 +9,5 @@ router.get('/getallcontest',getallContest);
 router.get('/getcontest/:id',getallcontestbyid);
 router.get('/user/contest',isAuthenticated,getContestsOfTheUser)
 
+
 export default router;

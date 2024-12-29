@@ -235,18 +235,4 @@ export const updateproblem = trycatchmethod(async (req, res, next) => {
   }
 });
 
-export const ProblemData=async(req,res)=>{
-  try{
-    const ProblemDta=req.body;
-    const newProblem=new ProblemModel(ProblemData);
-    await newProblem.save();
-    res.status(201).json({
-      message:"Problem Created Sucesfully",
-      Problem:newProblem,
-    })
-  }
-  catch(error)
-  {
-    res.status(500).json({message:"error creating Problem",error});
-  }
-}
+  

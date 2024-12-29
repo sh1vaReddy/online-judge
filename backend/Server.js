@@ -26,7 +26,7 @@ const io = new Server(app, {
 });
 
 // Middleware
-server.use(express.json());
+server.use(express.json({ limit: '50mb' }));
 server.use(
   cors({
     origin: "http://localhost:5173",
