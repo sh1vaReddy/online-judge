@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const verdict = async (ProblemId, executeCode) => {
   if (!ProblemId) {
@@ -12,10 +12,23 @@ export const verdict = async (ProblemId, executeCode) => {
     const response = await axios.get(
       `http://localhost:3000/api/v1/testcases/problem/${ProblemId}`
     );
-    const testcases = response.data.testcases;
+
+    const testcases = response.data.testcases[0]?.test_cases || [];
+
+    if (testcases.length === 0) {
+      return {
+        success: false,
+        message: "No test cases found for the provided Problem ID",
+      };
+    }
 
     for (let i = 0; i < testcases.length; i++) {
       const { input, expected_output } = testcases[i];
+      if (!input || !expected_output) {
+        console.warn(`Test case at index ${i} has invalid input or expected output`);
+        continue; 
+      }
+
       const actualOutput = await executeCode(input);
 
       if (
@@ -41,3 +54,4 @@ export const verdict = async (ProblemId, executeCode) => {
     };
   }
 };
+

@@ -4,7 +4,8 @@ import {
   gettestcasebyid,
   gettestcasebyproblemid,
   updatetestcase,
-  deletetestcase
+  deletetestcase,
+  testcasemData
 } from "../controller/TestCase_controller.js";
 import express from 'express';
 const router=express.Router();
@@ -27,5 +28,7 @@ router.put("/testcases/:id", updatetestcase);
 
 // Delete a test case by its ID
 router.delete("/testcases/:id", deletetestcase);
+
+router.get('/testcase/databse',testcasemData);
 
 export default router;

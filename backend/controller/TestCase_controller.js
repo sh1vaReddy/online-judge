@@ -1,6 +1,7 @@
 import { TestcaseModel } from "../model/TestCaseSchema.js";
 import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
+import { ProblemModel } from "../model/ProblemSchema.js";
 
 // Create Test Case
 export const createTestcases = trycatchmethod(async (req, res, next) => {
@@ -64,12 +65,16 @@ export const gettestcasebyid = trycatchmethod(async (req, res, next) => {
 // Get Test Cases by Problem ID
 export const gettestcasebyproblemid = trycatchmethod(async (req, res, next) => {
   const { id } = req.params;
+   const Problem_id=await ProblemModel.findById(id);
+   const findtestId=Problem_id.problem_id
+  
 
   if (!id) {
     return next(new ErrorHandler("Problem ID is required", 400));
   }
 
-  const testcases = await TestcaseModel.find({ problem_id: id }).populate(
+  const testcases = await TestcaseModel.find({
+    problem_id:findtestId}).populate(
     "problem_id",
     "title"
   );
@@ -131,3 +136,61 @@ export const deletetestcase = trycatchmethod(async (req, res, next) => {
     deletedTestcase,
   });
 });
+
+export const testcasemData = async (req, res) => {
+  console.log("Starting to insert data into the database...");
+  try {
+    const problems = [
+      {
+        problem_id: 1,
+        test_cases: [
+          { input: "[2, 7, 11, 15], target = 9", expected_output: "[0, 1]" },
+          { input: "[3, 2, 4], target = 6", expected_output: "[1, 2]" },
+          { input: "[3, 3], target = 6", expected_output: "[0, 1]" }
+        ]
+      },
+      {
+        problem_id: 2,
+        test_cases: [
+          { input: "\"abcabcbb\"", expected_output: "3" },
+          { input: "\"bbbbb\"", expected_output: "1" },
+          { input: "\"pwwkew\"", expected_output: "3" }
+        ]
+      },
+      {
+        problem_id: 3,
+        test_cases: [
+          { input: "[[1,3],[2,6],[8,10],[15,18]]", expected_output: "[[1,6],[8,10],[15,18]]" },
+          { input: "[[1,4],[4,5]]", expected_output: "[[1,5]]" },
+          { input: "[[1,3],[5,7],[8,10]]", expected_output: "[[1,3],[5,7],[8,10]]" }
+        ]
+      },
+      {
+        problem_id: 4,
+        test_cases: [
+          { input: "\"()\"", expected_output: "true" },
+          { input: "\"()[]{}\"", expected_output: "true" },
+          { input: "\"(]\"", expected_output: "false" }
+        ]
+      },
+      {
+        problem_id: 5,
+        test_cases: [
+          { input: "123", expected_output: "321" },
+          { input: "-123", expected_output: "-321" },
+          { input: "120", expected_output: "21" }
+        ]
+      }
+    ];
+    
+    const insertedProblems = await TestcaseModel.insertMany(problems);
+    res.status(201).json({
+      message: "Problems successfully inserted into the database.",
+      insertedCount: insertedProblems.length,
+      insertedProblems,
+    });
+  } catch (error) {
+    console.error("Error inserting problems:", error);
+    res.status(500).json({ message: "Error inserting problems into the database", error });
+  }
+};

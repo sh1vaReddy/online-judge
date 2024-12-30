@@ -17,11 +17,9 @@ const ExampleSchema = new Schema({
 const ProblemSchema = new Schema({
   problem_id: {
     type: Number,
-    unique: true,
   },
   title: {
     type: String,
-    unique: true,
     required: [true, "Title is required."],
   },
   description: {

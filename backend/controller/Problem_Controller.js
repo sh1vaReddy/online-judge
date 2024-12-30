@@ -236,3 +236,44 @@ export const updateproblem = trycatchmethod(async (req, res, next) => {
 });
 
   
+
+export const ProblemData=async(req,res)=>{
+  console.log("Starting to insert data into the database...");
+try {
+  // Load the JSON file data (assuming it's already loaded in the backend)
+  const problems =[
+    {
+        "problem_id": 40,
+        "title": "Find Peak Element",
+        "description": "A peak element is an element that is greater than its neighbors. Find a peak element in an array.",
+        "constraints": "The input array length is between 1 and 10^5.",
+        "examples": [
+            {
+                "input": "[1,2,3,1]",
+                "output": "2"
+            }
+        ],
+        "tags": ["Array", "Binary Search"],
+        "difficulty": "Medium",
+        "created_at": "2024-12-30T04:43:45.416+00:00",
+        "updated_at": "2024-12-30T04:43:45.417+00:00",
+        "__v": 0
+    }
+    
+  ]
+       
+
+    
+  // Insert multiple documents into MongoDB
+  const insertedProblems = await ProblemModel.insertMany(problems);
+
+  res.status(201).json({
+    message: "Problems successfully inserted into the database.",
+    insertedCount: insertedProblems.length,
+    insertedProblems,
+  });
+} catch (error) {
+  console.error("Error inserting problems:", error);
+  res.status(500).json({ message: "Error inserting problems into the database", error });
+}
+}
