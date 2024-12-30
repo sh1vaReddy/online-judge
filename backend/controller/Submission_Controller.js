@@ -53,9 +53,6 @@ export const getAllSubmissions = trycatchmethod(async (req, res, next) => {
     .populate("problem_id", "title")
     .exec();
 
-  if (!submissions || submissions.length === 0) {
-    return next(new ErrorHandler("No submissions found", 404));
-  }
 
   res.status(200).json({
     success: true,

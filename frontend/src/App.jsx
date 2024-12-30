@@ -30,19 +30,20 @@ const ProblemUpdate = lazy(() =>
 );
 const Unauthorized = lazy(() => import("./components/Admin/unauthorized.jsx"));
 const Dashboard = lazy(() => import("./components/Admin/Dashborad.jsx"));
-const Contest = lazy(() => import("./components/Admin/Contest.jsx"));
+const AdminCreateContest = lazy(() => import("./components/Admin/CreateContest.jsx"));
 const Assignment = lazy(() => import("./components/Contest/Assignment.jsx"));
 const ContestList = lazy(() => import("./components/Contest/Contestlist.jsx"));
 const UserProfile = lazy(() => import("./components/Header/UserProfile.jsx"));
-const ContestProblem = lazy(() =>
-  import("./components/Contest/ContestProblem.jsx")
-);
+const ContestProblem = lazy(() => import("./components/Contest/ContestProblem.jsx"));
 const Leaderboard = lazy(() => import("./components/Home/Leaderboard.jsx"));
+const AdminMonitorcontest=lazy(()=>import("./components/Admin/Monitringcontest.jsx"))
+const AdminDelteContest=lazy(()=>import('./components/Admin/DeleteContest.jsx'))
 
 const App = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -90,75 +91,15 @@ const App = () => {
               </Route>
 
               {/* Protected Routes */}
-              <Route
-                path="/contest"
-                element={
-                  <ProtectRoute user={user} redirect="/login">
-                    <SocketProvider>
-                      <Contest />
-                    </SocketProvider>
-                  </ProtectRoute>
-                }
-              />
-
-              <Route
-                path="/contestlist"
-                element={
-                  <ProtectRoute user={user} redirect="/login">
-                    <ContestList />
-                  </ProtectRoute>
-                }
-              />
-              <Route
-                path="/Assignment/:id"
-                element={
-                  <ProtectRoute user={user} redirect="/login">
-                    <Assignment />
-                  </ProtectRoute>
-                }
-              />
-
-              <Route
-                path="/Contest/problem/:id"
-                element={
-                  <ProtectRoute user={user} redirect="/login">
-                    <ContestProblem />
-                  </ProtectRoute>
-                }
-              />
-              <Route
-                path="/User/profile"
-                element={
-                  <ProtectRoute user={user} redirect="/login">
-                    <UserProfile />
-                  </ProtectRoute>
-                }
-              />
-
-              {/* Admin Protected Routes */}
-              <Route
-                element={
-                  <ProtectRoute
-                    user={user}
-                    role={user?.role}
-                    requirerole="admin"
-                    redirect="/unauthorized"
-                  />
-                }
-              >
-                <Route
-                  path="/admin/problem/create"
-                  element={<ProblemCreation />}
-                />
-                <Route
-                  path="/admin/problem/update"
-                  element={<ProblemUpdate />}
-                />
-                <Route
-                  path="/admin/problem/delete"
-                  element={<ProblemDelete />}
-                />
-                <Route path="/admin/dashboard" element={<Dashboard />} />
+              
+              <Route element={<ProtectRoute user={user}  role={user?.role} requirerole="admin" redirect="/login"/>}>
+                <Route path="/admin/create/contest" element={<AdminCreateContest/>} />
+                <Route path="/admin/contest/monitor" element={<AdminMonitorcontest/>} />
+                <Route path="/admin/contest/delete" element={<AdminDelteContest/>} />
+                <Route path="/admin/problem/create" element={<ProblemCreation />} />
+                <Route path="/admin/problem/update" element={<ProblemUpdate />} />
+                <Route path="/admin/problem/delete" element={<ProblemDelete />} />
+                <Route path="/admin/dashboard" element={<Dashboard/>}/>
               </Route>
             </Routes>
           </Suspense>

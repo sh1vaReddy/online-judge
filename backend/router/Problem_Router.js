@@ -12,8 +12,6 @@ import { isAuthenticated, authoriesrole } from "../middleware/auth.js";
 // Create a new problem (admin-only)
 router.post(
   "/create/problem",
-  isAuthenticated,
-  authoriesrole("admin"),
   createproblem
 );
 

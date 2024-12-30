@@ -8,7 +8,7 @@ const TestCaseSchema = new Schema({
   test_cases: [
     {
       input: {
-        type: String,
+        type: String,     
         required: true,
       },
       expected_output: {

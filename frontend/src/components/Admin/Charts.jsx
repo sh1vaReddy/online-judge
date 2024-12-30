@@ -20,8 +20,6 @@ const Charts = () => {
         const response = await axios.get(`${server}/api/v1/submissions`, {
           withCredentials: true,
         });
-
-        console.log('API Response:', response.data); // Debugging the response structure
         const submissions = Array.isArray(response.data) ? response.data : response.data.submissions;
 
         if (!Array.isArray(submissions)) {

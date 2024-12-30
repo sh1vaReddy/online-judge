@@ -1,13 +1,15 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from 'react-router-dom';
 
-const ProtectRoute = ({ user, role, requirerole, redirect, children }) => {
+const ProtectRoute = ({ children, user,role,requirerole, redirect = '/login' }) => {
   if (!user) {
     return <Navigate to={redirect} />;
   }
-  if (requirerole && role !== requirerole) {
-    return <Navigate to="/unauthorized" />;
+
+  if(requirerole && role != requirerole)
+  {
+    return <Navigate to='/problem'/>
   }
-  return children;
+  return children ? children : <Outlet />;
 };
 
 export default ProtectRoute;

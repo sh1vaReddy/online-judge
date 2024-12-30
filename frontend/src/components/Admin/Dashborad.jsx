@@ -7,19 +7,33 @@ import {server} from '../../constants/config';
 const Dashboard = () => {
 
   const[users,setusers]=useState([]);
+  const[constestlist,setcontestlist]=useState([]);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
         const response = await axios.get(`${server}/api/v1/getallusers`);
-        setusers(response.data.user);
+        const constresponse = await axios.get(`${server}/api/v1/getallcontest`);
+        console.log(response.data);
+        setcontestlist(constresponse.data.contests)
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
+
+    const fetchcontestlist=async()=>{
+      try {
+        const constresponse = await axios.get(`${server}/api/v1/getallcontest`);
+        setcontestlist(constresponse.data.contests)
+      } catch (error) {
+        console.error("Error fetching Contest:", error);
+      }
+
+    }
     fetchAllUsers();
+    fetchcontestlist();
   }, []);
-  
+
   return (
     <>
       <div className="min-h-screen flex">
@@ -44,7 +58,7 @@ const Dashboard = () => {
               <div className="bg-green-500 text-white p-4 rounded-lg shadow">
                 <h2 className="text-lg font-bold">Active Contests</h2>
                 <p className="text-4xl font-semibold mt-2">
-                1250
+                   {constestlist.length+1 ? constestlist.length : "NO Active Contset"}
                 </p>
               </div>
 

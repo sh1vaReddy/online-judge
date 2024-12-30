@@ -7,14 +7,34 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Submission from "./Submission";
 import { server } from "../../constants/config";
-import { useLocation } from "react-router-dom";
+import GlobalProvide from "../util/GlobalProvider ";
+import Timecomplexitybutton from "../util/Timecomplexitybutton";
+
+// Modal Component
+const TimeComplexityModal = ({ isVisible, onClose, globalValue }) => {
+  if (!isVisible) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
+        <h1 className="text-2xl font-bold mb-4">Time Complexity</h1>
+        <p>{globalValue}</p>
+        <button className="mt-4 px-4 py-2 bg-red-500 text-white" onClick={onClose}>
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const Problem = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("description");
   const [ProblemData, setProblemData] = useState(null);
   const { id } = useParams();
-  const location = useLocation();
-  const { code, language } = location.state || {};
+  const [globalvalue] = GlobalProvide();
+const[TimeDisplay]=Timecomplexitybutton();
+  const [DispalyTimecompliext, setDispalyTimecompliext] = useState(false);
+  console.log(TimeDisplay);
 
   const themes = {
     light: {
@@ -33,14 +53,9 @@ const Problem = ({ theme }) => {
     },
   };
 
-  
-
-  
   // Fallback to "dark" if theme prop is not provided or invalid
   const currentTheme = themes[theme] || themes.dark;
 
-
-  
   useEffect(() => {
     const fetchProblem = async () => {
       try {
@@ -54,19 +69,13 @@ const Problem = ({ theme }) => {
   }, [id]);
 
   return (
-    <div
-      className={`rounded-lg border overflow-hidden h-full ${currentTheme.container}`}
-    >
+    <div className={`rounded-lg border overflow-hidden h-full ${currentTheme.container}`}>
       {/* Navigation Tabs */}
-      <div
-        className={`h-16 flex items-center px-4 rounded-t-md ${currentTheme.header}`}
-      >
+      <div className={`h-16 flex items-center px-4 rounded-t-md ${currentTheme.header}`}>
         <nav className="flex space-x-16">
           <button
             className={`font-semibold text-lg flex items-center space-x-2 transition ${
-              activeTab === "description"
-                ? currentTheme.activeButton
-                : currentTheme.button
+              activeTab === "description" ? currentTheme.activeButton : currentTheme.button
             }`}
             onClick={() => setActiveTab("description")}
           >
@@ -75,9 +84,7 @@ const Problem = ({ theme }) => {
           </button>
           <button
             className={`font-semibold text-lg flex items-center space-x-2 transition ${
-              activeTab === "discussion"
-                ? currentTheme.activeButton
-                : currentTheme.button
+              activeTab === "discussion" ? currentTheme.activeButton : currentTheme.button
             }`}
             onClick={() => setActiveTab("discussion")}
           >
@@ -86,9 +93,7 @@ const Problem = ({ theme }) => {
           </button>
           <button
             className={`font-semibold text-lg flex items-center space-x-2 transition ${
-              activeTab === "submissions"
-                ? currentTheme.activeButton
-                : currentTheme.button
+              activeTab === "submissions" ? currentTheme.activeButton : currentTheme.button
             }`}
             onClick={() => setActiveTab("submissions")}
           >
@@ -98,9 +103,20 @@ const Problem = ({ theme }) => {
         </nav>
       </div>
       
+      <button className="m-4 px-4 py-2 bg-blue-500 text-white" onClick={() => setDispalyTimecompliext(true)}>
+        Time Complexity
+      </button>
+
+      {/* Time Complexity Modal */}
+      <TimeComplexityModal 
+        isVisible={DispalyTimecompliext} 
+        onClose={() => setDispalyTimecompliext(false)} 
+        globalValue={globalvalue} 
+      />
+
       {/* Content Area */}
       <div className={`p-6 ${currentTheme.content}`}>
-        {ProblemData && activeTab == "description" && (
+        {ProblemData && activeTab === "description" && (
           <div>
             <h1 className="text-xl font-bold px-4">
               {ProblemData.problem_id}. {ProblemData.title}
@@ -114,11 +130,11 @@ const Problem = ({ theme }) => {
                     : ProblemData.difficulty === "Medium"
                     ? "text-yellow-500"
                     : "text-red-500"
-                }`}>
+                }`}
+              >
                 {ProblemData.difficulty}
               </h1>
             </div>
-
             <h1 className="p-4">{ProblemData.description}</h1>
             <div className="p-4">
               <h1 className="font-semibold text-xl">Constraints:</h1>
@@ -126,7 +142,6 @@ const Problem = ({ theme }) => {
             </div>
           </div>
         )}
-      
         {activeTab === "discussion" && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Discussion</h2>

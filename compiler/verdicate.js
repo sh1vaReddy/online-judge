@@ -13,6 +13,8 @@ export const verdict = async (ProblemId, executeCode) => {
       `http://localhost:3000/api/v1/testcases/problem/${ProblemId}`
     );
 
+    console.log(response.data);
+
     const testcases = response.data.testcases[0]?.test_cases || [];
 
     if (testcases.length === 0) {

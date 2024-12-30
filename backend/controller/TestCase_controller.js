@@ -6,6 +6,7 @@ import { ProblemModel } from "../model/ProblemSchema.js";
 // Create Test Case
 export const createTestcases = trycatchmethod(async (req, res, next) => {
   const { testcases } = req.body;
+  console.log(req.body);
 
   if (!Array.isArray(testcases) || testcases.length === 0) {
     return next(new ErrorHandler("Testcases must be a non-empty array", 400));
@@ -46,6 +47,7 @@ export const getalltestcase = trycatchmethod(async (req, res, next) => {
 
 // Get Test Case by ID
 export const gettestcasebyid = trycatchmethod(async (req, res, next) => {
+
   const testcase = await TestcaseModel.findById(req.params.id).populate(
     "problem_id",
     "title"
@@ -66,10 +68,10 @@ export const gettestcasebyid = trycatchmethod(async (req, res, next) => {
 export const gettestcasebyproblemid = trycatchmethod(async (req, res, next) => {
   const { id } = req.params;
    const Problem_id=await ProblemModel.findById(id);
-   const findtestId=Problem_id.problem_id
-  
+   const findtestId=Problem_id.problem_id;
 
-  if (!id) {
+  
+  if (!findtestId) {
     return next(new ErrorHandler("Problem ID is required", 400));
   }
 

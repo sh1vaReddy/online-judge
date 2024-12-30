@@ -194,22 +194,22 @@ export const getallcontestbyid = trycatchmethod(async (req, res) => {
 
 
 
-export const deletecontest = trycatchmethod(async (req, res) => {
-  try {
-    const deletedContest = await ContestModel.findByIdAndDelete(req.params.id);
-    if (!deletedContest) {
-      return res.status(404).json({ success: false, message: "Contest not found" });
-    }
+  export const deletecontest = trycatchmethod(async (req, res) => {
+    try {
+      const deletedContest = await ContestModel.findByIdAndDelete(req.params.id);
+      if (!deletedContest) {
+        return res.status(404).json({ success: false, message: "Contest not found" });
+      }
 
-    return res.status(200).json({ success: true, message: "Contest deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting contest:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error.",
-    });
-  }
-}); 
+      return res.status(200).json({ success: true, message: "Contest deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting contest:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error.",
+      });
+    }
+  }); 
 
 
 export const getContestsOfTheUser = trycatchmethod(async (req, res, next) => {
@@ -241,4 +241,23 @@ export const getContestsOfTheUser = trycatchmethod(async (req, res, next) => {
     // Pass error to the next middleware
     next(error);
   }
+});
+
+
+export const getContestList = trycatchmethod(async (req, res, next) => {
+
+  const contestList = await ContestModel.find();
+  
+  if (!contestList || contestList.length === 0) {
+    return res.status(404).json({
+      success: false,
+      message: "No contests found"
+    });
+  }
+
+
+  res.status(200).json({
+    success: true,
+    contests: contestList
+  });
 });

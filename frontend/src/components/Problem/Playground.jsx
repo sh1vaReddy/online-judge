@@ -5,6 +5,9 @@ import { MdFormatAlignLeft } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import { server } from "../../constants/config";
 import { useSelector } from "react-redux";
+import  GlobalProvide from '../util/GlobalProvider ';
+import Timecomplexitybutton from "../util/Timecomplexitybutton";
+
 
 const Playground = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("Input");
@@ -15,8 +18,13 @@ const Playground = ({ theme }) => {
   const [testCases, setTestCases] = useState();
   const [syntaxError, setSyntaxError] = useState("");
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const [globalValue, setGlobalValue]=GlobalProvide();
+  const [Timestate, setTimestate ] = Timecomplexitybutton();
+
+ 
 
   const fetchTestCases = async () => {
+   
     try {
       const response = await axios.get(
         `${server}/api/v1/testcases/problem/${id}`,
@@ -61,6 +69,7 @@ int main() {
   };
 
   const handleSubmission = async () => {
+    setTimestate(true);
     if(isAuthenticated)
     {
       try {
@@ -75,7 +84,14 @@ int main() {
           
         );
         setouput(response.data.output);
-  
+
+
+        const timeresponse=await axios.post(`http://localhost:8080/time-complexity`,{
+          code,
+          language: selectedLanguage,
+        })
+        setGlobalValue(timeresponse.data.TImeComplexity);
+        setTimestate("dispaly");
         const verdictResult = response.data.verdictResult.message;
         let status;
   
@@ -90,7 +106,7 @@ int main() {
           setVerdict("Runtime Error occurred.");
         }
   
-        console.log(response.data.verdictResult.message);
+      console.log(response.data.verdictResult.message);
         await axios.post(
           `${server}/api/v1/submissions`,
           {
@@ -103,6 +119,8 @@ int main() {
         );
   
         setouput(response.data.output);
+        
+        
   
         if (response.data.success) {
           const verdictMessage = response.data.verdictResult.message;
