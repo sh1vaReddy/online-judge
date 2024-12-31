@@ -64,7 +64,7 @@ const ProblemList = () => {
         <tbody>
           {problemData.map((problem) => (
             <tr
-              key={problem._id} // Use a unique identifier for `key`
+              key={problem._id} 
               className="border-b dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => handleRowClick(problem._id)}
             >

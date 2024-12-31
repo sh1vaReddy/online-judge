@@ -14,6 +14,8 @@ if (!fs.existsSync(outputpath)) {
     fs.mkdirSync(outputpath, { recursive: true });
 }
 
+const TIME_LIMIT = 2000;
+
 export const excuteCPP = async (filepath, inputpath) => {
     const outputId = path.basename(filepath).split(".")[0];
     const outputExecutablePath = path.join(outputpath, `${outputId}.exe`);
@@ -27,7 +29,7 @@ export const excuteCPP = async (filepath, inputpath) => {
         }
 
         const executeCommand = `"${outputExecutablePath}" < "${inputpath}"`;
-        const { stdout, stderr } = await execAsync(executeCommand);
+        const { stdout, stderr } = await execAsync(executeCommand,{ timeout: TIME_LIMIT });
 
         if (stderr) {
             return new Error(`Runtime error: ${stderr}`);
@@ -42,7 +44,7 @@ export const excuteCPP = async (filepath, inputpath) => {
 
 export const excutepython = async (filepath, inputpath) => {
     try {
-        const { stdout, stderr } = await execAsync(`python3 "${filepath}" < "${inputpath}"`);
+        const { stdout, stderr } = await execAsync(`python3 "${filepath}" < "${inputpath}"`,{ timeout: TIME_LIMIT });
 
         if (stderr) {
             return new Error(`Runtime error: ${stderr}`);
@@ -67,7 +69,7 @@ export const excuteJava = async (filepath, inputpath) => {
         }
 
         const executeCommand = `java -cp "${outputClassPath}" ${inputpath}`;
-        const { stdout, stderr } = await execAsync(executeCommand);
+        const { stdout, stderr } = await execAsync(executeCommand,{ timeout: TIME_LIMIT });
 
         if (stderr) {
             return new Error(`Runtime error: ${stderr}`);
@@ -84,7 +86,7 @@ export const excuteJava = async (filepath, inputpath) => {
 export const excutejavascript=async(filepath,inputpath)=>
 {
     try{
-        const {stdout,stderr}=await execAsync(`node "${filepath}"<"${inputpath}"`);
+        const {stdout,stderr}=await execAsync(`node "${filepath}"<"${inputpath}"`,{ timeout: TIME_LIMIT });
         
           if(stderr)
           {

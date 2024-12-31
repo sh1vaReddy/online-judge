@@ -14,7 +14,7 @@ const Monitringcontest = () => {
           console.log(response.data);
           if (response.data.success) {
             setContests(response.data.contests);
-          } else {
+          } else if(response.data.message){
             setError(response.data.message);
           }
         } catch (err) {

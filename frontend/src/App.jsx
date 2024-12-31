@@ -38,6 +38,9 @@ const ContestProblem = lazy(() => import("./components/Contest/ContestProblem.js
 const Leaderboard = lazy(() => import("./components/Home/Leaderboard.jsx"));
 const AdminMonitorcontest=lazy(()=>import("./components/Admin/Monitringcontest.jsx"))
 const AdminDelteContest=lazy(()=>import('./components/Admin/DeleteContest.jsx'))
+const Conatct=lazy(()=>import('./components/Header/Contact.jsx'));
+const GetIssue=lazy(()=>import('./components/Admin/Getallissuse.jsx'));
+const UpdateIssue=lazy(()=>import('./components/Admin/UpdateIssue.jsx'));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -80,6 +83,7 @@ const App = () => {
                 <Route path="/problem/:id" element={<Editor />} />
                 <Route path="/problem" element={<ProblemList />} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
+                <Route path='/Conatct' element={<Conatct/>}/>
                 <Route
                   path="/leaderboard"
                   element={
@@ -100,6 +104,8 @@ const App = () => {
                 <Route path="/admin/problem/update" element={<ProblemUpdate />} />
                 <Route path="/admin/problem/delete" element={<ProblemDelete />} />
                 <Route path="/admin/dashboard" element={<Dashboard/>}/>
+                <Route path='/admin/issue' element={<GetIssue/>}/>
+                <Route path='admin/Issue/update/:id' element={<UpdateIssue/>}/>
               </Route>
             </Routes>
           </Suspense>

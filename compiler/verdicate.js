@@ -13,9 +13,9 @@ export const verdict = async (ProblemId, executeCode) => {
       `http://localhost:3000/api/v1/testcases/problem/${ProblemId}`
     );
 
-    console.log(response.data);
-
-    const testcases = response.data.testcases[0]?.test_cases || [];
+  
+    
+    const testcases = response.data.testcases || [];
 
     if (testcases.length === 0) {
       return {
@@ -28,7 +28,7 @@ export const verdict = async (ProblemId, executeCode) => {
       const { input, expected_output } = testcases[i];
       if (!input || !expected_output) {
         console.warn(`Test case at index ${i} has invalid input or expected output`);
-        continue; 
+        continue; // Skip invalid test case
       }
 
       const actualOutput = await executeCode(input);
@@ -56,4 +56,3 @@ export const verdict = async (ProblemId, executeCode) => {
     };
   }
 };
-

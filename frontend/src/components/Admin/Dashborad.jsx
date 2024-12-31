@@ -3,19 +3,20 @@ import Charts from "./Charts";
 import Silderbar from "./Silderbar";
 import axios from 'axios';
 import {server} from '../../constants/config';
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
 
   const[users,setusers]=useState([]);
   const[constestlist,setcontestlist]=useState([]);
+  const navigation=useNavigate();
+  const [Issuelist, setIssuelist] = useState([]);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
         const response = await axios.get(`${server}/api/v1/getallusers`);
-        const constresponse = await axios.get(`${server}/api/v1/getallcontest`);
-        console.log(response.data);
-        setcontestlist(constresponse.data.contests)
+        setusers(response.data.user);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -28,11 +29,23 @@ const Dashboard = () => {
       } catch (error) {
         console.error("Error fetching Contest:", error);
       }
-
     }
+    const getAllIssues = async () => {
+          try {
+            const response = await axios.get(`${server}/api/v1/getallcontact`);
+            setIssuelist(response.data.data);
+          } catch (error) {
+            console.log("Error fetching issues", error);
+          }
+        };
+      getAllIssues();
     fetchAllUsers();
     fetchcontestlist();
   }, []);
+
+  const handleissue=()=>{
+   navigation("/admin/issue")
+  }
 
   return (
     <>
@@ -58,13 +71,15 @@ const Dashboard = () => {
               <div className="bg-green-500 text-white p-4 rounded-lg shadow">
                 <h2 className="text-lg font-bold">Active Contests</h2>
                 <p className="text-4xl font-semibold mt-2">
-                   {constestlist.length+1 ? constestlist.length : "NO Active Contset"}
+                   {constestlist.length+1 ? constestlist.length : "No Active Contset"}
                 </p>
               </div>
 
               <div className="bg-red-500 text-white p-4 rounded-lg shadow">
-                <h2 className="text-lg font-bold">Pending Issues</h2>
-                <p className="text-4xl font-semibold mt-2">5</p>
+                <h2 className="text-lg font-bold"
+                 onClick={handleissue}
+                >Pending Issues</h2>
+                <p className="text-4xl font-semibold mt-2">{Issuelist.length ? Issuelist.length : <h4>No Issue are there</h4>}</p>
               </div>
             </div>
             <div className="p-10 w-full h-[400px]">

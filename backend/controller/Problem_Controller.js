@@ -3,6 +3,7 @@ import { ProblemModel } from "../model/ProblemSchema.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
 import ApiFeatures from "../util/ApiFeatures.js";
 
+
 export const createproblem = trycatchmethod(async (req, res, next) => {
   const { title, description, difficulty, constraints, tags, examples } =
     req.body;
@@ -277,3 +278,5 @@ try {
   res.status(500).json({ message: "Error inserting problems into the database", error });
 }
 }
+
+

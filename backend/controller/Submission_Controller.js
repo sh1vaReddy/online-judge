@@ -19,8 +19,7 @@ export const createSubmission = trycatchmethod(async (req, res, next) => {
   } = req.body;
 
 
-  const PorBlemId=await ProblemModel.find({problem_id})
-    const ObjectId =PorBlemId[0]._id;
+  
 
   // Validate the presence of all fields
   
@@ -28,7 +27,7 @@ export const createSubmission = trycatchmethod(async (req, res, next) => {
   // Create the submission record in the database
   const newSubmissionResult = await SubmissionModel.create({
     user_id,
-    problem_id:ObjectId,
+    problem_id,
     code,
     language,
     execution_time,
@@ -84,11 +83,9 @@ export const getSubmissionsByUserId = trycatchmethod(async (req, res, next) => {
 export const getSubmissionsByProblemId = trycatchmethod(async (req, res, next) => {
    const { id } = req.params;
 
-   const PorBlemId=await ProblemModel.find({problem_id:id})
-    const ObjectId =PorBlemId[0]._id;
 
-
-  const submissions = await SubmissionModel.find({ problem_id:ObjectId}).populate(
+  const submissions = await SubmissionModel.find({
+    problem_id:id }).populate(
     "problem_id",
     "title"
   );

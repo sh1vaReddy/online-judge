@@ -1,0 +1,4 @@
+const NEW_DISCUSSION="NEW_DISCUSSION";
+
+
+export {NEW_DISCUSSION};

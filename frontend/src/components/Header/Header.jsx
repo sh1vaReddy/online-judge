@@ -21,6 +21,7 @@ const Header = () => {
     { label: "Problems", to: "/problem" },
     { label: "Contest", to: "/contest" },
     { label: "Compiler", to: "/compiler" },
+    {label:"Contact",to:"/Conatct"},
   ];
   if(isAdmin)
   {

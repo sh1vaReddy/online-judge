@@ -5,8 +5,7 @@ import { MdFormatAlignLeft } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import { server } from "../../constants/config";
 import { useSelector } from "react-redux";
-import  GlobalProvide from '../util/GlobalProvider ';
-import Timecomplexitybutton from "../util/Timecomplexitybutton";
+
 
 
 const Playground = ({ theme }) => {
@@ -18,8 +17,9 @@ const Playground = ({ theme }) => {
   const [testCases, setTestCases] = useState();
   const [syntaxError, setSyntaxError] = useState("");
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const [globalValue, setGlobalValue]=GlobalProvide();
-  const [Timestate, setTimestate ] = Timecomplexitybutton();
+  
+
+ 
 
  
 
@@ -69,7 +69,6 @@ int main() {
   };
 
   const handleSubmission = async () => {
-    setTimestate(true);
     if(isAuthenticated)
     {
       try {
@@ -90,8 +89,8 @@ int main() {
           code,
           language: selectedLanguage,
         })
-        setGlobalValue(timeresponse.data.TImeComplexity);
-        setTimestate("dispaly");
+       
+  
         const verdictResult = response.data.verdictResult.message;
         let status;
   

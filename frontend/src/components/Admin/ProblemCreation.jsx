@@ -11,18 +11,18 @@ const ProblemCreation = () => {
   const [examples, setExamples] = useState([{ input: "", output: "" }]);
   const [tags, setTags] = useState([]);
   const [difficulty, setDifficulty] = useState("Easy");
-  const [testcase, setTestcases] = useState([{ input: " ", output: " " }]);
+  const [testcase, setTestcases] = useState([{ input: "", output: "" }]);
 
   const [createProblem, { isLoading, isSuccess, isError }] =
     useCreateProblemMutation();
 
-  const [createTestcase] = useCreateTestcaseMutation();
+  const [createTestcase] = useCreateTestcaseMutation(); // Mutation hook for creating test cases
 
   const addExample = () => {
     setExamples([...examples, { input: "", output: "" }]);
   };
 
-  const addTsetCase = () => {
+  const addTestCase = () => {
     setTestcases((prevTestcases) => [...prevTestcases, { input: "", output: "" }]);
   };
 
@@ -30,13 +30,12 @@ const ProblemCreation = () => {
     setTestcases((prevTestcases) => prevTestcases.slice(0, -1));
   };
 
-  const updateCase = (index, key, value) => {
+  const updateTestCase = (index, key, value) => {
     setTestcases((prevTestcases) =>
       prevTestcases.map((testcase, i) =>
         i === index ? { ...testcase, [key]: value } : testcase
       )
     );
-  
   };
 
   const deleteExample = () => {
@@ -45,14 +44,12 @@ const ProblemCreation = () => {
     );
   };
 
-  console.log(testcase);
-
-  const saveproblem = async () => {
+  const saveProblem = async () => {
     if (testcase.length === 0) {
       console.error("Testcases must be a non-empty array");
       return;
     }
-  
+
     const problemData = {
       title,
       description,
@@ -61,26 +58,35 @@ const ProblemCreation = () => {
       tags,
       difficulty,
     };
-  
+
     try {
       const Problem = await createProblem(problemData).unwrap();
       const ProblemId = Problem.problem.problem_id;
-  
+
+      // Map test cases to include problem_id
       const testcasesToSend = testcase.map((test) => ({
         ...test,
         problem_id: ProblemId,
       }));
-  
+
+      // Create test cases via mutation
       const createdTestcases = await createTestcase({
         testcases: testcasesToSend,
       }).unwrap();
-  
-      console.log("Problem and testcases created successfully:", createdTestcases);
+
+      console.log("Problem and test cases created successfully:", createdTestcases);
     } catch (error) {
-      console.error("Error creating problem or testcases:", error);
+      console.error("Error creating problem or test cases:", error);
     }
   };
-  
+
+  const updateExample = (index, key, value) => {
+    setExamples((prevExamples) =>
+      prevExamples.map((example, i) =>
+        i === index ? { ...example, [key]: value } : example
+      )
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6 text-gray-900 dark:text-white">
@@ -128,9 +134,7 @@ const ProblemCreation = () => {
           <label className="block text-sm font-medium">Examples</label>
           {examples.map((example, index) => (
             <div key={index} className="mb-2">
-              <label className="block text-xs font-medium">
-                Example {index + 1}
-              </label>
+              <label className="block text-xs font-medium">Example {index + 1}</label>
               <input
                 type="text"
                 className="w-full mt-1 mb-2 p-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none"
@@ -147,7 +151,7 @@ const ProblemCreation = () => {
               />
             </div>
           ))}
-          <div className="">
+          <div>
             <button
               className="mt-2 mr-2 px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
               onClick={addExample}
@@ -155,7 +159,7 @@ const ProblemCreation = () => {
               Add Example
             </button>
             <button
-              className="mt-2  px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
+              className="mt-2 px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
               onClick={deleteExample}
             >
               Remove Example
@@ -168,34 +172,32 @@ const ProblemCreation = () => {
           <label className="block text-sm font-medium">Test Cases</label>
           {testcase.map((testCase, index) => (
             <div key={index} className="mb-2">
-              <label className="block text-xs font-medium">
-                Test Case {index + 1}
-              </label>
+              <label className="block text-xs font-medium">Test Case {index + 1}</label>
               <input
                 type="text"
                 className="w-full mt-1 mb-2 p-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none"
                 value={testCase.input}
-                onChange={(e) => updateCase(index, "input", e.target.value)}
+                onChange={(e) => updateTestCase(index, "input", e.target.value)}
                 placeholder="Test case input"
               />
               <input
                 type="text"
                 className="w-full mt-1 p-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none"
                 value={testCase.output}
-                onChange={(e) => updateCase(index, "output", e.target.value)}
+                onChange={(e) => updateTestCase(index, "output", e.target.value)}
                 placeholder="Expected output"
               />
             </div>
           ))}
-          <div className="">
+          <div>
             <button
               className="mt-2 mr-2 px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
-              onClick={addTsetCase}
+              onClick={addTestCase}
             >
               Add Test Case
             </button>
             <button
-              className="mt-2  px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
+              className="mt-2 px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
               onClick={deleteTestcase}
             >
               Remove Test Case
@@ -232,7 +234,7 @@ const ProblemCreation = () => {
         {/* Submit Button */}
         <button
           className="w-full px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-lg hover:opacity-90"
-          onClick={saveproblem}
+          onClick={saveProblem}
         >
           Save Problem
         </button>
