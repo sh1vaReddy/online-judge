@@ -10,7 +10,9 @@ const Monitringcontest = () => {
     useEffect(() => {
       const fetchContests = async () => {
         try {
-          const response = await axios.get(`${server}/api/v1/getallcontest`);
+          const response = await axios.get(`${server}/api/v1/getallcontest`,{
+            withCredentials:true
+          });
           console.log(response.data);
           if (response.data.success) {
             setContests(response.data.contests);
@@ -18,7 +20,7 @@ const Monitringcontest = () => {
             setError(response.data.message);
           }
         } catch (err) {
-          setError("Failed to load contests. Please try again later.");
+          setError("No Active Contest Are There");
         } finally {
           setLoading(false);
         }

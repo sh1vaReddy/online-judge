@@ -15,7 +15,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await axios.get(`${server}/api/v1/getallusers`);
+        const response = await axios.get(`${server}/api/v1/getallusers`,{
+          withCredentials:true
+        });
         setusers(response.data.user);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -24,7 +26,9 @@ const Dashboard = () => {
 
     const fetchcontestlist=async()=>{
       try {
-        const constresponse = await axios.get(`${server}/api/v1/getallcontest`);
+        const constresponse = await axios.get(`${server}/api/v1/getallcontest`,{
+          withCredentials:true
+        });
         setcontestlist(constresponse.data.contests)
       } catch (error) {
         console.error("Error fetching Contest:", error);
@@ -32,7 +36,9 @@ const Dashboard = () => {
     }
     const getAllIssues = async () => {
           try {
-            const response = await axios.get(`${server}/api/v1/getallcontact`);
+            const response = await axios.get(`${server}/api/v1/getallcontact`,{
+              withCredentials:true
+            });
             setIssuelist(response.data.data);
           } catch (error) {
             console.log("Error fetching issues", error);

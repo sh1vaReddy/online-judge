@@ -22,9 +22,10 @@ const CreateContest = () => {
   const handleInputChange = async (event) => {
     const value = event.target.value;
     setUserInput(value);
-    const response = await axios.get(`${server}/api/v1/getallusers`);
+    const response = await axios.get(`${server}/api/v1/getallusers`,{
+      withCredentials:true
+    });
     setUser(response.data.user);
-    console.log(response.data.user);
   };
 
   const handleSelectAll = () => {
@@ -57,11 +58,13 @@ const CreateContest = () => {
     };
 
     try {
-      const response = await axios.post(`${server}/api/v1/create/contest`, contestData);
+      const response = await axios.post(`${server}/api/v1/create/contest`, contestData,{
+        withCredentials:true
+      });
       toast.success("Contest created successfully");
       console.log("Contest created successfully:", response.data);
     } catch (error) {
-      toast.error("Creating Contest Error");
+      toast.error("Creating Contest Get Error")
       console.error("Error creating contest:", error);
     }
   };

@@ -2,7 +2,8 @@ import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { UserModel } from "../model/User.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
 import { cookieOptions, sendToken } from "../util/SendToken.js";
-import { compare } from "bcrypt";
+import pkg from 'bcryptjs';
+const { compare } = pkg;
 
 export const Register = trycatchmethod(async (req, res, next) => {
   const { username, email, password } = req.body;

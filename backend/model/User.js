@@ -1,7 +1,8 @@
 import { Schema } from 'mongoose';
 import AutoIncrement from 'mongoose-sequence';
 import mongoose from 'mongoose';
-import { hash } from 'bcrypt';
+import pkg from 'bcryptjs';
+const { hash } = pkg;
 
 
 

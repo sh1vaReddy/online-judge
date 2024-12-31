@@ -6,6 +6,7 @@ import { UserModel } from "../model/User.js";
 
 export const createContest = trycatchmethod(async (req, res, next) => {
   const { name, description, startTime, endTime, problems, participants } = req.body;
+  console.log(req.body)
 
   
   if (!name || !description || !startTime || !endTime || !participants) {

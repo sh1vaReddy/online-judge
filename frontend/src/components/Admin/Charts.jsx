@@ -20,7 +20,11 @@ const Charts = () => {
         const response = await axios.get(`${server}/api/v1/submissions`, {
           withCredentials: true,
         });
-        const submissions = Array.isArray(response.data) ? response.data : response.data.submissions;
+
+        const submissions = Array.isArray(response.data)
+          ? response.data
+          : response.data.submissions;
+
 
         if (!Array.isArray(submissions)) {
           throw new Error('Submissions is not an array');

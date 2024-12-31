@@ -9,8 +9,9 @@ const DeleteContest = () => {
 
   const fetchContests = async () => {
     try {
-      const response = await axios.get(`${server}/api/v1/getcontsetlist`);
-      console.log(response.data)
+      const response = await axios.get(`${server}/api/v1/getcontsetlist`,{
+        withCredentials:true
+      });
       if (response.data.success) {
         setContests(response.data.contests);
       } else {
