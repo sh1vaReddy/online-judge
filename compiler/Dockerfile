@@ -26,4 +26,4 @@ COPY . .
 EXPOSE 8080
 
 # Set the default command to start the application
-CMD ["nodemon", "index.js"]
+CMD ["node", "index.js"]

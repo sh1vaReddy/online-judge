@@ -30,13 +30,13 @@ const Profile = () => {
 
   const handleopenprofile = () =>
   {
-      nav('/User/profile')
+      nav('/profile')
   }
 
   const Options = [
     { icon: <CiLogin size={28}/>, 
     name: "Log out",func:handlelogout}, 
-    { icon: <IoPersonCircle size={28} />, name: "Profile" ,func:handleopenprofile},
+    { icon: <IoPersonCircle size={28} />, name: "Profile",func:handleopenprofile},
   ];
 
   return (

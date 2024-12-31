@@ -6,6 +6,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 
+const TIME_LIMIT = 20000;
+
  const executeWithMemory=async(command,args=[],inputPath=null)=>{
     return new Promise((resolve,reject)=>{
         const startTime=Date.now();
@@ -63,7 +65,7 @@ if (!fs.existsSync(outputpath)) {
     fs.mkdirSync(outputpath, { recursive: true });
 }
 
-const TIME_LIMIT = 2000;
+
 
 export const excuteCPP = async (filepath, inputpath) => {
     const outputId = path.basename(filepath).split(".")[0];

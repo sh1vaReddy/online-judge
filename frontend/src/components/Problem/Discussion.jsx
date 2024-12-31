@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import { NEW_DISCUSSION, GET_DISSCUSSION } from "../util/Event";
+import { getsocket } from "../../Socket";
 
 const Discussion = () => {
-  const socket = io("http://localhost:3000", {
-    withCredentials: true,
-  });
+  const socket = getsocket();
   const [content, setContent] = useState("");
   const { id } = useParams();
   const [Message, setMessage] = useState([]);

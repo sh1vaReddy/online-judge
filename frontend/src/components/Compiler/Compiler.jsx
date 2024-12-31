@@ -36,6 +36,7 @@ console.log("Hello, World!");`,
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(defaultCode["cpp"]);
   const [output, setOutput] = useState("");
+  const [Input, setInput] = useState("");
 
   const formatCode = (code, language) => {
     return code.trim();
@@ -51,7 +52,7 @@ console.log("Hello, World!");`,
     const response = await axios.post(`http://localhost:8080/compile`, {
       language: selectedLanguage,
       code: code,
-      Input: "",
+      Input,
     });
     setOutput(response.data.output);
   };
@@ -151,8 +152,27 @@ console.log("Hello, World!");`,
         </div>
 
         {/* Output Section */}
-        <div className="w-1/2 p-4 h-full">
-          {/* Header Section */}
+        <div className="flex flex-col w-1/2 p-4 h-full">
+          {/* Input Section */}
+          <div
+            className={`flex justify-between items-center px-4 py-2 rounded-t-md ${currentTheme.editor}`}
+          >
+            <h2 className="text-lg font-semibold">Input</h2>
+            <button
+              onClick={() => setInput("")}
+              className="px-4 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition duration-300 shadow"
+            >
+              Clear
+            </button>
+          </div>
+          <textarea
+            value={Input}
+            onChange={(e) => setInput(e.target.value)}
+            className={`h-[calc(47%-2.5rem)] w-full rounded-b-md px-4 py-2 resize-none shadow-inner ${currentTheme.editor} mb-4`}
+            placeholder="Enter your input here..."
+          />
+
+          {/* Output Section */}
           <div
             className={`flex justify-between items-center px-4 py-2 rounded-t-md ${currentTheme.editor}`}
           >
@@ -164,12 +184,10 @@ console.log("Hello, World!");`,
               Clear
             </button>
           </div>
-
-          {/* Output Textarea */}
           <textarea
             readOnly
             value={output}
-            className={`h-[calc(97%-2.5rem)] w-full rounded-b-md px-4 py-2 resize-none shadow-inner ${currentTheme.editor}`}
+            className={`h-[calc(47%-2.5rem)] w-full rounded-b-md px-4 py-2 resize-none shadow-inner ${currentTheme.editor}`}
             placeholder="Program output will appear here..."
           />
         </div>

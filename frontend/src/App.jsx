@@ -41,6 +41,7 @@ const AdminDelteContest=lazy(()=>import('./components/Admin/DeleteContest.jsx'))
 const Conatct=lazy(()=>import('./components/Header/Contact.jsx'));
 const GetIssue=lazy(()=>import('./components/Admin/Getallissuse.jsx'));
 const UpdateIssue=lazy(()=>import('./components/Admin/UpdateIssue.jsx'));
+const Discussion=lazy(()=>import('./components/Problem/Discussion.jsx'));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -71,48 +72,61 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      <ThemeProvider>
-        <BrowserRouter>
-          <Suspense fallback={<Loader />}>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/compiler" element={<Compiler />} />
-                <Route path="/problem/:id" element={<Editor />} />
-                <Route path="/problem" element={<ProblemList />} />
-                <Route path="/unauthorized" element={<Unauthorized />} />
-                <Route path='/Conatct' element={<Conatct/>}/>
+      <SocketProvider> {/* Move SocketProvider here */}
+        <ThemeProvider>
+          <BrowserRouter>
+            <Suspense fallback={<Loader />}>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Layout />}>
+                  <Route path="/Discussion" element={<Discussion />} />
+                  <Route index element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/compiler" element={<Compiler />} />
+                  <Route path="/problem/:id" element={<Editor />} />
+                  <Route path="/problem" element={<ProblemList />} />
+                  <Route path="/unauthorized" element={<Unauthorized />} />
+                  <Route path="/Conatct" element={<Conatct />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/profile" element={<UserProfile />} />
+                <Route path="/contest" element={<ContestList />} />
+                <Route path='/Assignment/:id' element={<Assignment/>}/>
+                <Route path='/Contest/problem/:id' element={<ContestProblem/>}/>
+                </Route>
+  
+                {/* Protected Routes */}
+                
+  
+                {/* Admin Protected Routes */}
                 <Route
-                  path="/leaderboard"
                   element={
-                    <SocketProvider>
-                      <Leaderboard />
-                    </SocketProvider>
+                    <ProtectRoute
+                      user={user}
+                      role={user?.role}
+                      requirerole="admin"
+                      redirect="/login"
+                    />
                   }
-                />
-              </Route>
-
-              {/* Protected Routes */}
-              
-              <Route element={<ProtectRoute user={user}  role={user?.role} requirerole="admin" redirect="/login"/>}>
-                <Route path="/admin/create/contest" element={<AdminCreateContest/>} />
-                <Route path="/admin/contest/monitor" element={<AdminMonitorcontest/>} />
-                <Route path="/admin/contest/delete" element={<AdminDelteContest/>} />
-                <Route path="/admin/problem/create" element={<ProblemCreation />} />
-                <Route path="/admin/problem/update" element={<ProblemUpdate />} />
-                <Route path="/admin/problem/delete" element={<ProblemDelete />} />
-                <Route path="/admin/dashboard" element={<Dashboard/>}/>
-                <Route path='/admin/issue' element={<GetIssue/>}/>
-                <Route path='admin/Issue/update/:id' element={<UpdateIssue/>}/>
-              </Route>
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </ThemeProvider>
+                >
+                  <Route path="/admin/create/contest" element={<AdminCreateContest />} />
+                  <Route path="/admin/contest/monitor" element={<AdminMonitorcontest />} />
+                  <Route path="/admin/contest/delete" element={<AdminDelteContest />} />
+                  <Route path="/admin/problem/create" element={<ProblemCreation />} />
+                  <Route path="/admin/problem/update" element={<ProblemUpdate />} />
+                  <Route path="/admin/problem/delete" element={<ProblemDelete />} />
+                  <Route path="/admin/dashboard" element={<Dashboard />} />
+                  <Route path="/admin/issue" element={<GetIssue />} />
+                  <Route path="/profile" element={<UserProfile />} />
+                  <Route path="/admin/Issue/update/:id" element={<UpdateIssue />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </ThemeProvider>
+      </SocketProvider>
     </>
   );
+  
 };
 
 export default App;

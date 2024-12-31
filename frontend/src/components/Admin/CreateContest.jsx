@@ -6,6 +6,7 @@ import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import { server } from "../../constants/config";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const CreateContest = () => {
   const [name, setName] = useState("");
@@ -14,7 +15,6 @@ const CreateContest = () => {
   const [endTime, setEndTime] = useState(null);
   const [problems, setProblems] = useState([]);
   const [userInput, setUserInput] = useState("");
-  const [userSuggestions, setUserSuggestions] = useState([]);
   const [user, setUser] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -42,7 +42,7 @@ const CreateContest = () => {
 
   const handleProblemChange = (event) => {
     const value = event.target.value;
-    const problemsArray = value.split(","); // Assuming problems are comma-separated
+    const problemsArray = value.split(","); 
     setProblems(problemsArray);
   };
 
@@ -58,8 +58,10 @@ const CreateContest = () => {
 
     try {
       const response = await axios.post(`${server}/api/v1/create/contest`, contestData);
+      toast.success("Contest created successfully");
       console.log("Contest created successfully:", response.data);
     } catch (error) {
+      toast.error("Creating Contest Error");
       console.error("Error creating contest:", error);
     }
   };

@@ -3,6 +3,7 @@ import {
   useCreateProblemMutation,
   useCreateTestcaseMutation,
 } from "../../redux/Problemapi";
+import { toast } from "react-toastify";
 
 const ProblemCreation = () => {
   const [title, setTitle] = useState("");
@@ -74,9 +75,10 @@ const ProblemCreation = () => {
         testcases: testcasesToSend,
       }).unwrap();
 
-      console.log("Problem and test cases created successfully:", createdTestcases);
+      toast.success("Problem and test cases created successfully:");
     } catch (error) {
-      console.error("Error creating problem or test cases:", error);
+      toast.error("Error creating problem or test cases:");
+      console.log(error);
     }
   };
 

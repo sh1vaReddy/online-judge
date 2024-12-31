@@ -9,10 +9,11 @@ import {
 } from "../controller/TestCase_controller.js";
 import express from 'express';
 const router=express.Router();
+import {isAuthenticated,authoriesrole} from '../middleware/auth.js'
 // Routes for test cases
 
 // Create a new test case
-router.post("/testcases",createTestcases );
+router.post("/testcases",isAuthenticated,authoriesrole("admin"),createTestcases );
 
 // Get all test cases
 router.get("/testcases", getalltestcase);
@@ -24,11 +25,10 @@ router.get("/testcases/:id", gettestcasebyid);
 router.get("/testcases/problem/:id", gettestcasebyproblemid);
 
 // Update a test case by its ID
-router.put("/testcases/:id", updatetestcase);
+router.put("/testcases/:id",isAuthenticated,authoriesrole("admin"),updatetestcase);
 
 // Delete a test case by its ID
-router.delete("/testcases/:id", deletetestcase);
+router.delete("/testcases/:id",isAuthenticated,authoriesrole("admin"),deletetestcase);
 
-router.get('/testcase/databse',testcasemData);
 
 export default router;

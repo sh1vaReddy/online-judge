@@ -4,11 +4,11 @@ import {createContest, getallContest, getallcontestbyid,  getContestList,  getCo
 import { restrictToParticipants } from '../middleware/restrictToParticipants.js';
 import { isAuthenticated,authoriesrole } from '../middleware/auth.js';
 
-router.post('/create/contest',isAuthenticated,authoriesrole,createContest);
-router.get('/getallcontest',getallContest);
-router.get('/getcontest/:id',getallcontestbyid);
-router.get('/user/contest',isAuthenticated,getContestsOfTheUser)
-router.get('/getcontsetlist',getContestList)
+router.post('/create/contest',isAuthenticated,authoriesrole("admin"),createContest);
+router.get('/getallcontest',isAuthenticated,authoriesrole("admin"),getallContest);
+router.get('/getcontest/:id',isAuthenticated,restrictToParticipants,getallcontestbyid);
+router.get('/user/contest',isAuthenticated,authoriesrole("admin"),getContestsOfTheUser)
+router.get('/getcontsetlist',isAuthenticated,authoriesrole("admin"),getContestList)
 
 
 export default router;

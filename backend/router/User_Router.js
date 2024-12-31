@@ -7,7 +7,7 @@ router.post('/sing_up',Register);
 router.post('/Login',Login)
 router.get('/me',isAuthenticated,getmyprofile);
 router.get('/logout',isAuthenticated,logout);
-router.get("/getallusers",getallusers)
+router.get("/getallusers",isAuthenticated,authoriesrole("admin"),getallusers)
 router.post("/getUserInfo",getuserbyid);
 
 export default router;  

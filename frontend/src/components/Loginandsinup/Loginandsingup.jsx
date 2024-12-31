@@ -9,12 +9,15 @@ import { userExists } from "../../redux/reducers/authslice";
 
 const Loginandsignup = () => {
   const [isLogin, setIsLogin] = useState(true);
+
   const [formData, setFormData] = useState({
     email: "",
     username: "",
     password: "",
     confirmPassword: "",
   });
+
+  
   const [error, setError] = useState("");
   const dispatch=useDispatch();
   const navigate=useNavigate();
@@ -23,6 +26,8 @@ const Loginandsignup = () => {
     setError(""); 
     setFormData({ email: "", username: "", password: "", confirmPassword: "" });
   };
+
+ 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
