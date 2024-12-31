@@ -89,6 +89,8 @@ int main() {
           code,
           language: selectedLanguage,
         })
+
+        const   execution_time=timeresponse.data.TimeComplexity;
        
   
         const verdictResult = response.data.verdictResult.message;
@@ -113,6 +115,7 @@ int main() {
             code,
             status,
             language: selectedLanguage,
+            execution_time
           },
           { withCredentials: true }
         );
@@ -269,7 +272,7 @@ int main() {
             id="language"
             value={selectedLanguage}
             onChange={handleLanguageChange}
-            className={`rounded-md px-3 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-gray-400 transition-all ${currentTheme.dropdown}`}
+            className={`rounded-md px-3 py-2 w-48 focus:outline-none border-gray-900 focus:ring-2 focus:ring-indigo-500 hover:border-gray-400 transition-all ${currentTheme.dropdown}`}
           >
             {languageOptions.map((option) => (
               <option key={option.value} value={option.value}>

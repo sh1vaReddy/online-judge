@@ -28,8 +28,8 @@ const Contact = () => {
   };
 
   return (
-    <div className="h-full dark:bg-gray-800 bg-gray-200">
-      <div className="p-4 mx-auto max-w-xl bg-white font-sans ">
+    <div className="h-full py-40 dark:bg-gray-900 bg-gray-200">
+      <div className="p-4 mx-auto max-w-xl bg-white font-sans rounded-xl">
         <h1 className="text-2xl text-gray-800 font-bold text-center">
           Contact Us
         </h1>
@@ -51,7 +51,7 @@ const Contact = () => {
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full py-2.5 px-4 text-gray-800 bg-gray-100 border focus:border-black focus:bg-transparent text-sm outline-none transition-all"
+              className="w-full py-4 px-4 rounded-lg text-gray-800 bg-gray-100 border focus:border-black focus:bg-transparent text-sm outline-none transition-all"
               required
             />
           </div>
@@ -61,24 +61,24 @@ const Contact = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full py-2.5 px-4 text-gray-800 bg-gray-100 border focus:border-black focus:bg-transparent text-sm outline-none transition-all"
+              className="w-full py-4 px-4 rounded-lg text-gray-800 bg-gray-100 border focus:border-black focus:bg-transparent text-sm outline-none transition-all"
               required
             />
           </div>
           <div>
             <textarea
-              placeholder="Message"
+              placeholder="Enter Your Issue"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows="4"
-              className="w-full px-4 text-gray-800 bg-gray-100 border focus:border-black focus:bg-transparent text-sm pt-3 outline-none transition-all"
+              className="w-full px-4 rounded-lg text-gray-800 bg-gray-100 border focus:border-black focus:bg-transparent text-sm pt-3 outline-none transition-all"
               required
             ></textarea>
           </div>
           <div>
             <button
               type="submit"
-              className="text-white bg-black hover:bg-gray-900 tracking-wide text-sm px-4 py-2.5 w-full outline-none"
+              className="text-white rounded bg-black mt-6 hover:bg-gray-900 tracking-wide text-sm px-4 py-2.5 w-full outline-none"
             >
               Send
             </button>

@@ -16,7 +16,10 @@ const Submission = () => {
     const fetchSubmissions = async () => {
       try {
         const response = await axios.get(`${server}/api/v1/submissions/problem/${id}`);
-        setSubmissions(response.data.submissions);
+        const sortedSubmissions = response.data.submissions.sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setSubmissions(sortedSubmissions);
       } catch (error) {
         console.error("Error fetching submissions:", error);
       }
@@ -85,7 +88,7 @@ const Submission = () => {
                     {submission.language || "N/A"}
                   </td>
                   <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
-                    {submission.runtime || "N/A"}
+                    {submission.execution_time || "N/A"}
                   </td>
                   <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
                     {submission.memory || "N/A"}

@@ -12,9 +12,9 @@ const DiscusSchema=new mongoose.Schema({
         ref:'User',
         required:true,
     },
-    title:{
+    user_name:{
         type:String,
-        requiure:true,
+        required:true,
     },
     content:{
         type:String,

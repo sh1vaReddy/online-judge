@@ -1,10 +1,59 @@
 import fs from 'fs';
 import { v4 as uuid } from 'uuid';
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+
+ const executeWithMemory=async(command,args=[],inputPath=null)=>{
+    return new Promise((resolve,reject)=>{
+        const startTime=Date.now();
+        const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });
+
+        let output = '';
+        let error = '';
+        child.stdout.on('data', (data) => {
+            output += data.toString();
+        });
+
+        child.stderr.on('data', (data) => {
+            error += data.toString();
+        });
+
+        if (inputPath) {
+            const inputStream = fs.createReadStream(inputPath);
+            inputStream.pipe(child.stdin);
+        }
+         child.on('close', async (code) => {
+            if (code !== 0) {
+                reject(new Error(`Process exited with code ${code}: ${error}`));
+            } else {
+                try {
+                    // Use `ps` command (Unix-like systems) to measure memory
+                    const memoryCommand = `ps -o rss= -p ${child.pid}`;
+                    const { stdout: memoryUsage } = await exec(memoryCommand);
+                    const elapsedTime = Date.now() - startTime;
+                    resolve({
+                        output: output.trim(),
+                        memoryUsage: parseInt(memoryUsage.trim(), 10), // Memory in KB
+                        elapsedTime, // Time in ms
+                    });
+                } catch (err) {
+                    reject(new Error(`Memory check failed: ${err.message}`));
+                }
+            }
+        });
+
+        // Handle timeout
+        setTimeout(() => {
+            child.kill('SIGKILL');
+            reject(new Error('Execution timed out'));
+        }, TIME_LIMIT);
+
+    })
+
+ }
 const execAsync = promisify(exec);
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -28,6 +77,7 @@ export const excuteCPP = async (filepath, inputpath) => {
             return new Error(`Compilation error: ${compilerstderr}`);
         }
 
+        
         const executeCommand = `"${outputExecutablePath}" < "${inputpath}"`;
         const { stdout, stderr } = await execAsync(executeCommand,{ timeout: TIME_LIMIT });
 

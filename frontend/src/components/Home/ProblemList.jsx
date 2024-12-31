@@ -58,7 +58,7 @@ const ProblemList = () => {
             <th className="px-4 py-2 dark:text-gray-100">Problem Number</th>
             <th className="px-4 py-2 dark:text-gray-100">Title</th>
             <th className="px-4 py-2 dark:text-gray-100">Difficulty</th>
-            <th className="px-4 py-2 dark:text-gray-100">Status</th>
+            <th className="px-4 py-2 dark:text-gray-100">Tags</th>
           </tr>
         </thead>
         <tbody>

@@ -20,7 +20,7 @@ const SubmissionResultSchema = new Schema({
     required: true,
   },
   execution_time: {
-    type: Number,
+    type:String,
   },
   memory_used: {
     type: Number,

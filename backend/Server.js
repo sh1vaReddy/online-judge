@@ -9,12 +9,14 @@ import UserRoute from "./router/User_Router.js";
 import ProblemRoute from "./router/Problem_Router.js";
 import TestcaseRouter from "./router/Testcase_Router.js";
 import SubmissionRouter from "./router/Submission_Router.js";
-import ContestRouter from './router/Constesr_Router.js';
-import LeaderRouter from './router/Leaderboard_Router.js';
-import Contactrouter from './router/Conact_router.js';
-import Discussionrouter from './router/Discussion_router.js'
-import {NEW_DISCUSSION} from './constants/event.js';
+import ContestRouter from "./router/Constesr_Router.js";
+import LeaderRouter from "./router/Leaderboard_Router.js";
+import Contactrouter from "./router/Conact_router.js";
+import Discussionrouter from "./router/Discussion_router.js";
+import { GET_DISSCUSSION, NEW_DISCUSSION } from "./constants/event.js";
 import { DiscussModel } from "./model/DiscussionSchema.js";
+import { socketAuthenticator } from "./middleware/auth.js";
+import { UserModel } from "./model/User.js";
 
 dotenv.config();
 
@@ -30,7 +32,7 @@ const io = new Server(app, {
 });
 
 // Middleware
-server.use(express.json({ limit: '50mb' }));
+server.use(express.json({ limit: "50mb" }));
 server.use(
   cors({
     origin: "http://localhost:5173",
@@ -46,40 +48,48 @@ server.use("/api/v1", ProblemRoute);
 server.use("/api/v1", TestcaseRouter);
 server.use("/api/v1", SubmissionRouter);
 server.use("/api/v1", ContestRouter);
-server.use("/api/v1", LeaderRouter,Contactrouter,Discussionrouter);
+server.use("/api/v1", LeaderRouter, Contactrouter, Discussionrouter);
 
+io.use((socket, next) => {
+  cookieParser()(
+    socket.request,
+    socket.request.res,
+    async (err) => await socketAuthenticator(err, socket, next)
+  );
+});
 
-// WebSocket Namespace for Real-Time Updates
-io.on('connection', (socket) => {
-  console.log('User connected on namespace /api/v1:', socket.id);
+io.on("connection", (socket) => {
+  console.log("User connected on namespace /api/v1:", socket.id);
 
-
-  socket.on(NEW_DISCUSSION,async({problem_id, title, content })=>{
-    console.log("Received discussion data:", { problem_id, title, content });
+  socket.on(NEW_DISCUSSION, async ({ id, content }) => {
+    
     try {
-      const discussion = await DiscussModel.create({
-        problem_id,
-        user_id: socket.handshake.auth.user_id,  
-        title,
+      const user=await UserModel.findById(socket.user._id);
+      if (!user) {
+        throw new Error('User not found');
+      }
+      await DiscussModel.create({
+        problem_id: id,
+        user_id: socket.user._id,
+        user_name:user.username,
         content,
-      });
-      io.of('/api/v1').emit('newDiscussion', discussion);
+    });
     } catch (error) {
-      console.error('Error creating discussion:', error);
+      console.log(error);
     }
   });
 
-  socket.on('joinContest', (contestId) => {
-    console.log(`User joined contest ${contestId}`);
+  socket.on(GET_DISSCUSSION, async ({ id }) => {
+    try {
+      const discussions = await DiscussModel.find({ problem_id: id });
+      socket.emit(GET_DISSCUSSION, discussions);
+    } catch (error) {
+      console.error("Error fetching discussions:", error);
+      socket.emit(GET_DISSCUSSION, []);
+    }
   });
-
-  socket.on('leaderboardupdate', (leaderboardData) => {
-    console.log('Leaderboard update received:', leaderboardData);
-    io.of('/api/v1').emit('leaderboardupdate', leaderboardData); 
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
   });
 });
 

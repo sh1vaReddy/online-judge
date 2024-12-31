@@ -144,9 +144,9 @@ const Problem = ({ theme }) => {
         {activeTab === "discussion" && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Discussion</h2>
-            <p className="leading-relaxed">
+            <div className="leading-relaxed">
               <Discussion/>
-            </p>
+            </div>
           </div>
         )}
 
