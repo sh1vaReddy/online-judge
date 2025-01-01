@@ -26,7 +26,7 @@ const app = http.createServer(server);
 const io = new Server(app, {
   transports: ['websocket', 'polling'],
   cors: {
-    origin:process.env.CLIENT_URL || 'http://localhost:5173',
+    origin:process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }

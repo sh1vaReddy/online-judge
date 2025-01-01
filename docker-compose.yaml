@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  app1:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-service
+    ports:
+      - "8080:8080" 
+   
+
+  app2:
+    build:
+      context: ./compiler
+      dockerfile: Dockerfile
+    container_name: compiler_service
+    ports:
+      - "3000:3000" 
+    environment:
+      - PORT=3000
+      - JWT_SECRET=$%&*^$#@!*&
+      - SUBMISSION_THRESHOLD=3
+      - SCORE_PENALTY=15
+      - mongo_url=mongodb+srv://kanagaddashivareddy:bhEFsj6CsFnPtxrF@cluster0.uvcd9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - CLIENT_URL=https://online-judge-66ac41q0d-shiva-pasad-reddys-projects.vercel.app/

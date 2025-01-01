@@ -25,7 +25,7 @@ ENV JWT_SECRET=$%&*^$#@!*&
 ENV SUBMISSION_THRESHOLD=3
 ENV SCORE_PENALTY=15
 ENV mongo_url=mongodb+srv://kanagaddashivareddy:bhEFsj6CsFnPtxrF@cluster0.uvcd9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-ENV CLIENT_URL=h 
+ENV CLIENT_URL=https://online-judge-66ac41q0d-shiva-pasad-reddys-projects.vercel.app/
 
 # Define the command to run the application
 CMD ["node", "Server.js"]
