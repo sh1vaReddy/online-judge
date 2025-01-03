@@ -1,7 +1,16 @@
+# Ignore environment files
 /backend/.env
 /frontend/.env
-/backend/Dockerfile
+
+# Ignore Docker-related files that shouldn't be versioned
 /backend/.dockerignore
-/compiler/Dockerfile
 /compiler/.dockerignore
-./keys
+
+# Ignore Docker build directories or temporary files (if any)
+**/docker-compose.override.yml
+
+# Ignore sensitive keys directory
+/keys
+
+# Ignore all files related to Docker containers, except Dockerfiles
+!**/Dockerfile
