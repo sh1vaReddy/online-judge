@@ -1,3 +1,7 @@
 /backend/.env
 /frontend/.env
+/backend/Dockerfile
+/backend/.dockerignore
+/compiler/Dockerfile
+/compiler/.dockerignore
 ./keys
