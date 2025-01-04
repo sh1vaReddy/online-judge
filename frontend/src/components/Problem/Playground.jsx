@@ -5,6 +5,7 @@ import { MdFormatAlignLeft } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import { server } from "../../constants/config";
 import { useSelector } from "react-redux";
+import { compiler_server } from "../../constants/config";
 
 
 
@@ -73,7 +74,7 @@ int main() {
     {
       try {
         const response = await axios.post(
-          `http://localhost:8080/run`,
+          `${compiler_server}/run`,
           {
             language: selectedLanguage,
             code,
@@ -85,7 +86,7 @@ int main() {
         setouput(response.data.output);
 
 
-        const timeresponse=await axios.post(`http://localhost:8080/time-complexity`,{
+        const timeresponse=await axios.post(`${compiler_server}/time-complexity`,{
           code,
           language: selectedLanguage,
         })

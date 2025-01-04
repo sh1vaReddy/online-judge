@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node Server.js"
+    "start": "nodemon Server.js",
+    "build": "npx babel Server.js"
   },
   "author": "",
   "license": "ISC",
@@ -28,5 +29,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
   }
 }

@@ -4,6 +4,7 @@ import { MdFormatAlignLeft } from "react-icons/md";
 import { ThemeContext } from "../../ThemeContext";
 import axios from "axios";
 import { FaPlay } from "react-icons/fa";
+import { compiler_server } from "../../constants/config";
 
 const Compiler = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -49,7 +50,7 @@ console.log("Hello, World!");`,
   };
 
   const handleRun = async () => {
-    const response = await axios.post(`http://localhost:8080/compile`, {
+    const response = await axios.post(`${compiler_server}/compile`, {
       language: selectedLanguage,
       code: code,
       Input,
