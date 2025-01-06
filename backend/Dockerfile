@@ -10,7 +10,6 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install 
 
-# Copy the .env file into the container
 
 # Copy the rest of the application code to the container
 COPY . .
@@ -19,12 +18,13 @@ COPY . .
 EXPOSE 3000
 
 # Set environment variables from the .env file
-ENV PORT=8080
+ENV PORT=3000
 ENV JWT_SECRET=$%&*^$#@!*&
 ENV SUBMISSION_THRESHOLD=3
 ENV SCORE_PENALTY=15
 ENV mongo_url=mongodb+srv://kanagaddashivareddy:bhEFsj6CsFnPtxrF@cluster0.uvcd9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-ENV CLIENT_URL=
+ENV CLIENT_URL=https://www.codemater.site
+
 
 # Define the command to run the application
 CMD ["node", "Server.js"]

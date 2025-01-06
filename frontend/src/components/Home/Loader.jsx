@@ -1,4 +1,4 @@
-import  CodeMaster from '../../assets/login.png'
+import  CodeMaster from '../../assets/compiler.png'
 
 
 const Loader = () => {

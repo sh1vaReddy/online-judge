@@ -17,7 +17,7 @@ const ProblemCreation = () => {
   const [createProblem, { isLoading, isSuccess, isError }] =
     useCreateProblemMutation();
 
-  const [createTestcase] = useCreateTestcaseMutation(); // Mutation hook for creating test cases
+  const [createTestcase] = useCreateTestcaseMutation(); 
 
   const addExample = () => {
     setExamples([...examples, { input: "", output: "" }]);
@@ -45,9 +45,30 @@ const ProblemCreation = () => {
     );
   };
 
+  const updateExample = (index, key, value) => {
+    setExamples((prevExamples) =>
+      prevExamples.map((example, i) =>
+        i === index ? { ...example, [key]: value } : example
+      )
+    );
+  };
+
+  const validateTestCases = () => {
+    return testcase.every(({ input, output }) => input && output);
+  };
+
+  const validateExamples = () => {
+    return examples.every(({ input, output }) => input && output);
+  };
+
   const saveProblem = async () => {
-    if (testcase.length === 0) {
-      console.error("Testcases must be a non-empty array");
+    if (!validateTestCases()) {
+      toast.error("Each test case must have both input and output.");
+      return;
+    }
+
+    if (!validateExamples()) {
+      toast.error("Each example must have both input and output.");
       return;
     }
 
@@ -64,30 +85,20 @@ const ProblemCreation = () => {
       const Problem = await createProblem(problemData).unwrap();
       const ProblemId = Problem.problem.problem_id;
 
-      // Map test cases to include problem_id
       const testcasesToSend = testcase.map((test) => ({
         ...test,
         problem_id: ProblemId,
       }));
 
-      // Create test cases via mutation
       const createdTestcases = await createTestcase({
         testcases: testcasesToSend,
       }).unwrap();
 
-      toast.success("Problem and test cases created successfully:");
+      toast.success("Problem and test cases created successfully.");
     } catch (error) {
-      toast.error("Error creating problem or test cases:");
+      toast.error("Error creating problem or test cases.");
       console.log(error);
     }
-  };
-
-  const updateExample = (index, key, value) => {
-    setExamples((prevExamples) =>
-      prevExamples.map((example, i) =>
-        i === index ? { ...example, [key]: value } : example
-      )
-    );
   };
 
   return (

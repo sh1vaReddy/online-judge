@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { server } from "../../constants/config";
 import { useSelector } from "react-redux";
 import { compiler_server } from "../../constants/config";
+import {Editor} from '@monaco-editor/react';
 
 
 
@@ -313,7 +314,7 @@ int main() {
 
         {/* Code Editor Section */}
         <div className="rounded-b-md w-full h-full">
-          <textarea
+          <Editor
             value={code}
             onChange={(e) => setCode(e.target.value)}
             className={`w-full h-full rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner ${currentTheme.editor}`}

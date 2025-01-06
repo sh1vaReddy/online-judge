@@ -5,7 +5,6 @@ const TestCaseSchema = new Schema({
   problem_id: {
     type: Number, 
     unique: true,
-    required: true,
   },
   input: {
     type: String,

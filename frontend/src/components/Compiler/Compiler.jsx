@@ -5,6 +5,7 @@ import { ThemeContext } from "../../ThemeContext";
 import axios from "axios";
 import { FaPlay } from "react-icons/fa";
 import { compiler_server } from "../../constants/config";
+import {Editor} from '@monaco-editor/react';
 
 const Compiler = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -50,13 +51,18 @@ console.log("Hello, World!");`,
   };
 
   const handleRun = async () => {
-    const response = await axios.post(`${compiler_server}/compile`, {
-      language: selectedLanguage,
-      code: code,
-      Input,
-    });
-    setOutput(response.data.output);
+    try {
+      const response = await axios.post(`${compiler_server}/compile`, {
+        language: selectedLanguage,
+        code: code,
+        Input,
+      });
+      setOutput(response.data.output);
+    } catch (error) {
+      setOutput(`Error: ${error.response?.data?.error || error.message}`);
+    }
   };
+  
 
   const languageOptions = [
     { label: "JavaScript", value: "javascript" },
@@ -143,9 +149,9 @@ console.log("Hello, World!");`,
       <div className="flex h-[calc(103.5vh-10rem)]">
         {/* Code Editor Section */}
         <div className="w-3/4 p-4">
-          <textarea
+          <Editor
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(value) => setCode(value || "")}
             className={`h-full w-full rounded-md px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner ${currentTheme.editor}`}
             placeholder="Write your code here..."
             style={{ height: "100%" }}
