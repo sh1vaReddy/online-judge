@@ -73,6 +73,7 @@ const App = () => {
     <>
       <ToastContainer />
    {/* Move SocketProvider here */}
+    <SocketProvider>
         <ThemeProvider>
           <BrowserRouter>
             <Suspense fallback={<Loader />}>
@@ -123,6 +124,7 @@ const App = () => {
             </Suspense>
           </BrowserRouter>
         </ThemeProvider>
+        </SocketProvider>
     </>
   );
   
