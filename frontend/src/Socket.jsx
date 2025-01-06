@@ -15,7 +15,7 @@ const getsocket = () => {
 
 // Socket Provider Component
 const SocketProvider = ({ children }) => {
-  const socket = useMemo(() => io("http://localhost:3000", { withCredentials: true }), []);
+  const socket = useMemo(() => io(`${server}`, { withCredentials: true }), []);
 
   useEffect(() => {
     // Clean up the socket connection on unmount
