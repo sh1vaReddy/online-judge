@@ -16,7 +16,6 @@ const getsocket = () => {
 // Socket Provider Component
 const SocketProvider = ({ children }) => {
   const socket = useMemo(() => io(`${server}`, { 
-    "transports": ['websocket'],
     withCredentials: true }), []);
 
   useEffect(() => {
