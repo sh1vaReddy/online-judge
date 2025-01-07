@@ -15,7 +15,9 @@ const getsocket = () => {
 
 // Socket Provider Component
 const SocketProvider = ({ children }) => {
-  const socket = useMemo(() => io(`${server}`, { withCredentials: true }), []);
+  const socket = useMemo(() => io(`${server}`, { 
+    "transports": ['websocket'],
+    withCredentials: true }), []);
 
   useEffect(() => {
     // Clean up the socket connection on unmount
