@@ -1,38 +1,49 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { NEW_DISCUSSION, GET_DISSCUSSION } from "../util/Event";
+import { NEW_DISCUSSION, GET_DISCUSSION } from "../util/Event";
 import { getsocket } from "../../Socket";
 
 const Discussion = () => {
   const socket = getsocket();
+
   const [content, setContent] = useState("");
   const { id } = useParams();
-  const [Message, setMessage] = useState([]);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     console.log("Connecting to WebSocket");
+
+    const handleDiscussions = (discussions) => {
+      setMessages(discussions);
+    };
+
     socket.on("connect", () => {
       console.log("Connected to WebSocket:", socket.id);
+      socket.emit(GET_DISCUSSION, { id });
     });
 
-    socket.on(GET_DISSCUSSION, (discussions) => {
-      setMessage(discussions);
-    });
-
-    socket.emit(GET_DISSCUSSION, { id });
+    socket.on(GET_DISCUSSION, handleDiscussions);
 
     return () => {
       socket.off("connect");
+      socket.off(GET_DISCUSSION, handleDiscussions);
       socket.disconnect();
       console.log("Disconnected from WebSocket");
     };
-  }, [id]);
+  }, [id, socket]);
 
   const handleSendMessage = () => {
-    socket.emit(NEW_DISCUSSION, {
-      content,
-      id,
+    if (content.trim() === "") {
+      alert("Message cannot be empty.");
+      return;
+    }
+
+    socket.emit(NEW_DISCUSSION, { content, id }, (error) => {
+      if (error) {
+        alert("Failed to send message. Please try again.");
+      }
     });
+
     setContent("");
   };
 
@@ -41,7 +52,7 @@ const Discussion = () => {
       <div className="flex-grow overflow-auto p-4">
         <h1 className="text-xl font-semibold mb-4">Welcome to the discussion</h1>
         <ul className="space-y-4">
-          {Message.map((item) => (
+          {messages.map((item) => (
             <li
               key={item._id}
               className="bg-white shadow-md rounded-md p-4"
@@ -52,14 +63,17 @@ const Discussion = () => {
           ))}
         </ul>
       </div>
+
       <div className="p-4 bg-white shadow-md sticky bottom-0">
         <div className="flex items-center gap-2">
           <input
             type="text"
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
             className="flex-grow border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Type your message..."
+            aria-label="Type your message"
           />
           <button
             onClick={handleSendMessage}

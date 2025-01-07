@@ -70,6 +70,19 @@ int main() {
     setCode(defaultCode[newLanguage] || "");
   };
 
+  const handleRun = async () => {
+      try {
+        const response = await axios.post(`${compiler_server}/compile`, {
+          language: selectedLanguage,
+          code: code,
+          Input: input,
+        });
+        setouput(response.data.output);
+      } catch (error) {
+        setouput(`Error: ${error.response?.data?.error || error.message}`);
+      }
+    };
+
   const handleSubmission = async () => {
     if(isAuthenticated)
     {
@@ -85,6 +98,7 @@ int main() {
           
         );
         setouput(response.data.output);
+      
 
 
         const timeresponse=await axios.post(`${compiler_server}/time-complexity`,{
@@ -330,7 +344,7 @@ int main() {
           <div className="flex gap-4">
             <button
               className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
-              onClick={() => alert("Running test cases...")}
+              onClick={handleRun}
             >
               Run
             </button>

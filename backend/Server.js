@@ -17,6 +17,7 @@ import { GET_DISSCUSSION, NEW_DISCUSSION } from "./constants/event.js";
 import { DiscussModel } from "./model/DiscussionSchema.js";
 import { socketAuthenticator } from "./middleware/auth.js";
 import { UserModel } from "./model/User.js";
+import {createDiscussion,handleGetDiscussion} from './controller/Discussion.js';
 
 dotenv.config();
 
@@ -53,45 +54,18 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log(socket.id);
+  console.log("User connected:", socket.id);
 
-  socket.on(NEW_DISCUSSION, async ({ id, content }) => {
-    
-    try {
-      const user=await UserModel.findById(socket.user._id);
-      if (!user) {
-        throw new Error('User not found');
-      }
-      await DiscussModel.create({
-        problem_id: id,
-        user_id: socket.user._id,
-        user_name:user.username,
-        content,
-    });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
-  socket.on(GET_DISSCUSSION, async ({ id }) => {
-    try {
-      const discussions = await DiscussModel.find({ problem_id: id });
-      socket.emit(GET_DISSCUSSION, discussions);
-    } catch (error) {
-      console.error("Error fetching discussions:", error);
-      socket.emit(GET_DISSCUSSION, []);
-    }
-  });
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
+  socket.on(NEW_DISCUSSION,async(data)=>createDiscussion(socket,data));
+  socket.on(GET_DISSCUSSION,async(data)=>handleGetDiscussion(socket,data)); 
+   
 });
 
 // Connect to Database
 ConnectDB();
 
 // Start the Server
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
