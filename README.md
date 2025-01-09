@@ -150,3 +150,4 @@ Contributions are welcome! Please follow these steps:
 - Discussion forums for each problem.
 - Enhanced analytics for user performance.
 - Support for contest hosting and participation.
+- timer and note taking for user
