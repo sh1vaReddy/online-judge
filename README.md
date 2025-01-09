@@ -38,7 +38,7 @@ Welcome to Code Master! This platform is designed to evaluate programming skills
 
 - **Frontend**:
   - React.js
-  - Tailwind CSS / Bootstrap for styling
+  - Tailwind CSS 
   - Axios for API requests
 
 - **Backend**:
@@ -54,8 +54,8 @@ Welcome to Code Master! This platform is designed to evaluate programming skills
   - Support for multiple languages (C++, Python, Java, etc.)
 
 - **Deployment**:
-  - Frontend: Vercel / Netlify
-  - Backend: AWS / Heroku
+  - Frontend: Vercel 
+  - Backend: AWS 
   - Database: MongoDB Atlas
 
 ## Installation
