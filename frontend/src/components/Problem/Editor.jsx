@@ -1,34 +1,36 @@
+import SplitPane from "react-split-pane";
 import Playground from "./Playground";
 import Problem from "./Problem";
 import { useContext } from "react";
 import { ThemeContext } from "../../ThemeContext";
 
-
 const Editor = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
-
   return (
-      <div className={`h-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
-      {/* Theme Toggle Button */}
-      <div className="absolute top-4 right-4">
-        <button
-          onClick={toggleTheme}
+    <div className="h-full">
+      <SplitPane
+        split="vertical"
+        minSize={500}
+        defaultSize="50%"
+        resizerClassName="border-x-4 bg-gray-400 cursor-col-resize"
+      >
+        <div
+          className={`h-full p-3 ${
+            theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
+          }`}
         >
-        </button>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex  h-screen">
-        <div className="w-1/2 p-3 h-full">
           <Problem theme={theme} />
         </div>
-        <div className="w-1/2 p-3 h-full bg-gray-50 rounded-md dark:bg-gray-900">
+        <div
+          className={`h-full p-3 bg-gray-50 ${
+            theme === "dark" ? "dark:bg-gray-900" : ""
+          }`}
+        >
           <Playground theme={theme} />
         </div>
-      </div>
+      </SplitPane>
     </div>
-
   );
 };
 
