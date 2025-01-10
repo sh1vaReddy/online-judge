@@ -8,13 +8,13 @@ import { toast } from "react-toastify";
 import Submission from "./Submission";
 import { server } from "../../constants/config";
 import Discussion from "./Discussion";
-import { useSelector } from "react-redux";
+
 
 const Problem = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("description");
   const [ProblemData, setProblemData] = useState(null);
   const { id } = useParams();
-  const { isAuthenticated } = useSelector((state) => state.auth);
+ 
 
   const themes = {
     light: {
@@ -47,13 +47,7 @@ const Problem = ({ theme }) => {
     fetchProblem();
   }, [id]);
 
-  const handleDiscussionClick = () => {
-    if (!isAuthenticated) {
-      toast.error("Please log in to access the Discussion section.");
-    } else {
-      setActiveTab("discussion");
-    }
-  };
+ 
 
   return (
     <div className={`rounded-lg border overflow-hidden h-full ${currentTheme.container}`}>
@@ -72,8 +66,7 @@ const Problem = ({ theme }) => {
             className={`font-semibold text-lg flex items-center space-x-2 transition ${
               activeTab === "discussion" ? currentTheme.activeButton : currentTheme.button
             }`}
-            onClick={handleDiscussionClick}
-            disabled={!isAuthenticated} 
+            onClick={()=>setActiveTab("discussion")}
           >
             <FaRegMessage />
             <span>Discussion</span>
@@ -135,7 +128,7 @@ const Problem = ({ theme }) => {
           </div>
         )}
 
-        {activeTab === "discussion" && isAuthenticated && (
+        {activeTab === "discussion" && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Discussion</h2>
             <div className="leading-relaxed">
