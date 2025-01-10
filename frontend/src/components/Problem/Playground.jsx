@@ -96,7 +96,19 @@ int main() {
 
         const execution_time = timeresponse.data.TimeComplexity;
 
-        
+        const verdictResult = response.data.verdictResult.message;
+        let status;
+
+        if (verdictResult === "All test cases passed!") {
+          status = "Accepted";
+          setVerdict("All test cases passed!");
+        } else if (verdictResult.includes("Test case failed")) {
+          status = "Wrong Answer";
+          setVerdict(`Test case failed: ${verdictResult}`);
+        } else {
+          status = "Runtime Error";
+          setVerdict("Runtime Error occurred.");
+        }
 
         console.log(response.data.verdictResult.message);
         await axios.post(
@@ -112,21 +124,6 @@ int main() {
         );
 
         setouput(response.data.output);
-
-
-        const verdictResult = response.data.verdictResult.message;
-        let status;
-
-        if (verdictResult === "All test cases passed!") {
-          status = "Accepted";
-          setVerdict("All test cases passed!");
-        } else if (verdictResult.includes("Test case failed")) {
-          status = "Wrong Answer";
-          setVerdict(`Test case failed: ${verdictResult}`);
-        } else {
-          status = "Runtime Error";
-          setVerdict("Runtime Error occurred.");
-        }
 
         if (response.data.success) {
           const verdictMessage = response.data.verdictResult.message;
@@ -172,10 +169,6 @@ int main() {
     } else {
       alert("plese login or singup to submit the code");
     }
-  };
-
-  const formatCode = (code, language) => {
-    return code.trim();
   };
 
   const renderTabContent = () => {
