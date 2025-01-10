@@ -58,6 +58,11 @@ const Dashboard = () => {
     navigation("/admin/allUser");
   }
 
+  const handlegetactivecontest = () =>
+  {
+    navigation("/admin/contest/monitor")
+  }
+
   return (
     <>
       <div className="min-h-screen flex">
@@ -82,7 +87,9 @@ const Dashboard = () => {
                 </p>
               </div>
               <div className="bg-green-500 text-white p-4 rounded-lg shadow">
-                <h2 className="text-lg font-bold">Active Contests</h2>
+                <h2 className="text-lg font-bold"
+                  onClick={handlegetactivecontest}
+                >Active Contests</h2>
                 <p className="text-4xl font-semibold mt-2">
                    {constestlist.length+1 ? constestlist.length : "No Active Contset"}
                 </p>

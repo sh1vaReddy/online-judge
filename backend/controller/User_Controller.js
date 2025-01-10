@@ -93,8 +93,6 @@ export const getuserbyid=trycatchmethod(async(req,res)=>{
             message: "No user IDs provided.",
         });
     }
-
-    // Find users by their IDs
     const users = await UserModel.find({ _id: { $in: userIds } });
 
   
