@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { FaCode } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { useParams } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import { server } from "../../constants/config";
 
 const Submission = () => {
@@ -15,9 +15,11 @@ const Submission = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const response = await axios.get(`${server}/api/v1/submissions/problem/${id}`);
-        const sortedSubmissions = response.data.submissions.sort((a, b) => 
-          new Date(b.createdAt) - new Date(a.createdAt)
+        const response = await axios.get(
+          `${server}/api/v1/submissions/problem/${id}`
+        );
+        const sortedSubmissions = response.data.submissions.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
         setSubmissions(sortedSubmissions);
       } catch (error) {
@@ -35,7 +37,7 @@ const Submission = () => {
 
   const handleClickOutside = (event) => {
     if (popupRef.current && !popupRef.current.contains(event.target)) {
-      setshowModel(false); 
+      setshowModel(false);
     }
   };
 
@@ -47,7 +49,7 @@ const Submission = () => {
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside); 
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showModel]);
 
@@ -61,11 +63,21 @@ const Submission = () => {
         <table className="table-auto w-full text-left border-collapse">
           <thead className="bg-gradient-to-r from-blue-500 to-teal-500 text-white">
             <tr>
-              <th className="px-6 py-4 text-sm font-extrabold  uppercase">Status</th>
-              <th className="px-6 py-4 text-sm font-semibold uppercase">Language</th>
-              <th className="px-6 py-4 text-sm font-semibold uppercase">Runtime</th>
-              <th className="px-6 py-4 text-sm font-semibold uppercase">Memory</th>
-              <th className="px-6 py-4 text-sm font-semibold uppercase">Code</th>
+              <th className="px-6 py-4 text-sm font-extrabold  uppercase">
+                Status
+              </th>
+              <th className="px-6 py-4 text-sm font-semibold uppercase">
+                Language
+              </th>
+              <th className="px-6 py-4 text-sm font-semibold uppercase">
+                Runtime
+              </th>
+              <th className="px-6 py-4 text-sm font-semibold uppercase">
+                Memory
+              </th>
+              <th className="px-6 py-4 text-sm font-semibold uppercase">
+                Code
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -81,14 +93,16 @@ const Submission = () => {
                   key={index}
                   className="hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-200"
                 >
-                  <td className={`px-6 py-4 ${getStatusColor(submission.status)}`}>
+                  <td
+                    className={`px-6 py-4 ${getStatusColor(submission.status)}`}
+                  >
                     {submission.status || "N/A"}
                   </td>
                   <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
                     {submission.language || "N/A"}
                   </td>
                   <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
-                    {submission.execution_time || "N/A"}
+                    {submission.execution_time|| "N/A"}
                   </td>
                   <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
                     {submission.memory || "N/A"}
@@ -108,7 +122,7 @@ const Submission = () => {
       {showModel && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div
-            ref={popupRef} 
+            ref={popupRef}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative"
           >
             <h1 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">

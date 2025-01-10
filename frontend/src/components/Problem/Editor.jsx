@@ -12,7 +12,7 @@ const Editor = () => {
   return (
       <div className={`h-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
         <PanelGroup direction="horizontal" className="h-full">
-        <div className="flex  h-screen">
+        <div className="flex  h-screen w-full">
           <Panel 
           defaultSize={50} minSize={10} maxSize={60}>
           <div className="p-3 h-full">
