@@ -7,6 +7,7 @@ import { server } from "../../constants/config";
 import { useSelector } from "react-redux";
 import { compiler_server } from "../../constants/config";
 import {Editor} from '@monaco-editor/react';
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 
 
@@ -19,12 +20,6 @@ const Playground = ({ theme }) => {
   const [testCases, setTestCases] = useState();
   const [syntaxError, setSyntaxError] = useState("");
   const { isAuthenticated } = useSelector((state) => state.auth);
-  
-
- 
-
- 
-
   const fetchTestCases = async () => {
    
     try {
@@ -276,8 +271,8 @@ int main() {
   const currentTheme = themes[theme] || themes.dark;
 
   return (
-    <div>
-      <div
+    <PanelGroup>
+      <Panel defaultSize={70}
         className={`rounded-lg border shadow-lg overflow-hidden h-[70vh] ${currentTheme.container}`}
       >
         <div
@@ -328,7 +323,9 @@ int main() {
             theme={theme === "light" ? "vs" : "vs-dark"}
           />
         </div>
-      </div>
+      </Panel>
+      <PanelResizeHandle/>
+      <Panel>
       <div className="mt-3 h-[25vh] rounded-lg  shadow-lg overflow-auto">
         <div
           className={`flex justify-between items-center px-4 py-2 ${currentTheme.header}`}
@@ -351,7 +348,6 @@ int main() {
             </button>
           </div>
         </div>
-
         <div className="flex gap-4 px-4 py-2">
           <button
             className={`px-4 py-2 rounded-lg  ${
@@ -380,7 +376,9 @@ int main() {
         </div>
         {renderTabContent()}
       </div>
-    </div>
+      </Panel>
+      
+    </PanelGroup>
   );
 };
 
