@@ -33,7 +33,7 @@ const Editor = () => {
             e.target.style.width = "7px";
           }}
         />
-          <Panel defaultSize={45}  minSize={30} maxSize={65}>
+          <Panel defaultSize={50}  minSize={30} maxSize={70}>
           <div className="p-3 h-full bg-gray-50 rounded-md dark:bg-gray-900">
           <Playground theme={theme} />
         </div>

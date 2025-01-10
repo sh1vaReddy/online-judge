@@ -3,16 +3,15 @@ import { trycatchmethod } from "../middleware/trycatchmethod.js";
 import { ErrorHandler } from "../util/ErrorHandler.js";
 import { ProblemModel } from "../model/ProblemSchema.js";
 
-// Create Test Case
 export const createTestcases = trycatchmethod(async (req, res, next) => {
   const { testcases } = req.body;
-  console.log(testcases);
+
 
   if (!Array.isArray(testcases) || testcases.length === 0) {
     return next(new ErrorHandler("Testcases must be a non-empty array", 400));
   }
 
-  // Validate each testcase in the array
+
   for (const testcase of testcases) {
     if (!testcase.problem_id || !testcase.input || !testcase.output) {
       return next(new ErrorHandler("Each testcase must include problem_id, input, and output", 400));
@@ -35,7 +34,6 @@ export const createTestcases = trycatchmethod(async (req, res, next) => {
 });
 
 
-// Get All Test Cases
 export const getalltestcase = trycatchmethod(async (req, res, next) => {
   const allTestcases = await TestcaseModel.find().populate("problem_id", "title");
   res.status(200).json({
@@ -69,7 +67,6 @@ export const gettestcasebyproblemid = trycatchmethod(async (req, res, next) => {
   const { id } = req.params;
    const Problem_id=await ProblemModel.findById(id);
    const findtestId=Problem_id.problem_id;
-   console.log(findtestId);
 
   if (!findtestId) {
     return next(new ErrorHandler("Problem ID is required", 400));
@@ -78,7 +75,6 @@ export const gettestcasebyproblemid = trycatchmethod(async (req, res, next) => {
   const testcases = await TestcaseModel.find({
     problem_id:findtestId});
 
-  console.log(testcases);
 
   if (!testcases.length) {
     return next(new ErrorHandler("No test cases found for the given problem ID", 404));

@@ -33,6 +33,7 @@ app.get("/", (req, res) => {
 // Compilation route
 app.post("/compile", async (req, res) => {
   const { language = "cpp", code, Input } = req.body;
+  console.log(req.body);
 
   if (!code) {
     return res.status(400).json({ success: false, error: "Code is required" });
@@ -71,7 +72,7 @@ app.post("/compile", async (req, res) => {
 // Run code route
 app.post("/run", async (req, res) => {
   const { language = "cpp", code, input, ProblemId } = req.body;
-
+  console.log(req.body);
   if (!code) {
     return res.status(400).json({ success: false, message: "Code is required" });
   }

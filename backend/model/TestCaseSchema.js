@@ -4,7 +4,6 @@ import mongoose, { Schema } from "mongoose";
 const TestCaseSchema = new Schema({
   problem_id: {
     type: Number, 
-    unique: true,
   },
   input: {
     type: String,

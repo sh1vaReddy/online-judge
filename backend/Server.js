@@ -12,7 +12,6 @@ import SubmissionRouter from "./router/Submission_Router.js";
 import ContestRouter from "./router/Constesr_Router.js";
 import LeaderRouter from "./router/Leaderboard_Router.js";
 import Contactrouter from "./router/Conact_router.js";
-import Discussionrouter from "./router/Discussion_router.js";
 import { GET_DISSCUSSION, NEW_DISCUSSION } from "./constants/event.js";
 import { DiscussModel } from "./model/DiscussionSchema.js";
 import { socketAuthenticator } from "./middleware/auth.js";
@@ -46,7 +45,6 @@ server.use(
   "/api/v1",
   LeaderRouter,
   Contactrouter,
-  Discussionrouter,
   UserRoute,
   ProblemRoute,
   TestcaseRouter,
@@ -90,10 +88,8 @@ io.on("connection", (socket) => {
   });
 });
 
-// Connect to Database
 ConnectDB();
 
-// Start the Server
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

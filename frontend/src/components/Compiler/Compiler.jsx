@@ -144,8 +144,6 @@ console.log("Hello, World!");`,
           </button>
         </div>
       </div>
-
-      {/* Main Content Section */}
       <div className="flex h-[calc(103.5vh-10rem)]">
         {/* Code Editor Section */}
         <div className="w-3/4 p-4">

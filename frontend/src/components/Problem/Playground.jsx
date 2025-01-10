@@ -308,16 +308,14 @@ int main() {
         <div className="rounded-b-md w-full h-full">
           <Editor
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(value) => setCode(value || "")}
             className={`w-full h-full rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner ${currentTheme.editor}`}
             theme={theme === "light" ? "vs" : "vs-dark"}
           />
         </div>
       </Panel>
-      <PanelResizeHandle 
-      />
-      <Panel
-       maxSize={91}>
+      <PanelResizeHandle />
+      <Panel maxSize={91}>
         <div className="mt-3 h-[25vh] rounded-lg  shadow-lg overflow-auto">
           <div
             className={`flex justify-between items-center px-4 py-2 ${currentTheme.header}`}
