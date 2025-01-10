@@ -17,13 +17,13 @@ An online judge platform for competitive programming enthusiasts, built using th
   - Select programming languages for submission.
 
 - **Code Evaluation**:
-  - Secure sandbox for running user-submitted code.
+  - Secure Docker for running user-submitted code.
   - Test case evaluation with detailed feedback (passed/failed).
 
 - **Leaderboards**:
   - Track top users based on solved problems and points.
   - View personal progress and rankings.
-  - Real-time leaderboard updates using WebSocket.
+  - Real-time leaderboard updates using Socket.io.
 
 - **Admin Panel**:
   - Add, update, or delete problems.
