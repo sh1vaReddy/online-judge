@@ -50,7 +50,12 @@ const Dashboard = () => {
   }, []);
 
   const handleissue=()=>{
-   navigation("/admin/issue")
+   navigation("/admin/issue");
+  }
+
+  const handleGetalluser = () =>
+  {
+    navigation("/admin/allUser");
   }
 
   return (
@@ -69,7 +74,9 @@ const Dashboard = () => {
             </p>
             <div className="grid grid-cols-3 gap-6">
               <div className="bg-blue-500 text-white p-4 rounded-lg shadow">
-                <h2 className="text-lg font-bold">Total Users</h2>
+                <h2 className="text-lg font-bold"
+                onClick={handleGetalluser}
+                >Total Users</h2>
                 <p className="text-4xl font-semibold mt-2">
                 {users.length ? users.length : "Loading..."}
                 </p>

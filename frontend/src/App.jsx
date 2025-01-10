@@ -42,6 +42,7 @@ const Conatct=lazy(()=>import('./components/Header/Contact.jsx'));
 const GetIssue=lazy(()=>import('./components/Admin/Getallissuse.jsx'));
 const UpdateIssue=lazy(()=>import('./components/Admin/UpdateIssue.jsx'));
 const Discussion=lazy(()=>import('./components/Problem/Discussion.jsx'));
+const Getalluser=lazy(()=>import('./components/Admin/Getalluser.jsx'));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -113,6 +114,7 @@ const App = () => {
                   <Route path="/admin/issue" element={<GetIssue />} />
                   <Route path="/profile" element={<UserProfile />} />
                   <Route path="/admin/Issue/update/:id" element={<UpdateIssue />} />
+                  <Route path="/admin/allUser" element={<Getalluser/>}/>
                 </Route>
               </Routes>
             </Suspense>
