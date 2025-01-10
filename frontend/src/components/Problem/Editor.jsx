@@ -8,11 +8,13 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 const Editor = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+
   return (
       <div className={`h-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
         <PanelGroup direction="horizontal" className="h-full">
         <div className="flex  h-screen">
-          <Panel defaultSize={50} minSize={20} maxSize={60}>
+          <Panel 
+          defaultSize={50} minSize={10} maxSize={60}>
           <div className="p-3 h-full">
           <Problem theme={theme} />
         </div>
@@ -33,7 +35,7 @@ const Editor = () => {
             e.target.style.width = "7px";
           }}
         />
-          <Panel defaultSize={50}  minSize={30} maxSize={70}>
+          <Panel defaultSize={50}  minSize={10} maxSize={65}>
           <div className="p-3 h-full bg-gray-50 rounded-md dark:bg-gray-900">
           <Playground theme={theme} />
         </div>

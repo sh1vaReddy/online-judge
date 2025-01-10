@@ -262,7 +262,6 @@ int main() {
     <PanelGroup>
       <Panel
         defaultSize={70}
-        maxSize={83}
         className={`rounded-lg border shadow-lg overflow-hidden h-[70vh] ${currentTheme.container}`}
       >
         <div
@@ -315,7 +314,7 @@ int main() {
         </div>
       </Panel>
       <PanelResizeHandle />
-      <Panel maxSize={91}>
+      <Panel>
         <div className="mt-3 h-[25vh] rounded-lg  shadow-lg overflow-auto">
           <div
             className={`flex justify-between items-center px-4 py-2 ${currentTheme.header}`}
