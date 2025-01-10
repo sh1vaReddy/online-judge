@@ -6,10 +6,8 @@ import { useParams } from "react-router-dom";
 import { server } from "../../constants/config";
 import { useSelector } from "react-redux";
 import { compiler_server } from "../../constants/config";
-import {Editor} from '@monaco-editor/react';
+import { Editor } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-
-
 
 const Playground = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("Input");
@@ -21,7 +19,6 @@ const Playground = ({ theme }) => {
   const [syntaxError, setSyntaxError] = useState("");
   const { isAuthenticated } = useSelector((state) => state.auth);
   const fetchTestCases = async () => {
-   
     try {
       const response = await axios.get(
         `${server}/api/v1/testcases/problem/${id}`,
@@ -66,47 +63,42 @@ int main() {
   };
 
   const handleRun = async () => {
-      try {
-        const response = await axios.post(`${compiler_server}/compile`, {
-          language: selectedLanguage,
-          code: code,
-          Input: input,
-        });
-        setouput(response.data.output);
-      } catch (error) {
-        setouput(`Error: ${error.response?.data?.error || error.message}`);
-      }
-    };
+    try {
+      const response = await axios.post(`${compiler_server}/compile`, {
+        language: selectedLanguage,
+        code: code,
+        Input: input,
+      });
+      setouput(response.data.output);
+    } catch (error) {
+      setouput(`Error: ${error.response?.data?.error || error.message}`);
+    }
+  };
 
   const handleSubmission = async () => {
-    if(isAuthenticated)
-    {
+    if (isAuthenticated) {
       try {
-        const response = await axios.post(
-          `${compiler_server}/run`,
-          {
-            language: selectedLanguage,
-            code,
-            input,
-            ProblemId: id,
-          },
-          
-        );
-        setouput(response.data.output);
-      
-
-
-        const timeresponse=await axios.post(`${compiler_server}/time-complexity`,{
-          code,
+        const response = await axios.post(`${compiler_server}/run`, {
           language: selectedLanguage,
-        })
+          code,
+          input,
+          ProblemId: id,
+        });
+        setouput(response.data.output);
 
-        const   execution_time=timeresponse.data.TimeComplexity;
-       
-  
+        const timeresponse = await axios.post(
+          `${compiler_server}/time-complexity`,
+          {
+            code,
+            language: selectedLanguage,
+          }
+        );
+
+        const execution_time = timeresponse.data.TimeComplexity;
+
         const verdictResult = response.data.verdictResult.message;
         let status;
-  
+
         if (verdictResult === "All test cases passed!") {
           status = "Accepted";
           setVerdict("All test cases passed!");
@@ -117,8 +109,8 @@ int main() {
           status = "Runtime Error";
           setVerdict("Runtime Error occurred.");
         }
-  
-      console.log(response.data.verdictResult.message);
+
+        console.log(response.data.verdictResult.message);
         await axios.post(
           `${server}/api/v1/submissions`,
           {
@@ -126,19 +118,17 @@ int main() {
             code,
             status,
             language: selectedLanguage,
-            execution_time
+            execution_time,
           },
           { withCredentials: true }
         );
-  
+
         setouput(response.data.output);
-        
-        
-  
+
         if (response.data.success) {
           const verdictMessage = response.data.verdictResult.message;
           setVerdict(verdictMessage);
-  
+
           if (verdictMessage === "All test cases passed!") {
             setTestCases((prevTestCases) =>
               prevTestCases.map((testCase) => ({
@@ -176,11 +166,9 @@ int main() {
         console.error("Error during submission:", error);
         alert("An error occurred while submitting the code.");
       }
+    } else {
+      alert("plese login or singup to submit the code");
     }
-   else
-   {
-    alert("plese login or singup to submit the code")
-   }
   };
 
   const renderTabContent = () => {
@@ -272,7 +260,9 @@ int main() {
 
   return (
     <PanelGroup>
-      <Panel defaultSize={70}
+      <Panel
+        defaultSize={70}
+        maxSize={83}
         className={`rounded-lg border shadow-lg overflow-hidden h-[70vh] ${currentTheme.container}`}
       >
         <div
@@ -324,60 +314,61 @@ int main() {
           />
         </div>
       </Panel>
-      <PanelResizeHandle/>
-      <Panel>
-      <div className="mt-3 h-[25vh] rounded-lg  shadow-lg overflow-auto">
-        <div
-          className={`flex justify-between items-center px-4 py-2 ${currentTheme.header}`}
-        >
-          <h2 className="font-semibold">Test Cases</h2>
-          <div className="flex gap-4">
+      <PanelResizeHandle 
+      />
+      <Panel
+       maxSize={91}>
+        <div className="mt-3 h-[25vh] rounded-lg  shadow-lg overflow-auto">
+          <div
+            className={`flex justify-between items-center px-4 py-2 ${currentTheme.header}`}
+          >
+            <h2 className="font-semibold">Test Cases</h2>
+            <div className="flex gap-4">
+              <button
+                className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
+                onClick={handleRun}
+              >
+                Run
+              </button>
+              <button
+                className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 ${currentTheme.buttonFormat}`}
+                onClick={() => {
+                  handleSubmission(), fetchTestCases();
+                }}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+          <div className="flex gap-4 px-4 py-2">
             <button
-              className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}
-              onClick={handleRun}
+              className={`px-4 py-2 rounded-lg  ${
+                activeTab === "Input" ? "bg-green-600" : "bg-green-500"
+              } text-white font-semibold hover:bg-green-600 focus:outline-none`}
+              onClick={() => setActiveTab("Input")}
             >
-              Run
+              Input
             </button>
             <button
-              className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 ${currentTheme.buttonFormat}`}
-              onClick={() => {
-                handleSubmission(), fetchTestCases();
-              }}
+              className={`px-4 py-2 rounded-lg ${
+                activeTab === "Output" ? "bg-blue-600" : "bg-blue-500"
+              } text-white font-semibold hover:bg-blue-600 focus:outline-none`}
+              onClick={() => setActiveTab("Output")}
             >
-              Submit
+              Output
+            </button>
+            <button
+              className={`px-4 py-2 rounded-lg ${
+                activeTab === "Verdict" ? "bg-purple-600" : "bg-purple-500"
+              } text-white font-semibold hover:bg-purple-600 focus:outline-none`}
+              onClick={() => setActiveTab("Verdict")}
+            >
+              Verdict
             </button>
           </div>
+          {renderTabContent()}
         </div>
-        <div className="flex gap-4 px-4 py-2">
-          <button
-            className={`px-4 py-2 rounded-lg  ${
-              activeTab === "Input" ? "bg-green-600" : "bg-green-500"
-            } text-white font-semibold hover:bg-green-600 focus:outline-none`}
-            onClick={() => setActiveTab("Input")}
-          >
-            Input
-          </button>
-          <button
-            className={`px-4 py-2 rounded-lg ${
-              activeTab === "Output" ? "bg-blue-600" : "bg-blue-500"
-            } text-white font-semibold hover:bg-blue-600 focus:outline-none`}
-            onClick={() => setActiveTab("Output")}
-          >
-            Output
-          </button>
-          <button
-            className={`px-4 py-2 rounded-lg ${
-              activeTab === "Verdict" ? "bg-purple-600" : "bg-purple-500"
-            } text-white font-semibold hover:bg-purple-600 focus:outline-none`}
-            onClick={() => setActiveTab("Verdict")}
-          >
-            Verdict
-          </button>
-        </div>
-        {renderTabContent()}
-      </div>
       </Panel>
-      
     </PanelGroup>
   );
 };
