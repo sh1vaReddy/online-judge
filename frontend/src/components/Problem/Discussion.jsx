@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { NEW_DISCUSSION, GET_DISCUSSION } from "../util/Event";
 import { io } from "socket.io-client";
-import {server} from '../../constants/config'
+import {server} from '../../constants/config';
+
 
 const Discussion = () => {
   const socket = io(`${server}`, {
@@ -12,6 +13,7 @@ const Discussion = () => {
   const [content, setContent] = useState("");
   const { id } = useParams();
   const [discussions, setDiscussions] = useState([]);
+ 
 
 
   useEffect(() => {

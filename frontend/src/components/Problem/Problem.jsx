@@ -8,11 +8,13 @@ import { toast } from "react-toastify";
 import Submission from "./Submission";
 import { server } from "../../constants/config";
 import Discussion from "./Discussion";
+import { useSelector } from "react-redux";
 
 const Problem = ({ theme }) => {
   const [activeTab, setActiveTab] = useState("description");
   const [ProblemData, setProblemData] = useState(null);
   const { id } = useParams();
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const themes = {
     light: {
@@ -45,20 +47,21 @@ const Problem = ({ theme }) => {
     fetchProblem();
   }, [id]);
 
+  const handleDiscussionClick = () => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to access the Discussion section.");
+    } else {
+      setActiveTab("discussion");
+    }
+  };
+
   return (
-    <div
-      className={`rounded-lg border overflow-hidden h-full ${currentTheme.container}`}
-    >
-      {/* Navigation Tabs */}
-      <div
-        className={`h-16 flex items-center px-4 rounded-t-md ${currentTheme.header}`}
-      >
+    <div className={`rounded-lg border overflow-hidden h-full ${currentTheme.container}`}>
+      <div className={`h-16 flex items-center px-4 rounded-t-md ${currentTheme.header}`}>
         <nav className="flex space-x-6">
           <button
             className={`font-semibold text-lg flex items-center space-x-2 transition ${
-              activeTab === "description"
-                ? currentTheme.activeButton
-                : currentTheme.button
+              activeTab === "description" ? currentTheme.activeButton : currentTheme.button
             }`}
             onClick={() => setActiveTab("description")}
           >
@@ -67,20 +70,17 @@ const Problem = ({ theme }) => {
           </button>
           <button
             className={`font-semibold text-lg flex items-center space-x-2 transition ${
-              activeTab === "discussion"
-                ? currentTheme.activeButton
-                : currentTheme.button
+              activeTab === "discussion" ? currentTheme.activeButton : currentTheme.button
             }`}
-            onClick={() => setActiveTab("discussion")}
+            onClick={handleDiscussionClick}
+            disabled={!isAuthenticated} 
           >
             <FaRegMessage />
             <span>Discussion</span>
           </button>
           <button
             className={`font-semibold text-lg flex items-center space-x-2 transition ${
-              activeTab === "submissions"
-                ? currentTheme.activeButton
-                : currentTheme.button
+              activeTab === "submissions" ? currentTheme.activeButton : currentTheme.button
             }`}
             onClick={() => setActiveTab("submissions")}
           >
@@ -89,11 +89,7 @@ const Problem = ({ theme }) => {
           </button>
         </nav>
       </div>
-
-      {/* Content Area */}
-      <div
-        className={`p-6 ${currentTheme.content} overflow-auto h-full`}
-      >
+      <div className={`p-6 ${currentTheme.content} overflow-auto h-full`}>
         {ProblemData && activeTab === "description" && (
           <div>
             <h1 className="text-xl font-bold px-4">
@@ -130,9 +126,7 @@ const Problem = ({ theme }) => {
                     <p className="text-lg">{example.input}</p>
                   </div>
                   <div>
-                    <h3 className="text-xl mt-4 py-1 font-serif">
-                      OUTPUT:
-                    </h3>
+                    <h3 className="text-xl mt-4 py-1 font-serif">OUTPUT:</h3>
                     <p className="text-lg">{example.output}</p>
                   </div>
                 </div>
@@ -141,11 +135,11 @@ const Problem = ({ theme }) => {
           </div>
         )}
 
-        {activeTab === "discussion" && (
+        {activeTab === "discussion" && isAuthenticated && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Discussion</h2>
             <div className="leading-relaxed">
-              <Discussion/>
+              <Discussion />
             </div>
           </div>
         )}
