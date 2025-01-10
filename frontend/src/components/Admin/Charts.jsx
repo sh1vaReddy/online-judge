@@ -25,16 +25,16 @@ const Charts = () => {
           ? response.data
           : response.data.submissions;
 
-
         if (!Array.isArray(submissions)) {
           throw new Error('Submissions is not an array');
         }
 
         const statusCount = {
           Accepted: 0,
-          'Not Accepted': 0,
-          Pending: 0,
-          'Syntax Error': 0,
+          'Wrong Answer': 0,
+          Partial: 0,
+          'Runtime Error': 0,
+          'Time Limit Exceeded': 0,
         };
 
         submissions.forEach((submission) => {
@@ -51,15 +51,17 @@ const Charts = () => {
               data: Object.values(statusCount),
               backgroundColor: [
                 'rgba(75, 192, 192, 0.6)', 
-                'rgba(255, 99, 132, 0.6)',
+                'rgba(255, 99, 132, 0.6)', 
                 'rgba(255, 206, 86, 0.6)', 
-                'rgba(153, 102, 255, 0.6)',
+                'rgba(153, 102, 255, 0.6)', 
+                'rgba(54, 162, 235, 0.6)', 
               ],
               borderColor: [
                 'rgba(75, 192, 192, 1)', 
                 'rgba(255, 99, 132, 1)', 
                 'rgba(255, 206, 86, 1)', 
                 'rgba(153, 102, 255, 1)', 
+                'rgba(54, 162, 235, 1)',
               ],
               borderWidth: 1,
             },
