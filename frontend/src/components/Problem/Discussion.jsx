@@ -49,7 +49,6 @@ const Discussion = () => {
             <li key={index} className="bg-white shadow-md rounded-md p-4">
               <h2 className="text-lg font-bold text-gray-700">{item.user_name}</h2>
               <p className="text-gray-600">{item.content}</p>
-              <small>{new Date(item.timestamp).toLocaleString()}</small>
             </li>
           ))}
         </ul>
