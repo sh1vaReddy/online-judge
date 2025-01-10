@@ -1,50 +1,43 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { NEW_DISCUSSION, GET_DISCUSSION } from "../util/Event";
-import { getsocket } from "../../Socket";
+import { io } from "socket.io-client";
+import {server} from '../../constants/config'
 
 const Discussion = () => {
-  const socket = getsocket();
+  const socket = io(`${server}`, {
+    withCredentials: true,
+  });
 
   const [content, setContent] = useState("");
   const { id } = useParams();
-  const [messages, setMessages] = useState([]);
+  const [discussions, setDiscussions] = useState([]);
+
 
   useEffect(() => {
-    console.log("Connecting to WebSocket");
-
-    const handleDiscussions = (discussions) => {
-      setMessages(discussions);
-    };
-
-    socket.on("connect", () => {
-      console.log("Connected to WebSocket:", socket.id);
-      socket.emit(GET_DISCUSSION, { id });
+    socket.emit(GET_DISCUSSION, { id });
+    socket.on(GET_DISCUSSION, (discussionData) => {
+      setDiscussions(discussionData);
     });
 
-    socket.on(GET_DISCUSSION, handleDiscussions);
-
     return () => {
-      socket.off("connect");
-      socket.off(GET_DISCUSSION, handleDiscussions);
+      socket.off(GET_DISCUSSION); 
       socket.disconnect();
-      console.log("Disconnected from WebSocket");
     };
-  }, [id, socket]);
+  }, [id,socket]);
 
   const handleSendMessage = () => {
     if (content.trim() === "") {
       alert("Message cannot be empty.");
       return;
     }
-
     socket.emit(NEW_DISCUSSION, { content, id }, (error) => {
       if (error) {
         alert("Failed to send message. Please try again.");
+      } else {
+        setContent("");
       }
     });
-
-    setContent("");
   };
 
   return (
@@ -52,13 +45,11 @@ const Discussion = () => {
       <div className="flex-grow overflow-auto p-4">
         <h1 className="text-xl font-semibold mb-4">Welcome to the discussion</h1>
         <ul className="space-y-4">
-          {messages.map((item) => (
-            <li
-              key={item._id}
-              className="bg-white shadow-md rounded-md p-4"
-            >
+          {discussions.map((item, index) => (
+            <li key={index} className="bg-white shadow-md rounded-md p-4">
               <h2 className="text-lg font-bold text-gray-700">{item.user_name}</h2>
               <p className="text-gray-600">{item.content}</p>
+              <small>{new Date(item.timestamp).toLocaleString()}</small>
             </li>
           ))}
         </ul>

@@ -2,7 +2,8 @@ import { DiscussModel } from "../model/DiscussionSchema.js";
 import { UserModel } from "../model/User.js";
 import { GET_DISSCUSSION } from "../constants/event.js";
 
-export const createDiscussion = async (socket, { id, content }) => {
+export const createDiscussion = async ({data}) => {
+  console.log(data);
   try {
     const user = await UserModel.findById(socket.user._id);
     if (!user) {

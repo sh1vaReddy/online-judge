@@ -17,7 +17,6 @@ import { GET_DISSCUSSION, NEW_DISCUSSION } from "./constants/event.js";
 import { DiscussModel } from "./model/DiscussionSchema.js";
 import { socketAuthenticator } from "./middleware/auth.js";
 import { UserModel } from "./model/User.js";
-import {createDiscussion,handleGetDiscussion} from './controller/Discussion.js';
 
 dotenv.config();
 
@@ -25,25 +24,35 @@ const server = express();
 const app = http.createServer(server);
 
 const io = new Server(app, {
-  transports: ['websocket', 'polling'],
+  transports: ["websocket", "polling"],
   cors: {
-    origin:process.env.CLIENT_URL,
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-  }
+  },
 });
 
-// Middleware
 server.use(express.json({ limit: "50mb" }));
-server.use(cors({
-  origin: process.env.CLIENT_URL,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-}));
+server.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 server.use(cookieParser());
 
-// API Routes
-server.use("/api/v1", LeaderRouter, Contactrouter, Discussionrouter,UserRoute,ProblemRoute,TestcaseRouter,SubmissionRouter,ContestRouter);
+server.use(
+  "/api/v1",
+  LeaderRouter,
+  Contactrouter,
+  Discussionrouter,
+  UserRoute,
+  ProblemRoute,
+  TestcaseRouter,
+  SubmissionRouter,
+  ContestRouter
+);
 
 io.use((socket, next) => {
   cookieParser()(
@@ -54,11 +63,31 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  socket.on(NEW_DISCUSSION,async(data)=>createDiscussion(socket,data));
-  socket.on(GET_DISSCUSSION,async(data)=>handleGetDiscussion(socket,data)); 
-   
+  socket.on(NEW_DISCUSSION, async ({ id, content }) => {
+    try {
+      const user = await UserModel.findById(socket.user._id);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      await DiscussModel.create({
+        problem_id: id,
+        user_id: socket.user._id,
+        user_name: user.username,
+        content,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  socket.on(GET_DISSCUSSION, async ({ id }) => {
+    try {
+      const discussions = await DiscussModel.find({ problem_id: id });
+      socket.emit(GET_DISSCUSSION, discussions);
+    } catch (error) {
+      console.error("Error fetching discussions:", error);
+      socket.emit(GET_DISSCUSSION, []);
+    }
+  });
 });
 
 // Connect to Database

@@ -204,7 +204,6 @@ int main() {
           {testCases ? (
             <div className="flex flex-row gap-4">
               {" "}
-              {/* Ensure vertical layout with consistent spacing */}
               {testCases.map((testCase, index) => (
                 <div
                   key={index}
@@ -296,10 +295,7 @@ int main() {
               </option>
             ))}
           </select>
-
-          {/* Button Container */}
           <div className="absolute top-1/2 right-4 transform -translate-y-1/2 flex gap-6">
-            {/* Reset Button */}
             <button
               onClick={() => setCode(defaultCode[selectedLanguage] || "")}
               className={`flex items-center justify-center gap-2 px-5 py-3 font-semibold rounded-lg shadow-lg transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentTheme.buttonReset}`}

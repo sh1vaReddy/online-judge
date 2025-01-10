@@ -72,13 +72,12 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-   {/* Move SocketProvider here */}
+
     <SocketProvider>
         <ThemeProvider>
           <BrowserRouter>
             <Suspense fallback={<Loader />}>
               <Routes>
-                {/* Public Routes */}
                 <Route path="/" element={<Layout />}>
                   <Route path="/Discussion" element={<Discussion />} />
                   <Route index element={<Home />} />
@@ -94,11 +93,6 @@ const App = () => {
                 <Route path='/Assignment/:id' element={<Assignment/>}/>
                 <Route path='/Contest/problem/:id' element={<ContestProblem/>}/>
                 </Route>
-  
-                {/* Protected Routes */}
-                
-  
-                {/* Admin Protected Routes */}
                 <Route
                   element={
                     <ProtectRoute
