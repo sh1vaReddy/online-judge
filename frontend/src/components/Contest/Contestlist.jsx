@@ -57,16 +57,16 @@ const Contestlist = () => {
                 <tr key={index} className="hover:bg-gray-200 dark:hover:bg-gray-800"
                   onClick={()=>handleopenassginment(contest)}
                 >
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-4 py-2 dark:text-white">
                     {contest.name}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-4 py-2 dark:text-white">
                     {contest.startTime}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-4 py-2 dark:text-white">
                     {contest.endTime}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-4 py-2 dark:text-white">
                   <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
                         contest.status === "active"
@@ -84,7 +84,7 @@ const Contestlist = () => {
               ))
             ) : (
               <tr>
-                <td className="border border-gray-300 px-4 py-2 text-center" colSpan="4">
+                <td className="border border-gray-300 px-4 py-2 text-center dark:text-white" colSpan="4">
                   No contests available
                 </td>
               </tr>
