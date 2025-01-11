@@ -10,12 +10,11 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const toggleMenu = () => setMenuOpen(!menuOpen);
-  const { isAdmin, isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const location = useLocation();
 
   if (location.pathname === "/login") return null;
 
-  // Array of menu items
   const menuItems = [
     { label: "Home", to: "/" },
     { label: "Problems", to: "/problem" },
@@ -23,10 +22,7 @@ const Header = () => {
     { label: "Compiler", to: "/compiler" },
     {label:"Contact",to:"/Conatct"},
   ];
-  if(isAdmin)
-  {
-    menuItems.push({label:"Admin",to:'/admin/dashboard'})
-  }
+  
 
   if(!isAuthenticated)
 {

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete, AiOutlineEye} from 'react-icons/ai';
 import { MdAutoDelete } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
+import { IoArrowBackSharp } from "react-icons/io5";
 
 const Sidebar = () => {
   const menuItem = [
@@ -39,7 +40,16 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="min-h-full w-full bg-gray-100 flex flex-col p-16 dark:bg-gray-800 ">
+      <div className="min-h-full w-full bg-gray-100 flex flex-col p-10 dark:bg-gray-800 ">
+        <button 
+  className="rounded-full  text-gray-900 transition duration-300 transform hover:scale-110 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-400"
+>
+  <IoArrowBackSharp
+    size={30}
+    onClick={() => window.history.back()}
+  />
+</button>
+
       {menuItem.map((item, index) => {
         return (
           <Link
