@@ -95,6 +95,7 @@ const ProblemCreation = () => {
       }).unwrap();
 
       toast.success("Problem and test cases created successfully.");
+       navigation('/admin/dashboard')
     } catch (error) {
       toast.error("Error creating problem or test cases.");
       console.log(error);
