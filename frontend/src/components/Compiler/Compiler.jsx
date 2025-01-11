@@ -152,6 +152,7 @@ console.log("Hello, World!");`,
             onChange={(value) => setCode(value || "")}
             className={`h-full w-full rounded-md px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner ${currentTheme.editor}`}
             placeholder="Write your code here..."
+            theme={theme === "light" ? "vs" : "vs-dark"}
             style={{ height: "100%" }}
           />
         </div>
