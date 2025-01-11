@@ -45,7 +45,7 @@ const Sidebar = () => {
           <Link
             key={index}
             to={item.to}
-            className="text-gray-900 text-xl font-medium py-8 px-4 flex items-center transition duration-500 hover:text-tomato hover:scale-110 dark:text-gray-200"
+            className="text-gray-900 text-xl font-medium py-10 px-6 flex items-center transition duration-500 hover:text-tomato hover:scale-110 dark:text-gray-200"
           >
             {item.icon && <span className="mr-2">{item.icon}</span>}
             {item.label}

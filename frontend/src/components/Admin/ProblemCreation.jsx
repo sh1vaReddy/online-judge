@@ -105,8 +105,6 @@ const ProblemCreation = () => {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6 text-gray-900 dark:text-white">
       <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold mb-6">Create a New Problem</h1>
-
-        {/* Problem Title */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Problem Title</label>
           <input
@@ -117,8 +115,6 @@ const ProblemCreation = () => {
             placeholder="Enter the problem title"
           />
         </div>
-
-        {/* Problem Description */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Description</label>
           <textarea
@@ -129,8 +125,6 @@ const ProblemCreation = () => {
             placeholder="Describe the problem statement in detail"
           ></textarea>
         </div>
-
-        {/* Constraints */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Constraints</label>
           <textarea
@@ -141,8 +135,6 @@ const ProblemCreation = () => {
             placeholder="Specify the problem constraints"
           ></textarea>
         </div>
-
-        {/* Examples */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Examples</label>
           {examples.map((example, index) => (
@@ -179,8 +171,6 @@ const ProblemCreation = () => {
             </button>
           </div>
         </div>
-
-        {/* Test Cases */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Test Cases</label>
           {testcase.map((testCase, index) => (
@@ -217,8 +207,6 @@ const ProblemCreation = () => {
             </button>
           </div>
         </div>
-
-        {/* Tags */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Tags</label>
           <input
@@ -230,7 +218,6 @@ const ProblemCreation = () => {
           />
         </div>
 
-        {/* Difficulty */}
         <div className="mb-6">
           <label className="block text-sm font-medium">Difficulty</label>
           <select
@@ -243,8 +230,6 @@ const ProblemCreation = () => {
             <option value="Hard">Hard</option>
           </select>
         </div>
-
-        {/* Submit Button */}
         <button
           className="w-full px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-lg hover:opacity-90"
           onClick={saveProblem}

@@ -39,7 +39,7 @@ const ProblemList = () => {
   let count=totalItems;
 
   return (
-    <div className="h-full dark:bg-gray-800 p-4">
+    <div className="h-screen dark:bg-gray-800 p-4">
       <h2 className="text-xl font-bold mb-4 dark:text-white">Problem List</h2>
 
       <div className="mb-4">

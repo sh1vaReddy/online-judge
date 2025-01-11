@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { server } from "../../constants/config";
+import Contest from '../../assets/Contrest.avif';
 
 const MonitoringContest = () => {
   const [contests, setContests] = useState([]);
@@ -37,21 +38,35 @@ const MonitoringContest = () => {
       </div>
     );
   }
-
   if (error || contests.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-300">
-        <div className="text-center bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-gray-700 mb-2">
-            No Active Contests Are There
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-gray-100">
+        <div className="text-center bg-white shadow-2xl rounded-lg p-10 max-w-xl mx-auto border border-gray-200">
+          <div className="mb-8">
+            <img
+              src={Contest} // Replace with a proper image or illustration path
+              alt="No Contests"
+              className="w-48 h-48 mx-auto object-contain"
+            />
+          </div>
+          <h2 className="text-4xl font-extrabold text-gray-800 mb-4">
+            No Active Contests Available
           </h2>
-          <p className="text-gray-500">
-            Check back later for upcoming contests or updates!
+          <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+            We couldn't find any contests at the moment. Check back later for
+            updates or new events. Stay tuned for upcoming opportunities!
           </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105"
+          >
+            Refresh
+          </button>
         </div>
       </div>
     );
   }
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
