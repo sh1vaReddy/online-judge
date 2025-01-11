@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { server } from "../../constants/config";
-import Contest from '../../assets/delete.webp'
+import Contest from "../../assets/delete.webp";
+import { toast } from "react-toastify";
 
 const DeleteContest = () => {
   const [contests, setContests] = useState([]);
@@ -27,12 +28,16 @@ const DeleteContest = () => {
 
   const deleteContest = async (contestId) => {
     try {
-      const response = await axios.delete(`${server}/api/v1/contests/${contestId}`);
+      const response = await axios.delete(
+        `${server}/api/v1/delete/contets/${contestId}`,{
+          withCredentials:true
+        }
+      );
       if (response.data.success) {
-        alert(response.data.message);
+        toast.success(response.data.message);
         setContests(contests.filter((contest) => contest._id !== contestId));
       } else {
-        alert("Failed to delete contest: " + response.data.message);
+        toast.error("Failed to delete contest: " + response.data.message);
       }
     } catch (err) {
       console.error("Error deleting contest:", err);
@@ -71,7 +76,8 @@ const DeleteContest = () => {
             No Contests Available
           </h2>
           <p className="text-gray-600 text-lg mb-6">
-            We couldn't find any contests at the moment. Check back later for updates or new events!
+            We couldn't find any contests at the moment. Check back later for
+            updates or new events!
           </p>
           <button
             onClick={() => window.location.reload()}
@@ -92,32 +98,66 @@ const DeleteContest = () => {
           View, manage, and delete contests effortlessly.
         </p>
       </header>
-      <div className="max-w-4xl mx-auto py-12 px-6">
-        {contests.length > 0 ? (
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="max-w-6xl mx-auto py-12 px-6">
+        <table className="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
+          <thead>
+            <tr className="bg-gray-200 text-gray-800 text-left">
+              <th className="px-6 py-3">Name</th>
+              <th className="px-6 py-3">Start Date</th>
+              <th className="px-6 py-3">End Date</th>
+              <th className="px-6 py-3">Participants</th>
+              <th className="px-6 py-3">Status</th>
+              <th className="px-6 py-3">Description</th>
+              <th className="px-6 py-3 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
             {contests.map((contest) => (
-              <li
-                key={contest._id}
-                className="p-6 bg-white border border-gray-200 rounded-lg shadow-md transition-transform transform hover:scale-105"
-              >
-                <div>
-                  <h2 className="text-2xl font-semibold text-gray-800">
-                    {contest.name}
-                  </h2>
-                  <p className="text-gray-600 mt-2">{contest.description}</p>
-                </div>
-                <button
-                  onClick={() => deleteContest(contest._id)}
-                  className="mt-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition"
+              <tr key={contest._id} className="border-b hover:bg-gray-100">
+                <td className="px-6 py-4">{contest.name}</td>
+                <td
+                  className={`px-6 py-4 ${
+                    contest.startTime ? "text-green-500" : "text-red-500"
+                  }`}
                 >
-                  Delete Contest
-                </button>
-              </li>
+                  {contest.startTime
+                    ? new Date(contest.startTime).toLocaleString()
+                    : "Not Set"}
+                </td>
+                <td
+                  className={`px-6 py-4 ${
+                    contest.endTime ? "text-red-500" : "text-gray-500"
+                  }`}
+                >
+                  {contest.endTime
+                    ? new Date(contest.endTime).toLocaleString()
+                    : "Not Set"}
+                </td>
+                <td className="px-6 py-4">
+                  {contest.participants?.length || 0}
+                </td>
+                <td
+                  className={`px-6 py-4 ${
+                    contest.isActive ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {contest.isActive ? "Active" : "Inactive"}
+                </td>
+                <td className="px-6 py-4">
+                  {contest.description || "No Description"}
+                </td>
+                <td className="px-6 py-4 text-center">
+                  <button
+                    onClick={() => deleteContest(contest._id)}
+                    className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
             ))}
-          </ul>
-        ) : (
-          <p className="text-center text-gray-500">No contests available.</p>
-        )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
