@@ -66,7 +66,7 @@ const Discussion = () => {
   
 
   const handleDeleteMessage = () => {
-    alert(`Deleting message: ${contextMenu.selectedMessageId}`);
+    console.log(`Deleting message: ${contextMenu.selectedMessageId}`);
     handleCloseContextMenu();
   };
 
