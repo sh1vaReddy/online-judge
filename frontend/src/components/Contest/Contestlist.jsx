@@ -32,7 +32,7 @@ const Contestlist = () => {
 
   return (
     <>
-      <div className="h-full flex justify-center overflow-x-auto dark:bg-gray-900 py-16">
+      <div className="h-screen flex justify-center overflow-x-auto dark:bg-gray-900 py-16">
         <table className="table-auto w-3/4 border-collapse border border-gray-300 dark:border-gray-700 shadow-lg rounded-lg"
         >
           <thead className="dark:bg-gray-900">
