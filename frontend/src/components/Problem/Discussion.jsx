@@ -16,6 +16,13 @@ const Discussion = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const [ShowLoginPopup, setShowLoginPopup] = useState(!isAuthenticated);
 
+
+  const [contextMenu, setContextMenu] = useState({
+    position: { x: 0, y: 0 },
+    visible: false,
+    selectedMessageId: null,
+  });
+
   useEffect(() => {
     socket.emit(GET_DISCUSSION, { id });
     socket.on(GET_DISCUSSION, (discussionData) => {
@@ -42,13 +49,41 @@ const Discussion = () => {
     });
   };
 
+
+  const handleOnContextMenu = (e, messageId) => {
+    e.preventDefault();
+    setContextMenu({
+      position: { x: e.clientX, y: e.clientY-125},
+      visible: true,
+      selectedMessageId: messageId,
+    });
+  };
+
+  const handleCloseContextMenu = () => {
+    setContextMenu({ ...contextMenu, visible: false });
+  };
+
+  
+
+  const handleDeleteMessage = () => {
+    alert(`Deleting message: ${contextMenu.selectedMessageId}`);
+    handleCloseContextMenu();
+  };
+
   return (
-    <div className="flex flex-col h-[550px] bg-gray-50 relative rounded-xl dark:bg-gray-800">
+    <div
+      className="flex flex-col h-[550px] bg-gray-50 relative rounded-xl dark:bg-gray-800"
+      onClick={handleCloseContextMenu}
+    >
       {ShowLoginPopup && (
         <div className="absolute inset-0 flex justify-center items-center bg-gray-400 bg-opacity-50 dark:bg-gray-900">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center dark:bg-gray-700">
-            <h2 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-100">Login Required</h2>
-            <p className="mb-4 text-gray-700 dark:text-gray-300">You must be logged in to join the discussion.</p>
+            <h2 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-100">
+              Login Required
+            </h2>
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              You must be logged in to join the discussion.
+            </p>
             <button
               onClick={() => (window.location.href = "/login")}
               className="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600 dark:hover:bg-blue-400"
@@ -69,13 +104,16 @@ const Discussion = () => {
                 <li
                   key={index}
                   className="bg-white shadow-md rounded-md p-4 dark:bg-gray-700"
+                  onContextMenu={(e) => handleOnContextMenu(e, item._id)}
                 >
-                  <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">
-                    {item.user_name}
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    {item.content}
-                  </p>
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                      {item.user_name}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {item.content}
+                    </p>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -99,6 +137,22 @@ const Discussion = () => {
               </button>
             </div>
           </div>
+          {contextMenu.visible && (
+            <div
+              className="absolute bg-white shadow-md rounded-md p-2 dark:bg-gray-700"
+              style={{
+                top: `${contextMenu.position.y}px`,
+                left: `${contextMenu.position.x}px`,
+              }}
+            >
+              <button
+                className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-200 dark:hover:bg-gray-600"
+                onClick={handleDeleteMessage}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
