@@ -7,6 +7,7 @@ import { server } from "../../constants/config";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import {useNavigate} from 'react-router-dom';
 
 const CreateContest = () => {
   const [name, setName] = useState("");
@@ -18,6 +19,7 @@ const CreateContest = () => {
   const [user, setUser] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const navigation=useNavigate();
 
   const handleInputChange = async (event) => {
     const value = event.target.value;
@@ -58,11 +60,11 @@ const CreateContest = () => {
     };
 
     try {
-      const response = await axios.post(`${server}/api/v1/create/contest`, contestData,{
+       await axios.post(`${server}/api/v1/create/contest`, contestData,{
         withCredentials:true
       });
       toast.success("Contest created successfully");
-      console.log("Contest created successfully:", response.data);
+      navigation('/admin/dashboard')
     } catch (error) {
       toast.error("Creating Contest Get Error")
       console.error("Error creating contest:", error);
